@@ -136,17 +136,7 @@ namespace Microsoft.Xna.Framework.Graphics
             this.width = width;
             this.height = height;
             this.format = format;
-            this.levelCount = 1;
-
-            if (mipmap)
-            {
-                int size = Math.Max(this.width, this.height);
-                while (size > 1)
-                {
-                    size = size / 2;
-                    this.levelCount++;
-                }
-            }
+            this.levelCount = mipmap ? CalculateMipLevels(width, height) : 1;
 
 #if DIRECTX
 
