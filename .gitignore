@@ -53,3 +53,4 @@ monodroid*.msi
 #Unix temporary files
 *~
 *.DotSettings
+/DigitalRune
