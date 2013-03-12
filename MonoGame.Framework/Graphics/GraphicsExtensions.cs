@@ -504,6 +504,21 @@ namespace Microsoft.Xna.Framework.Graphics
 				glFormat = PixelFormat.Red;
 				glType = PixelType.Float;
 				break;
+            case SurfaceFormat.HalfVector2:
+                glInternalFormat = PixelInternalFormat.Rg16f;
+                glFormat = PixelFormat.Rg;
+                glType = PixelType.Float;
+                break;
+            case SurfaceFormat.HalfVector4:
+                glInternalFormat = PixelInternalFormat.Rgba16f;
+                glFormat = PixelFormat.Rgba;
+                glType = PixelType.Float;
+                break;
+            case SurfaceFormat.HdrBlendable:
+                glInternalFormat = PixelInternalFormat.Rgba16f;
+                glFormat = PixelFormat.Rgba;
+                glType = PixelType.Float;
+                break;
 #endif
 				
 #if IOS || ANDROID
