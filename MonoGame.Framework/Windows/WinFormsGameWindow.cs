@@ -48,6 +48,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using FormsKey = System.Windows.Forms.Keys;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using XnaKey = Microsoft.Xna.Framework.Input.Keys;
 
@@ -204,14 +205,52 @@ namespace MonoGame.Framework
         private void OnKeyDown(object sender, KeyEventArgs keyEventArgs)
         {
             var key = (XnaKey)keyEventArgs.KeyCode;
-            if (!_keyState.Contains(key))
-                _keyState.Add(key);
+
+            // For Shift and Control we must manually check for left vs. right.
+            if (keyEventArgs.KeyCode == FormsKey.ShiftKey)
+            {
+                if (GetAsyncKeyState(FormsKey.LShiftKey) != 0 && !_keyState.Contains(XnaKey.LeftShift))
+                    _keyState.Add(XnaKey.LeftShift);
+                if (GetAsyncKeyState(FormsKey.RShiftKey) != 0 && !_keyState.Contains(XnaKey.RightShift))
+                    _keyState.Add(XnaKey.RightShift);
+            }
+            else if (keyEventArgs.KeyCode == FormsKey.ControlKey)
+            {
+                if (GetAsyncKeyState(FormsKey.LControlKey) != 0 && !_keyState.Contains(XnaKey.LeftControl))
+                    _keyState.Add(XnaKey.LeftControl);
+                if (GetAsyncKeyState(FormsKey.RControlKey) != 0 && !_keyState.Contains(XnaKey.RightControl))
+                    _keyState.Add(XnaKey.RightControl);
+            }
+            else
+            {
+                if (!_keyState.Contains(key))
+                    _keyState.Add(key);    
+            }
         }
 
         private void OnKeyUp(object sender, KeyEventArgs keyEventArgs)
         {
             var key = (XnaKey)keyEventArgs.KeyCode;
-            _keyState.Remove(key);
+
+            // For Shift and Control we must manually check for left vs. right.
+            if (keyEventArgs.KeyCode == FormsKey.ShiftKey)
+            {
+                if (GetAsyncKeyState(FormsKey.LShiftKey) == 0)
+                    _keyState.Remove(XnaKey.LeftShift);
+                if (GetAsyncKeyState(FormsKey.RShiftKey) == 0)
+                    _keyState.Remove(XnaKey.RightShift);
+            }
+            else if (keyEventArgs.KeyCode == FormsKey.ControlKey)
+            {
+                if (GetAsyncKeyState(FormsKey.LControlKey) == 0)
+                    _keyState.Remove(XnaKey.LeftControl);
+                if (GetAsyncKeyState(FormsKey.RControlKey) == 0)
+                    _keyState.Remove(XnaKey.RightControl);
+            }
+            else
+            {
+                _keyState.Remove(key);    
+            }
         }
 
         private void OnMouseEnter(object sender, EventArgs e)
@@ -306,6 +345,9 @@ namespace MonoGame.Framework
         [System.Security.SuppressUnmanagedCodeSecurity] // We won't use this maliciously
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         private static extern bool PeekMessage(out NativeMessage msg, IntPtr hWnd, uint messageFilterMin, uint messageFilterMax, uint flags);
+
+        [DllImport("user32.dll")]
+        private static extern short GetAsyncKeyState(FormsKey vKey);
 
         #region Public Methods
 
