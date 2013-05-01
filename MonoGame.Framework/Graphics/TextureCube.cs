@@ -156,7 +156,47 @@ namespace Microsoft.Xna.Framework.Graphics
         public void GetData<T>(CubeMapFace cubeMapFace, T[] data) where T : struct
         {
             //FIXME Does not compile on Android or iOS
-#if MONOMAC
+#if DIRECTX
+            // IMPORTANT: On some tablets (e.g. Microsoft Surface RT) and some phones 
+            // (e.g. Samsungs ATIV S) the method fails if the cubemap contains mipmaps.
+            // Only the first cubemap face returns valid data - the other faces return
+            // garbage. (This problem also appears, for example, when GetData<T>() is
+            // used in a WP7 XNA game on Samsung ATIV S, so it seems to be a general 
+            // limitations of these devices and not caused by the MonoGame implemenation.)
+            // 
+            // --> Avoid mipmaps if GetData<T>() is used.
+
+            // Create a temp staging resource for copying the data.
+            var desc = new Texture2DDescription();
+            desc.Width = size;
+            desc.Height = size;
+            desc.MipLevels = 1;
+            desc.ArraySize = 1;
+            desc.Format = SharpDXHelper.ToFormat(format);
+            desc.BindFlags = BindFlags.None;
+            desc.CpuAccessFlags = CpuAccessFlags.Read;
+            desc.SampleDescription.Count = 1;
+            desc.SampleDescription.Quality = 0;
+            desc.Usage = ResourceUsage.Staging;
+            desc.OptionFlags = ResourceOptionFlags.None;
+
+            var d3dContext = GraphicsDevice._d3dContext;
+            using (var stagingTexture = new SharpDX.Direct3D11.Texture2D(GraphicsDevice._d3dDevice, desc))
+            {
+                lock (d3dContext)
+                {
+                    // Copy the data from the GPU to the staging texture.
+                    int subresourceIndex = (int)cubeMapFace * levelCount;
+                    d3dContext.CopySubresourceRegion(_texture, subresourceIndex, null, stagingTexture, 0);
+
+                    // Copy the data to the array.
+                    DataStream stream;
+                    d3dContext.MapSubresource(stagingTexture, 0, MapMode.Read, MapFlags.None, out stream);
+                    stream.ReadRange(data, 0, data.Length);
+                    stream.Dispose();
+                }
+            }
+#elif MONOMAC
             TextureTarget target = GetGLCubeFace(cubeMapFace);
             GL.BindTexture(target, this.glTexture);
             // 4 bytes per pixel
