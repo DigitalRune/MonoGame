@@ -1771,7 +1771,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				for (var i = 0; i < previousRenderTargetBindings.Length; ++i)
 				{
 					var renderTarget = previousRenderTargetBindings[i].RenderTarget;
-					if (renderTarget.LevelCount > 1)
+					if (renderTarget != null && renderTarget.LevelCount > 1)
 					{
 						throw new NotImplementedException();
 						/*
