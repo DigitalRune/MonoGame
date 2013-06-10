@@ -26,21 +26,14 @@ SOFTWARE.
 #endregion License
 
 using System;
-
-#if WINRT
 using System.Runtime.Serialization;
-#endif
 
 namespace Microsoft.Xna.Framework
 {
     /// <summary>
     /// Describe a 32-bit packed color.
     /// </summary>
-    #if WINRT
     [DataContract]
-    #else
-    [Serializable]
-    #endif 
     public struct Color : IEquatable<Color>
     {
 	// ARGB
@@ -180,9 +173,7 @@ namespace Microsoft.Xna.Framework
 	/// <summary>
         /// Gets or sets the blue component of <see cref="Color"/>.
         /// </summary>
-#if WINRT
         [DataMember]
-#endif
         public byte B
         {
             get
@@ -198,9 +189,7 @@ namespace Microsoft.Xna.Framework
 	/// <summary>
         /// Gets or sets the green component of <see cref="Color"/>.
         /// </summary>
-#if WINRT
         [DataMember]
-#endif
         public byte G
         {
             get
@@ -216,9 +205,7 @@ namespace Microsoft.Xna.Framework
 	/// <summary>
         /// Gets or sets the red component of <see cref="Color"/>.
         /// </summary>
-#if WINRT
         [DataMember]
-#endif
         public byte R
         {
             get
@@ -234,9 +221,7 @@ namespace Microsoft.Xna.Framework
 	/// <summary>
         /// Gets or sets the alpha component of <see cref="Color"/>.
         /// </summary>
-#if WINRT
         [DataMember]
-#endif
         public byte A
         {
             get
@@ -1861,13 +1846,11 @@ namespace Microsoft.Xna.Framework
         /// <param name="amount">Interpolation factor.</param>
         /// <returns>Interpolated <see cref="Color"/>.</returns>
         public static Color Lerp(Color value1, Color value2, Single amount)
-        {
-            byte Red   = (byte)MathHelper.Clamp(MathHelper.Lerp(value1.R, value2.R, amount), Byte.MinValue, Byte.MaxValue);   
-			byte Green = (byte)MathHelper.Clamp(MathHelper.Lerp(value1.G, value2.G, amount), Byte.MinValue, Byte.MaxValue);
-			byte Blue  = (byte)MathHelper.Clamp(MathHelper.Lerp(value1.B, value2.B, amount), Byte.MinValue, Byte.MaxValue);
-			byte Alpha = (byte)MathHelper.Clamp(MathHelper.Lerp(value1.A, value2.A, amount), Byte.MinValue, Byte.MaxValue);
-			
-            return new Color( Red, Green, Blue, Alpha );
+        {		
+            return new Color(   (int)MathHelper.Lerp(value1.R, value2.R, amount), 
+                                (int)MathHelper.Lerp(value1.G, value2.G, amount), 
+                                (int)MathHelper.Lerp(value1.B, value2.B, amount), 
+                                (int)MathHelper.Lerp(value1.A, value2.A, amount) );
         }
 		
 	/// <summary>
@@ -1876,13 +1859,9 @@ namespace Microsoft.Xna.Framework
         /// <param name="value">Source <see cref="Color"/>.</param>
         /// <param name="scale">Multiplicator.</param>
         /// <returns>Multiplication result.</returns>
-	public static Color Multiply( Color value, float scale)
+	public static Color Multiply(Color value, float scale)
 	{
-	    byte Red = (byte)(MathHelper.Clamp(value.R * scale, Byte.MinValue, Byte.MaxValue));
-	    byte Green = (byte)(MathHelper.Clamp(value.G * scale, Byte.MinValue, Byte.MaxValue));
-	    byte Blue = (byte)(MathHelper.Clamp(value.B * scale, Byte.MinValue, Byte.MaxValue));
-	    byte Alpha = (byte)(MathHelper.Clamp(value.A * scale, Byte.MinValue, Byte.MaxValue)); 
-	    return new Color( Red, Green, Blue, Alpha );
+	    return new Color((int)(value.R * scale), (int)(value.G * scale), (int)(value.B * scale), (int)(value.A * scale));
 	}
 	
 	/// <summary>
@@ -1893,7 +1872,7 @@ namespace Microsoft.Xna.Framework
         /// <returns>Multiplication result.</returns>
 	public static Color operator *(Color value, float scale)
         {
-            return Multiply(value, scale);
+            return new Color((int)(value.R * scale), (int)(value.G * scale), (int)(value.B * scale), (int)(value.A * scale));
         }		
 
 	/// <summary>
@@ -1917,6 +1896,7 @@ namespace Microsoft.Xna.Framework
 	/// <summary>
         /// Gets or sets packed value of this <see cref="Color"/>.
         /// </summary>
+        [CLSCompliant(false)]
         public UInt32 PackedValue
         {
             get { return _packedValue; }

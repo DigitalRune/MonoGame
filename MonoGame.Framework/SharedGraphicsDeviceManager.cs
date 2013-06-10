@@ -64,6 +64,7 @@ namespace Microsoft.Xna.Framework
         public bool SynchronizeWithVerticalRetrace { get; set; }
 
 #if WINRT && !WINDOWS_PHONE
+        [CLSCompliant(false)]
         public SwapChainBackgroundPanel SwapChainPanel { get; set; }
 #endif 
 
@@ -81,7 +82,7 @@ namespace Microsoft.Xna.Framework
         {
             var createDevice = GraphicsDevice == null;
 
-            var presentationParameters = new PresentationParameters();
+            var presentationParameters = createDevice ? new PresentationParameters() : GraphicsDevice.PresentationParameters;
             presentationParameters.BackBufferWidth = PreferredBackBufferWidth;
             presentationParameters.BackBufferHeight = PreferredBackBufferHeight;
             presentationParameters.BackBufferFormat = PreferredBackBufferFormat;
