@@ -325,18 +325,24 @@ namespace Microsoft.Xna.Framework.Graphics
                         h = Math.Max(height >> level, 1);
 
                         // For DXT textures the width and height of each level is a multiple of 4.
-                        // The last two mip levels require the width and height to be passed as 2x2 and 1x1, but
-                        // there needs to be enough data passed to occupy a 4x4 block.
+                        // OpenGL only: The last two mip levels require the width and height to be 
+                        // passed as 2x2 and 1x1, but there needs to be enough data passed to occupy 
+                        // a 4x4 block. 
                         // Ref: http://www.mentby.com/Group/mac-opengl/issue-with-dxt-mipmapped-textures.html 
                         if (_format == SurfaceFormat.Dxt1 ||
                             _format == SurfaceFormat.Dxt1a ||
                             _format == SurfaceFormat.Dxt3 ||
                             _format == SurfaceFormat.Dxt5)
                         {
+#if DIRECTX
+                            w = (w + 3) & ~3;
+                            h = (h + 3) & ~3;
+#else
                             if (w > 4)
                                 w = (w + 3) & ~3;
                             if (h > 4)
                                 h = (h + 3) & ~3;
+#endif
                         }
                     }
 
@@ -664,7 +670,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     if (rect.HasValue)
                     {
                         // TODO: Need to deal with subregion copies!
-                        throw new NotImplementedException();
+                        d3dContext.CopySubresourceRegion(_texture, level, new SharpDX.Direct3D11.ResourceRegion(rect.Value.Left,rect.Value.Top,0, rect.Value.Right, rect.Value.Bottom, 0), stagingTex, 0, 0, 0, 0);
                     }
                     else
                         d3dContext.CopySubresourceRegion(_texture, level, null, stagingTex, 0, 0, 0, 0);
@@ -677,18 +683,30 @@ namespace Microsoft.Xna.Framework.Graphics
                 }
 
 #else
+			var temp = new T[this.width*this.height];
 
 			GL.BindTexture(TextureTarget.Texture2D, this.glTexture);
-
-			if (rect.HasValue) {
-				throw new NotImplementedException();
-			}
 
 			if (glFormat == (GLPixelFormat)All.CompressedTextureFormats) {
 				throw new NotImplementedException();
 			} else {
-				GL.GetTexImage(TextureTarget.Texture2D, level, this.glFormat, this.glType, data);
+				GL.GetTexImage(TextureTarget.Texture2D, level, this.glFormat, this.glType, temp);
 			}
+
+			if (rect.HasValue) {
+				int z = 0, w = 0;
+
+				for(int y= rect.Value.Y; y < rect.Value.Y+ rect.Value.Height; y++) {
+					for(int x=rect.Value.X; x < rect.Value.X + rect.Value.Width; x++) {
+						data[z*rect.Value.Width+w] = temp[(y*width)+x];
+						w++;
+					}
+					z++;
+				}
+			} else {
+				data = temp;
+			}
+
 
 #endif
         }
@@ -790,9 +808,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 return texture;
             }
-
-#elif WINDOWS_STOREAPP
-
+#elif WINDOWS_PHONE
+            throw new NotImplementedException();
+#elif WINDOWS_STOREAPP || DIRECTX
             // For reference this implementation was ultimately found through this post:
             // http://stackoverflow.com/questions/9602102/loading-textures-with-sharpdx-in-metro 
             Texture2D toReturn = null;
@@ -808,9 +826,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				toReturn._texture = sharpDxTexture;
 			}
             return toReturn;
-#elif DIRECTX
-            throw new NotImplementedException(); 
-#elif PSM
+#elif PSM
             return new Texture2D(graphicsDevice, stream);
 #else
             using (Bitmap image = (Bitmap)Bitmap.FromStream(stream))
@@ -990,8 +1006,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             }).Wait();
         }
-		
-        [CLSCompliant(false)]
+#endif
+#if DIRECTX && !WINDOWS_PHONE        [CLSCompliant(false)]
         public static SharpDX.Direct3D11.Texture2D CreateTex2DFromBitmap(SharpDX.WIC.BitmapSource bsource, GraphicsDevice device)
         {
 
@@ -1175,4 +1191,3 @@ namespace Microsoft.Xna.Framework.Graphics
 #endif
 	}
 }
-

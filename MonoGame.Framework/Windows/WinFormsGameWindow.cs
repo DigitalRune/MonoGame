@@ -48,9 +48,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Windows;
+using SharpDX.Multimedia;
+using SharpDX.RawInput;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 using Point = System.Drawing.Point;
-using FormsKey = System.Windows.Forms.Keys;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using XnaKey = Microsoft.Xna.Framework.Input.Keys;
 using XnaPoint = Microsoft.Xna.Framework.Point;
@@ -59,9 +60,9 @@ namespace MonoGame.Framework
 {
     public class WinFormsGameWindow : GameWindow
     {
-        internal Form _form;
+        internal WinFormsGameForm _form;
 
-        private WinFormsGamePlatform _platform;
+        private readonly WinFormsGamePlatform _platform;
 
         private bool _isResizable;
 
@@ -165,15 +166,17 @@ namespace MonoGame.Framework
             _form.FormBorderStyle = FormBorderStyle.FixedSingle;
             _form.StartPosition = FormStartPosition.CenterScreen;           
 
-            // Capture mouse and keyboard events.
+            // Capture mouse events.
             _form.MouseDown += OnMouseState;
             _form.MouseMove += OnMouseState;
             _form.MouseUp += OnMouseState;
             _form.MouseWheel += OnMouseState;
-            _form.KeyDown += OnKeyDown;
-            _form.KeyUp += OnKeyUp;
             _form.MouseEnter += OnMouseEnter;
             _form.MouseLeave += OnMouseLeave;            
+
+            // Use RawInput to capture key events.
+            Device.RegisterDevice(UsagePage.Generic, UsageId.GenericKeyboard, DeviceFlags.None);
+            Device.KeyboardInput += OnRawKeyEvent;
 
             _form.Activated += OnActivated;
             _form.Deactivate += OnDeactivate;
@@ -217,65 +220,7 @@ namespace MonoGame.Framework
 
             if (touchState.HasValue)
                 TouchPanel.AddEvent(0, touchState.Value, new Vector2(Mouse.State.X, Mouse.State.Y), true);
-        }
-
-        private void OnKeyDown(object sender, KeyEventArgs keyEventArgs)
-        {
-            var key = (XnaKey)keyEventArgs.KeyCode;
-
-            if (KeyState != null)
-            {
-                // For Shift and Control we must manually check for left vs. right.
-                if (keyEventArgs.KeyCode == FormsKey.ShiftKey)
-                {
-                    if (GetAsyncKeyState(FormsKey.LShiftKey) != 0 && !KeyState.Contains(XnaKey.LeftShift))
-                        KeyState.Add(XnaKey.LeftShift);
-                    if (GetAsyncKeyState(FormsKey.RShiftKey) != 0 && !KeyState.Contains(XnaKey.RightShift))
-                        KeyState.Add(XnaKey.RightShift);
-                }
-                else if (keyEventArgs.KeyCode == FormsKey.ControlKey)
-                {
-                    if (GetAsyncKeyState(FormsKey.LControlKey) != 0 && !KeyState.Contains(XnaKey.LeftControl))
-                        KeyState.Add(XnaKey.LeftControl);
-                    if (GetAsyncKeyState(FormsKey.RControlKey) != 0 && !KeyState.Contains(XnaKey.RightControl))
-                        KeyState.Add(XnaKey.RightControl);
-                }
-                else
-                {
-                    if (!KeyState.Contains(key))
-                        KeyState.Add(key);
-                }
-            }
-        }
-
-        private void OnKeyUp(object sender, KeyEventArgs keyEventArgs)
-        {
-            var key = (XnaKey)keyEventArgs.KeyCode;
-
-            if (KeyState != null)
-            {
-
-                // For Shift and Control we must manually check for left vs. right.
-                if (keyEventArgs.KeyCode == FormsKey.ShiftKey)
-                {
-                    if (GetAsyncKeyState(FormsKey.LShiftKey) == 0)
-                        KeyState.Remove(XnaKey.LeftShift);
-                    if (GetAsyncKeyState(FormsKey.RShiftKey) == 0)
-                        KeyState.Remove(XnaKey.RightShift);
-                }
-                else if (keyEventArgs.KeyCode == FormsKey.ControlKey)
-                {
-                    if (GetAsyncKeyState(FormsKey.LControlKey) == 0)
-                        KeyState.Remove(XnaKey.LeftControl);
-                    if (GetAsyncKeyState(FormsKey.RControlKey) == 0)
-                        KeyState.Remove(XnaKey.RightControl);
-                }
-                else
-                {
-                    KeyState.Remove(key);
-                }
-            }
-        }
+        }        
 
         private void OnMouseEnter(object sender, EventArgs e)
         {
@@ -295,6 +240,39 @@ namespace MonoGame.Framework
                 _isMouseHidden = false;
                 Cursor.Show();
             }
+        }
+
+        private void OnRawKeyEvent(object sender, KeyboardInputEventArgs args)
+        {
+            XnaKey xnaKey;
+
+            switch (args.MakeCode)
+            {
+                case 0x2a: // LShift
+                    xnaKey = XnaKey.LeftShift;
+                    break;
+
+                case 0x36: // RShift
+                    xnaKey = XnaKey.RightShift;
+                    break;
+
+                case 0x1d: // Ctrl
+                    xnaKey = (args.ScanCodeFlags & ScanCodeFlags.E0) != 0 ? XnaKey.RightControl : XnaKey.LeftControl;
+                    break;
+
+                case 0x38: // Alt
+                    xnaKey = (args.ScanCodeFlags & ScanCodeFlags.E0) != 0 ? XnaKey.RightAlt : XnaKey.LeftAlt;
+                    break;
+
+                default:
+                    xnaKey = (XnaKey)args.Key;
+                    break;
+            }
+
+            if (args.State == SharpDX.RawInput.KeyState.KeyDown && !KeyState.Contains(xnaKey))
+                KeyState.Add(xnaKey);
+            else if (args.State == SharpDX.RawInput.KeyState.KeyUp)
+                KeyState.Remove(xnaKey);
         }
 
         private void OnKeyPress(object sender, KeyPressEventArgs e)
@@ -373,9 +351,6 @@ namespace MonoGame.Framework
         [System.Security.SuppressUnmanagedCodeSecurity] // We won't use this maliciously
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         private static extern bool PeekMessage(out NativeMessage msg, IntPtr hWnd, uint messageFilterMin, uint messageFilterMax, uint flags);
-
-        [DllImport("user32.dll")]
-        private static extern short GetAsyncKeyState(FormsKey vKey);
 
         #region Public Methods
 
