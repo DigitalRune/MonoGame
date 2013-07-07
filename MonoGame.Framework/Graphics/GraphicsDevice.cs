@@ -1097,6 +1097,10 @@ namespace Microsoft.Xna.Framework.Graphics
             }
         }
 
+
+        public Color BlendFactor { get; set; }  // TODO: BlendFactor not yet implemented.
+
+
         public BlendState BlendState 
         {
 			get { return _blendState; }
