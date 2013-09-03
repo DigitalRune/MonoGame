@@ -677,8 +677,24 @@ namespace Microsoft.Xna.Framework.Graphics
 
                     // Copy the data to the array.
                     SharpDX.DataStream stream;
-                    d3dContext.MapSubresource(stagingTex, 0, SharpDX.Direct3D11.MapMode.Read, SharpDX.Direct3D11.MapFlags.None, out stream);
-                    stream.ReadRange(data, startIndex, elementCount);
+                    var box = d3dContext.MapSubresource(stagingTex, 0, SharpDX.Direct3D11.MapMode.Read, SharpDX.Direct3D11.MapFlags.None, out stream);
+                    if (box.RowPitch == GetPitch(width))
+                    {
+                        stream.ReadRange(data, startIndex, elementCount);
+                    }
+                    else
+                    {
+                        IntPtr ptr = box.DataPointer;
+                        for (int i = 0; i < height && elementCount > 0; i++)
+                        {
+                            int count = Math.Min(width, elementCount);
+                            SharpDX.Utilities.Read(ptr, data, startIndex, count);
+                            ptr += box.RowPitch;
+                            startIndex += count;
+                            elementCount -= count;
+                        }
+                    }
+                  
                     stream.Dispose();
                 }
 

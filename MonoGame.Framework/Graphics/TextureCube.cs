@@ -162,7 +162,7 @@ namespace Microsoft.Xna.Framework.Graphics
             // Only the first cubemap face returns valid data - the other faces return
             // garbage. (This problem also appears, for example, when GetData<T>() is
             // used in a WP7 XNA game on Samsung ATIV S, so it seems to be a general 
-            // limitations of these devices and not caused by the MonoGame implemenation.)
+            // limitations of these devices and not caused by the MonoGame implementation.)
             // 
             // --> Avoid mipmaps if GetData<T>() is used.
 
@@ -191,8 +191,22 @@ namespace Microsoft.Xna.Framework.Graphics
 
                     // Copy the data to the array.
                     DataStream stream;
-                    d3dContext.MapSubresource(stagingTexture, 0, MapMode.Read, MapFlags.None, out stream);
-                    stream.ReadRange(data, 0, data.Length);
+                    var box = d3dContext.MapSubresource(stagingTexture, 0, MapMode.Read, MapFlags.None, out stream);
+                    if (box.RowPitch == GetPitch(size))
+                    {
+                        stream.ReadRange(data, 0, data.Length);
+                    }
+                    else
+                    {
+                        int offset = 0;
+                        IntPtr ptr = box.DataPointer;
+                        for (int i = 0; i < size; i++)
+                        {
+                            Utilities.Read(ptr, data, offset, size);
+                            ptr += box.RowPitch;
+                            offset += size;
+                        }
+                    }
                     stream.Dispose();
                 }
             }
