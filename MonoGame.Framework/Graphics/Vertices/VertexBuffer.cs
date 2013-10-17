@@ -143,7 +143,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 throw new InvalidOperationException ("The array specified in the data parameter is not the correct size for the amount of data requested.");
             if (BufferUsage == BufferUsage.WriteOnly)
                 throw new NotSupportedException ("This VertexBuffer was created with a usage type of BufferUsage.WriteOnly. Calling GetData on a resource that was created with BufferUsage.WriteOnly is not supported.");
-			if ((elementCount * vertexStride) > (VertexCount * VertexDeclaration.VertexStride))
+            if ((offsetInBytes + elementCount * vertexStride) > (VertexCount * VertexDeclaration.VertexStride))
                 throw new ArgumentOutOfRangeException ("The vertex stride is larger than the vertex buffer.");
 
 #if DIRECTX
@@ -179,12 +179,12 @@ namespace Microsoft.Xna.Framework.Graphics
 
                     if (vertexStride == TsizeInBytes)
                     {
-                        SharpDX.Utilities.CopyMemory(dataPtr, box.DataPointer, vertexStride*data.Length);
+                        SharpDX.Utilities.CopyMemory(dataPtr, box.DataPointer + offsetInBytes, vertexStride * elementCount);
                     }
                     else
                     {
-                        for (int i = 0; i < data.Length; i++)
-                            SharpDX.Utilities.CopyMemory(dataPtr + i * TsizeInBytes, box.DataPointer + i * vertexStride, TsizeInBytes);
+                        for (int i = 0; i < elementCount; i++)
+                            SharpDX.Utilities.CopyMemory(dataPtr + i * TsizeInBytes, box.DataPointer + offsetInBytes + i * vertexStride, TsizeInBytes);
                     }
 
                     // Make sure that we unmap the resource in case of an exception

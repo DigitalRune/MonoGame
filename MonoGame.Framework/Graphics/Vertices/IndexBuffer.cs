@@ -170,6 +170,11 @@ namespace Microsoft.Xna.Framework.Graphics
                 throw new NotSupportedException("This IndexBuffer was created with a usage type of BufferUsage.WriteOnly. Calling GetData on a resource that was created with BufferUsage.WriteOnly is not supported.");
 
 #if DIRECTX
+            int TsizeInBytes = SharpDX.Utilities.SizeOf<T>();
+            int bufferSizeInBytes = IndexCount * (IndexElementSize == IndexElementSize.SixteenBits ? 2 : 4);
+            if (offsetInBytes + elementCount * TsizeInBytes > bufferSizeInBytes)
+                throw new InvalidOperationException("The array is not the correct size for the amount of data requested.");
+
             if (_isDynamic)
             {
                 throw new NotImplementedException();
@@ -189,7 +194,6 @@ namespace Microsoft.Xna.Framework.Graphics
                 lock (GraphicsDevice._d3dContext)
                     deviceContext.CopyResource(_buffer, stagingBuffer);
 
-                int TsizeInBytes = SharpDX.Utilities.SizeOf<T>();
                 var dataHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
                 var startBytes = startIndex * TsizeInBytes;
                 var dataPtr = (IntPtr)(dataHandle.AddrOfPinnedObject().ToInt64() + startBytes);
@@ -200,7 +204,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     // Map the staging resource to a CPU accessible memory
                     var box = deviceContext.MapSubresource(stagingBuffer, 0, SharpDX.Direct3D11.MapMode.Read, SharpDX.Direct3D11.MapFlags.None);
 
-                    SharpDX.Utilities.CopyMemory(dataPtr, box.DataPointer, TsizeInBytes * data.Length);
+                    SharpDX.Utilities.CopyMemory(dataPtr, box.DataPointer + offsetInBytes, TsizeInBytes * elementCount);
                     
                     // Make sure that we unmap the resource in case of an exception
                     deviceContext.UnmapSubresource(stagingBuffer, 0);
