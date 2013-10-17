@@ -269,10 +269,15 @@ namespace MonoGame.Framework
                     break;
             }
 
-            if (args.State == SharpDX.RawInput.KeyState.KeyDown && !KeyState.Contains(xnaKey))
-                KeyState.Add(xnaKey);
-            else if (args.State == SharpDX.RawInput.KeyState.KeyUp)
+            if ((args.State == SharpDX.RawInput.KeyState.KeyDown || args.State == SharpDX.RawInput.KeyState.SystemKeyDown))
+            {
+                if (!KeyState.Contains(xnaKey))
+                    KeyState.Add(xnaKey);
+            }
+            else if (args.State == SharpDX.RawInput.KeyState.KeyUp || args.State == SharpDX.RawInput.KeyState.SystemKeyUp)
+            {
                 KeyState.Remove(xnaKey);
+            }
         }
 
         private void OnKeyPress(object sender, KeyPressEventArgs e)
