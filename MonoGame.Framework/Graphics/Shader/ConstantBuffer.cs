@@ -115,6 +115,11 @@ namespace Microsoft.Xna.Framework.Graphics
             // Force the uniform location to be looked up again
             _program = -1;
 #endif
+
+#if DIRECTX
+            SharpDX.Utilities.Dispose(ref _cbuffer);
+            _dirty = true;
+#endif
         }
 
         private void SetData(int offset, int rows, int columns, object data)
@@ -156,14 +161,14 @@ namespace Microsoft.Xna.Framework.Graphics
             const int elementSize = 4;
             const int rowSize = elementSize * 4;
 
-            int rowsUsed = 0;
+            var rowsUsed = 0;
 
-            if (param.Elements.Count > 0)
+            var elements = param.Elements;
+            if (elements.Count > 0)
             {
-                foreach (var subparam in param.Elements)
+                for (var i=0; i < elements.Count; i++)
                 {
-                    int rowsUsedSubParam = SetParameter(offset, subparam);
-
+                    var rowsUsedSubParam = SetParameter(offset, elements[i]);
                     offset += rowsUsedSubParam * rowSize;
                     rowsUsed += rowsUsedSubParam;
                 }
@@ -189,7 +194,7 @@ namespace Microsoft.Xna.Framework.Graphics
                         }
                         break;
                     default:
-                        throw new NotImplementedException("Not supported!");
+                        throw new NotSupportedException("Not supported!");
                 }
             }
 
@@ -233,6 +238,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
         internal void Apply(GraphicsDevice device, ShaderStage stage, int slot)
         {
+            if (_cbuffer == null)
+                Initialize();
+
             // NOTE: We make the assumption here that the caller has
             // locked the d3dContext for us to use.
             var d3dContext = GraphicsDevice._d3dContext;

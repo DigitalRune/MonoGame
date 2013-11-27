@@ -396,8 +396,13 @@ namespace Microsoft.Xna.Framework.Graphics
 			_viewport = new Viewport (0, 0,
 			                         DisplayMode.Width, DisplayMode.Height);
 			_viewport.MaxDepth = 1.0f;
-
+   
+#if PSM
+            MaxTextureSlots = 8;
+#else
             MaxTextureSlots = 16;
+#endif
+            
 #if OPENGL
 #if GLES
             GL.GetInteger(All.MaxTextureImageUnits, ref MaxTextureSlots);
@@ -469,7 +474,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 #endif // OPENGL
 
-        private void Initialize()
+        internal void Initialize()
         {
             GraphicsCapabilities.Initialize(this);
 
@@ -514,6 +519,8 @@ namespace Microsoft.Xna.Framework.Graphics
             Textures.Clear();
             SamplerStates.Clear();
 
+            ClearLayouts();
+
             // Clear constant buffers
             _vertexConstantBuffers.Clear();
             _pixelConstantBuffers.Clear();
@@ -547,23 +554,16 @@ namespace Microsoft.Xna.Framework.Graphics
 
 #if WINDOWS_PHONE
 
-        internal void UpdateDevice(Device device, DeviceContext context)
+        private void UpdateDevice(Device device, DeviceContext context)
         {
             // TODO: Lost device logic!
-
-            if (_d3dDevice != null)
-            {
-                _d3dDevice.Dispose();
-                _d3dDevice = null;
-            }
+            SharpDX.Utilities.Dispose(ref _d3dDevice);
             _d3dDevice = device;
 
-            if (_d3dContext != null)
-            {
-                _d3dContext.Dispose();
-                _d3dContext = null;
-            }
+            SharpDX.Utilities.Dispose(ref _d3dContext);
             _d3dContext = context;
+
+            SharpDX.Utilities.Dispose(ref _depthStencilView);
         }
 
         internal void UpdateTarget(RenderTargetView renderTargetView)
@@ -578,14 +578,13 @@ namespace Microsoft.Xna.Framework.Graphics
                 var currentWidth = PresentationParameters.BackBufferWidth;
                 var currentHeight = PresentationParameters.BackBufferHeight;
 
-                if (currentWidth != texture2D.Description.Width &&
-                    currentHeight != texture2D.Description.Height)
+                if (_depthStencilView == null || (currentWidth != texture2D.Description.Width &&
+                    currentHeight != texture2D.Description.Height))
                 {
                     PresentationParameters.BackBufferWidth = texture2D.Description.Width;
                     PresentationParameters.BackBufferHeight = texture2D.Description.Height;
 
-                    Utilities.Dispose(ref _depthStencilView);
-
+					SharpDX.Utilities.Dispose(ref _depthStencilView);
                     using (var depthTexture = new SharpDX.Direct3D11.Texture2D(
                         _d3dDevice,
                         new Texture2DDescription()
@@ -669,9 +668,24 @@ namespace Microsoft.Xna.Framework.Graphics
             featureLevels.Add(FeatureLevel.Level_9_2);
             featureLevels.Add(FeatureLevel.Level_9_1);
 
-            // Create the Direct3D device.
-            using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags, featureLevels.ToArray()))
-                _d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
+#if DEBUG
+            try 
+            {
+#endif
+                // Create the Direct3D device.
+                using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags, featureLevels.ToArray()))
+                    _d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
+#if DEBUG
+            }
+            catch(SharpDXException)
+            {
+                // Try again without the debug flag.  This allows debug builds to run
+                // on machines that don't have the debug runtime installed.
+                creationFlags &= ~SharpDX.Direct3D11.DeviceCreationFlags.Debug;
+                using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags, featureLevels.ToArray()))
+                    _d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
+            }
+#endif
 
             // Set the correct profile based on the feature level.
             _featureLevel = _d3dDevice.FeatureLevel;
@@ -919,9 +933,24 @@ namespace Microsoft.Xna.Framework.Graphics
             featureLevels.Add(FeatureLevel.Level_9_2);
             featureLevels.Add(FeatureLevel.Level_9_1);
 
-            // Create the Direct3D device.
-            using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags, featureLevels.ToArray()))
-                _d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device>();
+#if DEBUG
+            try 
+            {
+#endif
+                // Create the Direct3D device.
+                using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags, featureLevels.ToArray()))
+                    _d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device>();
+#if DEBUG
+            }
+            catch(SharpDXException)
+            {
+                // Try again without the debug flag.  This allows debug builds to run
+                // on machines that don't have the debug runtime installed.
+                creationFlags &= ~SharpDX.Direct3D11.DeviceCreationFlags.Debug;
+                using (var defaultDevice = new SharpDX.Direct3D11.Device(DriverType.Hardware, creationFlags, featureLevels.ToArray()))
+                    _d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device>();
+            }
+#endif
 
             // Set the correct profile based on the feature level.
             _featureLevel = _d3dDevice.FeatureLevel;
@@ -980,6 +1009,8 @@ namespace Microsoft.Xna.Framework.Graphics
                             SharpDX.DXGI.Format.B8G8R8A8_UNorm :
                             SharpDXHelper.ToFormat(PresentationParameters.BackBufferFormat);
 
+            int vSyncFrameLatency = PresentationParameters.PresentationInterval.GetFrameLatency();
+
             // If the swap chain already exists... update it.
             if (_swapChain != null)
             {
@@ -988,6 +1019,17 @@ namespace Microsoft.Xna.Framework.Graphics
                                             PresentationParameters.BackBufferHeight,
                                             format,
                                             SwapChainFlags.None);
+
+                // Update Vsync setting.
+                using (var dxgiDevice = _d3dDevice.QueryInterface<SharpDX.DXGI.Device1>())
+                {
+                    // If VSync is disabled, Ensure that DXGI does not queue more than one frame at a time. This 
+                    // both reduces latency and ensures that the application will only render 
+                    // after each VSync, minimizing power consumption.
+                    // Setting latency to 0 (PresentInterval.Immediate) will result in the hardware default.
+                    // (normally 3) 
+                    dxgiDevice.MaximumFrameLatency = vSyncFrameLatency;
+                }
             }
 
             // Otherwise, create a new swap chain.
@@ -1022,10 +1064,12 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
                     _swapChain = new SwapChain(dxgiFactory, dxgiDevice, desc);
 
-                    // Ensure that DXGI does not queue more than one frame at a time. This 
+                    // If VSync is disabled, Ensure that DXGI does not queue more than one frame at a time. This 
                     // both reduces latency and ensures that the application will only render 
                     // after each VSync, minimizing power consumption.
-                    dxgiDevice.MaximumFrameLatency = 1;
+                    // Setting latency to 0 (PresentInterval.Immediate) will result in the hardware default.
+                    // (normally 3) 
+                    dxgiDevice.MaximumFrameLatency = vSyncFrameLatency;
                 }
             }
 
@@ -1254,6 +1298,16 @@ namespace Microsoft.Xna.Framework.Graphics
             GC.SuppressFinalize(this);
         }
 
+
+        private void ClearLayouts()
+        {
+#if DIRECTX
+            foreach (var layout in _inputLayouts)
+                layout.Value.Dispose();
+            _inputLayouts.Clear();
+#endif
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_isDisposed)
@@ -1265,27 +1319,11 @@ namespace Microsoft.Xna.Framework.Graphics
 
 #if DIRECTX
 
-                    if (_renderTargetView != null)
-                    {
-                        _renderTargetView.Dispose();
-                        _renderTargetView = null;
-                    }
-                    if (_depthStencilView != null)
-                    {
-                        _depthStencilView.Dispose();
-                        _depthStencilView = null;
-                    }
-
-                    if (_d3dDevice != null)
-                    {
-                        _d3dDevice.Dispose();
-                        _d3dDevice = null;
-                    }
-                    if (_d3dContext != null)
-                    {
-                        _d3dContext.Dispose();
-                        _d3dContext = null;
-                    }
+                    ClearLayouts();
+                    SharpDX.Utilities.Dispose(ref _renderTargetView);
+                    SharpDX.Utilities.Dispose(ref _depthStencilView);
+                    SharpDX.Utilities.Dispose(ref _d3dDevice);
+                    SharpDX.Utilities.Dispose(ref _d3dContext);
 
 #if WINDOWS_STOREAPP
 
@@ -1416,11 +1454,11 @@ namespace Microsoft.Xna.Framework.Graphics
 
             try
             {
-                // The first argument instructs DXGI to block until VSync, putting the application
-                // to sleep until the next VSync. This ensures we don't waste any cycles rendering
-                // frames that will never be displayed to the screen.
+                var syncInterval = PresentationParameters.PresentationInterval.GetFrameLatency();
+
+                // The first argument instructs DXGI to block n VSyncs before presenting.
                 lock (_d3dContext)
-                    _swapChain.Present(1, PresentFlags.None);
+                    _swapChain.Present(syncInterval, PresentFlags.None);
             }
             catch (SharpDX.SharpDXException)
             {
@@ -1448,6 +1486,7 @@ namespace Microsoft.Xna.Framework.Graphics
 #endif
         }
 
+        /*
         public void Present(Rectangle? sourceRectangle, Rectangle? destinationRectangle, IntPtr overrideWindowHandle)
         {
             throw new NotImplementedException();
@@ -1468,6 +1507,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             throw new NotImplementedException();
         }
+        */
 
         /// <summary>
         /// Trigger the DeviceResetting event
@@ -1546,6 +1586,10 @@ namespace Microsoft.Xna.Framework.Graphics
                 // In OpenGL we have to re-apply the special "posFixup"
                 // vertex shader uniform if the viewport changes.
                 _vertexShaderDirty = true;
+#elif PSM
+                _graphics.SetViewport(
+                    value.X, value.Y, value.Width, value.Height
+                );
 #endif
             }
         }
@@ -1636,6 +1680,8 @@ namespace Microsoft.Xna.Framework.Graphics
             // Clear the current bindings.
             Array.Clear(_currentRenderTargetBindings, 0, _currentRenderTargetBindings.Length);
 
+            int renderTargetWidth;
+            int renderTargetHeight;
             if (renderTargets == null)
             {
                 _currentRenderTargetCount = 0;
@@ -1656,10 +1702,9 @@ namespace Microsoft.Xna.Framework.Graphics
 #endif
                 clearTarget = PresentationParameters.RenderTargetUsage == RenderTargetUsage.DiscardContents;
 
-                Viewport = new Viewport(0, 0,
-					PresentationParameters.BackBufferWidth, 
-					PresentationParameters.BackBufferHeight);
-			}
+                renderTargetWidth = PresentationParameters.BackBufferWidth;
+                renderTargetHeight = PresentationParameters.BackBufferHeight;
+            }
 			else
 			{
                 // Copy the new bindings.
@@ -1670,6 +1715,11 @@ namespace Microsoft.Xna.Framework.Graphics
                 // Clear the current render targets.
                 Array.Clear(_currentRenderTargets, 0, _currentRenderTargets.Length);
                 _currentDepthStencilView = null;
+
+                // Make sure none of the new targets are bound
+                // to the device as a texture resource.
+                lock (_d3dContext)
+                    Textures.ClearTargets(this, _currentRenderTargetBindings);
 
                 for (var i = 0; i < _currentRenderTargetCount; i++)
                 {
@@ -1741,12 +1791,18 @@ namespace Microsoft.Xna.Framework.Graphics
                 _graphics.SetFrameBuffer(renderTarget._frameBuffer);
 #endif
 
-                // Set the viewport to the size of the first render target.
-                Viewport = new Viewport(0, 0, renderTarget.Width, renderTarget.Height);
-
                 // We clear the render target if asked.
                 clearTarget = renderTarget.RenderTargetUsage == RenderTargetUsage.DiscardContents;
+
+                renderTargetWidth = renderTarget.Width;
+                renderTargetHeight = renderTarget.Height;
             }
+
+            // Set the viewport to the size of the first render target.
+            Viewport = new Viewport(0, 0, renderTargetWidth, renderTargetHeight);
+
+            // Set the scissor rectangle to the size of the first render target.
+            ScissorRectangle = new Rectangle(0, 0, renderTargetWidth, renderTargetHeight);
 
             // In XNA 4, because of hardware limitations on Xbox, when
             // a render target doesn't have PreserveContents as its usage
@@ -1816,7 +1872,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     return BeginMode.TriangleStrip;
             }
 
-            throw new NotImplementedException();
+            throw new ArgumentException();
         }
 		
 #elif DIRECTX
@@ -1835,7 +1891,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     return PrimitiveTopology.TriangleStrip;
             }
 
-            throw new NotImplementedException();
+            throw new ArgumentException();
         }
 		
 #endif
@@ -2015,7 +2071,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
 #if DIRECTX
                     _d3dContext.InputAssembler.SetIndexBuffer(
-                        _indexBuffer._buffer,
+                        _indexBuffer.Buffer,
                         _indexBuffer.IndexElementSize == IndexElementSize.SixteenBits ? 
                             SharpDX.DXGI.Format.R16_UInt : SharpDX.DXGI.Format.R32_UInt,
                         0);
@@ -2032,7 +2088,7 @@ namespace Microsoft.Xna.Framework.Graphics
             {
 #if DIRECTX
                 if (_vertexBuffer != null)
-                    _d3dContext.InputAssembler.SetVertexBuffers(0, _vertexBuffer._binding);
+                    _d3dContext.InputAssembler.SetVertexBuffers(0, _vertexBuffer.Binding);
                 else
                     _d3dContext.InputAssembler.SetVertexBuffers(0);
 #elif OPENGL
@@ -2052,7 +2108,7 @@ namespace Microsoft.Xna.Framework.Graphics
 #if DIRECTX 
 
             if (_vertexShaderDirty)
-                _d3dContext.VertexShader.Set(_vertexShader._vertexShader);                
+                _d3dContext.VertexShader.Set(_vertexShader.VertexShader);
 
             if (_vertexShaderDirty || _vertexBufferDirty)
             {
@@ -2062,7 +2118,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (_pixelShaderDirty)
             {
-                _d3dContext.PixelShader.Set(_pixelShader._pixelShader);
+                _d3dContext.PixelShader.Set(_pixelShader.PixelShader);
                 _pixelShaderDirty = false;
             }
 
@@ -2376,6 +2432,8 @@ namespace Microsoft.Xna.Framework.Graphics
             // Release the handles.
             ibHandle.Free();
             vbHandle.Free();
+#else
+            throw new NotImplementedException("Not implemented");
 #endif
         }
 
@@ -2435,6 +2493,8 @@ namespace Microsoft.Xna.Framework.Graphics
             ibHandle.Free();
             vbHandle.Free();
 
+#else
+            throw new NotImplementedException("Not implemented");
 #endif
         }
 

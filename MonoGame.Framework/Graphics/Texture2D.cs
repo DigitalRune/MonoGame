@@ -125,7 +125,14 @@ namespace Microsoft.Xna.Framework.Graphics
 		GLPixelFormat glFormat;
 		PixelType glType;
 #endif
-	
+
+#if DIRECTX
+        private bool _shared;
+
+        private bool _renderTarget;
+        private bool _mipmap;
+#endif
+
         public Rectangle Bounds
         {
             get
@@ -165,36 +172,13 @@ namespace Microsoft.Xna.Framework.Graphics
 		        return;
 
 #if DIRECTX
-            // TODO: Move this to SetData() if we want to make Immutable textures!
-            var desc = new SharpDX.Direct3D11.Texture2DDescription();
-            desc.Width = width;
-            desc.Height = height;
-            desc.MipLevels = _levelCount;
-            desc.ArraySize = 1;
-            desc.Format = SharpDXHelper.ToFormat(format);
-            desc.BindFlags = SharpDX.Direct3D11.BindFlags.ShaderResource;
-            desc.CpuAccessFlags = SharpDX.Direct3D11.CpuAccessFlags.None;
-            desc.SampleDescription.Count = 1;
-            desc.SampleDescription.Quality = 0;
-            desc.Usage = SharpDX.Direct3D11.ResourceUsage.Default;
-            desc.OptionFlags = SharpDX.Direct3D11.ResourceOptionFlags.None;
+            _shared = shared;
 
-            if (type == SurfaceType.RenderTarget)
-            {
-                desc.BindFlags |= SharpDX.Direct3D11.BindFlags.RenderTarget;
-                if (mipmap)
-                {
-                    // Note: XNA 4 does not have a method Texture.GenerateMipMaps() 
-                    // because generation of mipmaps is not supported on the Xbox 360.
-                    // TODO: New method Texture.GenerateMipMaps() required.
-                    desc.OptionFlags |= SharpDX.Direct3D11.ResourceOptionFlags.GenerateMipMaps;
-                }
-            }
+            _renderTarget = (type == SurfaceType.RenderTarget);
+            _mipmap = mipmap;
 
-            if (shared)
-                desc.OptionFlags |= SharpDX.Direct3D11.ResourceOptionFlags.Shared;
-
-            _texture = new SharpDX.Direct3D11.Texture2D(graphicsDevice._d3dDevice, desc);
+            // Create texture
+            GetTexture();
 
 #elif PSM
             PixelBufferOption option = PixelBufferOption.None;
@@ -221,12 +205,13 @@ namespace Microsoft.Xna.Framework.Graphics
                     {
                         case SurfaceFormat.RgbPvrtc2Bpp:
                         case SurfaceFormat.RgbaPvrtc2Bpp:
-                            imageSize = (Math.Max(this.width, 8) * Math.Max(this.height, 8) * 2 + 7) / 8;
+                            imageSize = (Math.Max(this.width, 16) * Math.Max(this.height, 8) * 2 + 7) / 8;
                             break;
                         case SurfaceFormat.RgbPvrtc4Bpp:
                         case SurfaceFormat.RgbaPvrtc4Bpp:
-                            imageSize = (Math.Max(this.width, 16) * Math.Max(this.height, 8) * 4 + 7) / 8;
+                            imageSize = (Math.Max(this.width, 8) * Math.Max(this.height, 8) * 4 + 7) / 8;
                             break;
+                        case SurfaceFormat.RgbEtc1:
                         case SurfaceFormat.Dxt1:
                         case SurfaceFormat.Dxt1a:
                         case SurfaceFormat.Dxt3:
@@ -234,7 +219,7 @@ namespace Microsoft.Xna.Framework.Graphics
                             imageSize = ((this.width + 3) / 4) * ((this.height + 3) / 4) * format.Size();
                             break;
                         default:
-                            throw new NotImplementedException();
+                            throw new NotSupportedException();
                     }
 
                     GL.CompressedTexImage2D(TextureTarget.Texture2D, 0, glInternalFormat,
@@ -360,7 +345,8 @@ namespace Microsoft.Xna.Framework.Graphics
                     // TODO: We need to deal with threaded contexts here!
                     var d3dContext = GraphicsDevice._d3dContext;
                     lock (d3dContext)
-                        d3dContext.UpdateSubresource(box, _texture, level, region);
+						d3dContext.UpdateSubresource(box, GetTexture(), level, region);
+
 #elif PSM
                     _texture2D.SetPixels(level, data, _texture2D.Format, startIndex, 0, x, y, w, h);
 #elif OPENGL
@@ -669,11 +655,10 @@ namespace Microsoft.Xna.Framework.Graphics
                     // Copy the data from the GPU to the staging texture.
                     if (rect.HasValue)
                     {
-                        // TODO: Need to deal with subregion copies!
-                        d3dContext.CopySubresourceRegion(_texture, level, new SharpDX.Direct3D11.ResourceRegion(rect.Value.Left,rect.Value.Top,0, rect.Value.Right, rect.Value.Bottom, 0), stagingTex, 0, 0, 0, 0);
+                        d3dContext.CopySubresourceRegion(GetTexture(), level, new SharpDX.Direct3D11.ResourceRegion(rect.Value.Left, rect.Value.Top, 0, rect.Value.Right, rect.Value.Bottom, 1), stagingTex, 0, 0, 0, 0);
                     }
                     else
-                        d3dContext.CopySubresourceRegion(_texture, level, null, stagingTex, 0, 0, 0, 0);
+                        d3dContext.CopySubresourceRegion(GetTexture(), level, null, stagingTex, 0, 0, 0, 0);
 
                     // Copy the data to the array.
                     SharpDX.DataStream stream;
@@ -699,30 +684,28 @@ namespace Microsoft.Xna.Framework.Graphics
                 }
 
 #else
-			var temp = new T[this.width*this.height];
 
 			GL.BindTexture(TextureTarget.Texture2D, this.glTexture);
 
 			if (glFormat == (GLPixelFormat)All.CompressedTextureFormats) {
 				throw new NotImplementedException();
 			} else {
-				GL.GetTexImage(TextureTarget.Texture2D, level, this.glFormat, this.glType, temp);
-			}
+				if (rect.HasValue) {
+					var temp = new T[this.width*this.height];
+					GL.GetTexImage(TextureTarget.Texture2D, level, this.glFormat, this.glType, temp);
+					int z = 0, w = 0;
 
-			if (rect.HasValue) {
-				int z = 0, w = 0;
-
-				for(int y= rect.Value.Y; y < rect.Value.Y+ rect.Value.Height; y++) {
-					for(int x=rect.Value.X; x < rect.Value.X + rect.Value.Width; x++) {
-						data[z*rect.Value.Width+w] = temp[(y*width)+x];
-						w++;
+					for(int y= rect.Value.Y; y < rect.Value.Y+ rect.Value.Height; y++) {
+						for(int x=rect.Value.X; x < rect.Value.X + rect.Value.Width; x++) {
+							data[z*rect.Value.Width+w] = temp[(y*width)+x];
+							w++;
+						}
+						z++;
 					}
-					z++;
+				} else {
+					GL.GetTexImage(TextureTarget.Texture2D, level, this.glFormat, this.glType, data);
 				}
-			} else {
-				data = temp;
 			}
-
 
 #endif
         }
@@ -825,8 +808,10 @@ namespace Microsoft.Xna.Framework.Graphics
                 return texture;
             }
 #elif WINDOWS_PHONE
-            throw new NotImplementedException();
-#elif WINDOWS_STOREAPP || DIRECTX
+            throw new NotImplementedException();
+
+#elif WINDOWS_STOREAPP || DIRECTX
+
             // For reference this implementation was ultimately found through this post:
             // http://stackoverflow.com/questions/9602102/loading-textures-with-sharpdx-in-metro 
             Texture2D toReturn = null;
@@ -842,7 +827,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				toReturn._texture = sharpDxTexture;
 			}
             return toReturn;
-#elif PSM
+#elif PSM
             return new Texture2D(graphicsDevice, stream);
 #else
             using (Bitmap image = (Bitmap)Bitmap.FromStream(stream))
@@ -854,7 +839,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 BitmapData bitmapData = image.LockBits(new System.Drawing.Rectangle(0, 0, image.Width, image.Height),
                     ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                if (bitmapData.Stride != image.Width * 4) throw new NotImplementedException();
+                if (bitmapData.Stride != image.Width * 4) 
+                    throw new NotImplementedException();
                 Marshal.Copy(bitmapData.Scan0, data, 0, data.Length);
                 image.UnlockBits(bitmapData);
 
@@ -907,6 +893,9 @@ namespace Microsoft.Xna.Framework.Graphics
             var pixelData = new byte[Width * Height * GraphicsExtensions.Size(Format)];
             GetData(pixelData);
 
+            //We Must convert from BGRA to RGBA
+            ConvertToRGBA(height, width, pixelData);
+
             var waitEvent = new ManualResetEventSlim(false);
             Deployment.Current.Dispatcher.BeginInvoke(() =>
             {
@@ -922,6 +911,26 @@ namespace Microsoft.Xna.Framework.Graphics
 #else
             throw new NotImplementedException();
 #endif
+        }
+
+        //Converts Pixel Data from BGRA to RGBA
+        private static void ConvertToRGBA(int pixelHeight, int pixelWidth, byte[] pixels)
+        {
+            int offset = 0;
+
+            for (int row = 0; row < (uint)pixelHeight; row++)
+            {
+                for (int col = 0; col < (uint)pixelWidth; col++)
+                {
+                    offset = (row * (int)pixelWidth * 4) + (col * 4);
+
+                    byte B = pixels[offset];
+                    byte R = pixels[offset + 2];
+
+                    pixels[offset] = R;
+                    pixels[offset + 2] = B;
+                }
+            }
         }
 
         public void SaveAsPng(Stream stream, int width, int height)
@@ -1023,7 +1032,9 @@ namespace Microsoft.Xna.Framework.Graphics
             }).Wait();
         }
 #endif
-#if DIRECTX && !WINDOWS_PHONE        [CLSCompliant(false)]
+#if DIRECTX && !WINDOWS_PHONE
+		
+        [CLSCompliant(false)]
         public static SharpDX.Direct3D11.Texture2D CreateTex2DFromBitmap(SharpDX.WIC.BitmapSource bsource, GraphicsDevice device)
         {
 
@@ -1086,13 +1097,13 @@ namespace Microsoft.Xna.Framework.Graphics
 
         // This method allows games that use Texture2D.FromStream 
         // to reload their textures after the GL context is lost.
-        internal void Reload(Stream textureStream)
+        public void Reload(Stream textureStream)
         {
 #if OPENGL
             GenerateGLTextureIfRequired();
             FillTextureFromStream(textureStream);
 #endif
-        }
+}
 
 #if OPENGL
         private void GenerateGLTextureIfRequired()
@@ -1205,5 +1216,43 @@ namespace Microsoft.Xna.Framework.Graphics
             return imageInfo;
 		}
 #endif
+
+#if DIRECTX
+
+        internal override SharpDX.Direct3D11.Resource CreateTexture()
+		{
+            // TODO: Move this to SetData() if we want to make Immutable textures!
+            var desc = new SharpDX.Direct3D11.Texture2DDescription();
+            desc.Width = width;
+            desc.Height = height;
+            desc.MipLevels = _levelCount;
+            desc.ArraySize = 1;
+            desc.Format = SharpDXHelper.ToFormat(_format);
+            desc.BindFlags = SharpDX.Direct3D11.BindFlags.ShaderResource;
+            desc.CpuAccessFlags = SharpDX.Direct3D11.CpuAccessFlags.None;
+            desc.SampleDescription.Count = 1;
+            desc.SampleDescription.Quality = 0;
+            desc.Usage = SharpDX.Direct3D11.ResourceUsage.Default;
+            desc.OptionFlags = SharpDX.Direct3D11.ResourceOptionFlags.None;
+
+            if (_renderTarget)
+            {
+                desc.BindFlags |= SharpDX.Direct3D11.BindFlags.RenderTarget;
+                if (_mipmap)
+                {
+                    // Note: XNA 4 does not have a method Texture.GenerateMipMaps() 
+                    // because generation of mipmaps is not supported on the Xbox 360.
+                    // TODO: New method Texture.GenerateMipMaps() required.
+                    desc.OptionFlags |= SharpDX.Direct3D11.ResourceOptionFlags.GenerateMipMaps;
+                }
+            }
+            if (_shared)
+                desc.OptionFlags |= SharpDX.Direct3D11.ResourceOptionFlags.Shared;
+
+            return new SharpDX.Direct3D11.Texture2D(GraphicsDevice._d3dDevice, desc);
+        }
+
+#endif
 	}
 }
+

@@ -25,8 +25,18 @@ namespace Microsoft.Xna.Framework.Graphics
         internal bool _isDynamic;
 
 #if DIRECTX
-        internal SharpDX.Direct3D11.VertexBufferBinding _binding;
-        internal SharpDX.Direct3D11.Buffer _buffer;
+        private SharpDX.Direct3D11.VertexBufferBinding _binding;
+        private SharpDX.Direct3D11.Buffer _buffer;
+
+        internal SharpDX.Direct3D11.VertexBufferBinding Binding
+        {
+            get
+            {
+                GenerateIfRequired();
+                return _binding;
+            }
+        }
+
 #elif PSM
         internal Array _vertexArray;
 #else
@@ -55,28 +65,9 @@ namespace Microsoft.Xna.Framework.Graphics
             _isDynamic = dynamic;
 
 #if DIRECTX
-            // TODO: To use Immutable resources we would need to delay creation of 
-            // the Buffer until SetData() and recreate them if set more than once.
 
-            var accessflags = SharpDX.Direct3D11.CpuAccessFlags.None;
-            var usage = SharpDX.Direct3D11.ResourceUsage.Default;
+            GenerateIfRequired();
 
-            if (dynamic)
-            {
-                accessflags |= SharpDX.Direct3D11.CpuAccessFlags.Write;
-                usage = SharpDX.Direct3D11.ResourceUsage.Dynamic;
-            }
-
-            _buffer = new SharpDX.Direct3D11.Buffer(    graphicsDevice._d3dDevice, 
-                                                        vertexDeclaration.VertexStride * vertexCount,
-                                                        usage,
-                                                        SharpDX.Direct3D11.BindFlags.VertexBuffer,
-                                                        accessflags,
-                                                        SharpDX.Direct3D11.ResourceOptionFlags.None,
-                                                        0  // StructureSizeInBytes
-                                                        );
-
-            _binding = new SharpDX.Direct3D11.VertexBufferBinding(_buffer, VertexDeclaration.VertexStride, 0);
 #elif PSM
             //Do nothing, we cannot create the storage array yet
 #else
@@ -101,6 +92,13 @@ namespace Microsoft.Xna.Framework.Graphics
         {
 #if OPENGL
             vbo = 0;
+#endif
+
+#if DIRECTX
+
+            _binding = new SharpDX.Direct3D11.VertexBufferBinding();
+            SharpDX.Utilities.Dispose(ref _buffer);
+
 #endif
         }
 
@@ -130,6 +128,39 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 #endif
 
+#if DIRECTX
+
+        void GenerateIfRequired()
+        {
+            if (_buffer != null)
+                return;
+
+            // TODO: To use Immutable resources we would need to delay creation of 
+            // the Buffer until SetData() and recreate them if set more than once.
+
+            var accessflags = SharpDX.Direct3D11.CpuAccessFlags.None;
+            var usage = SharpDX.Direct3D11.ResourceUsage.Default;
+
+            if (_isDynamic)
+            {
+                accessflags |= SharpDX.Direct3D11.CpuAccessFlags.Write;
+                usage = SharpDX.Direct3D11.ResourceUsage.Dynamic;
+            }
+
+            _buffer = new SharpDX.Direct3D11.Buffer(GraphicsDevice._d3dDevice,
+                                                        VertexDeclaration.VertexStride * VertexCount,
+                                                        usage,
+                                                        SharpDX.Direct3D11.BindFlags.VertexBuffer,
+                                                        accessflags,
+                                                        SharpDX.Direct3D11.ResourceOptionFlags.None,
+                                                        0  // StructureSizeInBytes
+                                                        );
+
+            _binding = new SharpDX.Direct3D11.VertexBufferBinding(_buffer, VertexDeclaration.VertexStride, 0);
+        }
+
+#endif
+
         public void GetData<T> (int offsetInBytes, T[] data, int startIndex, int elementCount, int vertexStride) where T : struct
         {
 #if GLES
@@ -138,15 +169,18 @@ namespace Microsoft.Xna.Framework.Graphics
             throw new NotSupportedException("Vertex buffers are write-only on OpenGL ES platforms");
 #else
             if (data == null)
-                throw new ArgumentNullException ("data is null");
+                throw new ArgumentNullException("data", "This method does not accept null for this parameter.");
             if (data.Length < (startIndex + elementCount))
-                throw new InvalidOperationException ("The array specified in the data parameter is not the correct size for the amount of data requested.");
+                throw new ArgumentOutOfRangeException("elementCount", "This parameter must be a valid index within the array.");
             if (BufferUsage == BufferUsage.WriteOnly)
-                throw new NotSupportedException ("This VertexBuffer was created with a usage type of BufferUsage.WriteOnly. Calling GetData on a resource that was created with BufferUsage.WriteOnly is not supported.");
-            if ((elementCount * vertexStride) > (VertexCount * VertexDeclaration.VertexStride))
+                throw new NotSupportedException("Calling GetData on a resource that was created with BufferUsage.WriteOnly is not supported.");
+			if ((elementCount * vertexStride) > (VertexCount * VertexDeclaration.VertexStride))
                 throw new InvalidOperationException("The array is not the correct size for the amount of data requested.");
 
 #if DIRECTX
+
+            GenerateIfRequired();
+
             if (_isDynamic)
             {
                 throw new NotImplementedException();
@@ -155,7 +189,7 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 var deviceContext = GraphicsDevice._d3dContext;
                 
-                // Copy the texture to a staging resource
+                // Copy the buffer to a staging resource
                 var stagingDesc = _buffer.Description;
                 stagingDesc.BindFlags = SharpDX.Direct3D11.BindFlags.None;
                 stagingDesc.CpuAccessFlags = SharpDX.Direct3D11.CpuAccessFlags.Read | SharpDX.Direct3D11.CpuAccessFlags.Write;
@@ -184,7 +218,7 @@ namespace Microsoft.Xna.Framework.Graphics
                     else
                     {
                         for (int i = 0; i < elementCount; i++)
-                            SharpDX.Utilities.CopyMemory(dataPtr + i * TsizeInBytes, box.DataPointer + offsetInBytes + i * vertexStride, TsizeInBytes);
+                            SharpDX.Utilities.CopyMemory(dataPtr + i * TsizeInBytes, box.DataPointer + i * vertexStride + offsetInBytes, TsizeInBytes);
                     }
 
                     // Make sure that we unmap the resource in case of an exception
@@ -302,6 +336,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
 #if DIRECTX
 
+            GenerateIfRequired();
+
             if (_isDynamic)
             {
                 // We assume discard by default.
@@ -309,19 +345,12 @@ namespace Microsoft.Xna.Framework.Graphics
                 if ((options & SetDataOptions.NoOverwrite) == SetDataOptions.NoOverwrite)
                     mode = SharpDX.Direct3D11.MapMode.WriteNoOverwrite;
 
-                SharpDX.DataStream stream;
                 var d3dContext = GraphicsDevice._d3dContext;
                 lock (d3dContext)
                 {
-                    d3dContext.MapSubresource(
-                        _buffer,
-                        mode,
-                        SharpDX.Direct3D11.MapFlags.None,
-                        out stream);
-
-                    stream.Position = offsetInBytes;
-                    stream.WriteRange(data, startIndex, elementCount);
-
+                    var dataBox = d3dContext.MapSubresource(_buffer, 0, mode, SharpDX.Direct3D11.MapFlags.None);
+                    SharpDX.Utilities.Write(IntPtr.Add(dataBox.DataPointer, offsetInBytes), data, startIndex,
+                                            elementCount);
                     d3dContext.UnmapSubresource(_buffer, 0);
                 }
             }

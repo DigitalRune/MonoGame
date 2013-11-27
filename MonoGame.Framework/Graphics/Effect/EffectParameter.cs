@@ -109,11 +109,13 @@ namespace Microsoft.Xna.Framework.Graphics
             return ((float[])Data)[0] != 0.0f;
 #endif
         }
-
+        
+        /*
 		public bool[] GetValueBooleanArray ()
 		{
 			throw new NotImplementedException();
 		}
+        */
 
 		public int GetValueInt32 ()
 		{
@@ -127,11 +129,13 @@ namespace Microsoft.Xna.Framework.Graphics
             return (int)((float[])Data)[0];
 #endif
         }
-
+        
+        /*
 		public int[] GetValueInt32Array ()
 		{
 			throw new NotImplementedException();
 		}
+        */
 
 		public Matrix GetValueMatrix ()
 		{
@@ -148,21 +152,34 @@ namespace Microsoft.Xna.Framework.Graphics
                                 floatData[2], floatData[6], floatData[10], floatData[14],
                                 floatData[3], floatData[7], floatData[11], floatData[15]);
 		}
-
+        
 		public Matrix[] GetValueMatrixArray (int count)
 		{
-			throw new NotImplementedException();
+            if (ParameterClass != EffectParameterClass.Matrix || ParameterType != EffectParameterType.Single)
+                throw new InvalidCastException();
+
+            var ret = new Matrix[count];
+            for (var i = 0; i < count; i++)
+                ret[i] = Elements[i].GetValueMatrix();
+
+		    return ret;
 		}
 
 		public Quaternion GetValueQuaternion ()
 		{
-			throw new NotImplementedException();
-		}
+            if (ParameterClass != EffectParameterClass.Vector || ParameterType != EffectParameterType.Single)
+                throw new InvalidCastException();
 
+            var vecInfo = (float[])Data;
+            return new Quaternion(vecInfo[0], vecInfo[1], vecInfo[2], vecInfo[3]);
+        }
+
+        /*
 		public Quaternion[] GetValueQuaternionArray ()
 		{
 			throw new NotImplementedException();
 		}
+        */
 
 		public Single GetValueSingle ()
 		{
@@ -230,7 +247,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		public TextureCube GetValueTextureCube ()
 		{
-			throw new NotImplementedException();
+            if (ParameterClass != EffectParameterClass.Object || ParameterType != EffectParameterType.TextureCube)
+                throw new InvalidCastException();
+
+            return (TextureCube)Data;
 		}
 
 		public Vector2 GetValueVector2 ()
@@ -242,10 +262,12 @@ namespace Microsoft.Xna.Framework.Graphics
 			return new Vector2(vecInfo[0],vecInfo[1]);
 		}
 
+        /*
 		public Vector2[] GetValueVector2Array ()
 		{
 			throw new NotImplementedException();
 		}
+        */
 
 		public Vector3 GetValueVector3 ()
 		{
@@ -256,10 +278,12 @@ namespace Microsoft.Xna.Framework.Graphics
 			return new Vector3(vecInfo[0],vecInfo[1],vecInfo[2]);
 		}
 
+        /*
 		public Vector3[] GetValueVector3Array ()
 		{
 			throw new NotImplementedException();
 		}
+        */
 
 		public Vector4 GetValueVector4 ()
 		{
@@ -269,11 +293,13 @@ namespace Microsoft.Xna.Framework.Graphics
             var vecInfo = (float[])Data;
 			return new Vector4(vecInfo[0],vecInfo[1],vecInfo[2],vecInfo[3]);
 		}
-
+        
+        /*
 		public Vector4[] GetValueVector4Array ()
 		{
 			throw new NotImplementedException();
 		}
+        */
 
 		public void SetValue (bool value)
 		{
@@ -291,10 +317,12 @@ namespace Microsoft.Xna.Framework.Graphics
             StateKey = unchecked(NextStateKey++);
 		}
 
+        /*
 		public void SetValue (bool[] value)
 		{
 			throw new NotImplementedException();
 		}
+        */
 
 		public void SetValue (int value)
 		{
@@ -310,13 +338,18 @@ namespace Microsoft.Xna.Framework.Graphics
             StateKey = unchecked(NextStateKey++);
 		}
 
+        /*
 		public void SetValue (int[] value)
 		{
 			throw new NotImplementedException();
 		}
+        */
 
         public void SetValue(Matrix value)
         {
+            if (ParameterClass != EffectParameterClass.Matrix || ParameterType != EffectParameterType.Single)
+                throw new InvalidCastException();
+
             // HLSL expects matrices to be transposed by default.
             // These unrolled loops do the transpose during assignment.
             if (RowCount == 4 && ColumnCount == 4)
@@ -404,6 +437,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		public void SetValueTranspose(Matrix value)
 		{
+            if (ParameterClass != EffectParameterClass.Matrix || ParameterType != EffectParameterType.Single)
+                throw new InvalidCastException();
+
             // HLSL expects matrices to be transposed by default, so copying them straight
             // from the in-memory version effectively transposes them back to row-major.
             if (RowCount == 4 && ColumnCount == 4)
@@ -491,27 +527,133 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		public void SetValue (Matrix[] value)
 		{
-            for (var i = 0; i < value.Length; i++)
-				Elements[i].SetValue (value[i]);
+            if (ParameterClass != EffectParameterClass.Matrix || ParameterType != EffectParameterType.Single)
+                throw new InvalidCastException();
+
+		    if (RowCount == 4 && ColumnCount == 4)
+		    {
+		        for (var i = 0; i < value.Length; i++)
+		        {
+		            var fData = (float[])Elements[i].Data;
+
+		            fData[0] = value[i].M11;
+		            fData[1] = value[i].M21;
+		            fData[2] = value[i].M31;
+		            fData[3] = value[i].M41;
+
+		            fData[4] = value[i].M12;
+		            fData[5] = value[i].M22;
+		            fData[6] = value[i].M32;
+		            fData[7] = value[i].M42;
+
+		            fData[8] = value[i].M13;
+		            fData[9] = value[i].M23;
+		            fData[10] = value[i].M33;
+		            fData[11] = value[i].M43;
+
+		            fData[12] = value[i].M14;
+		            fData[13] = value[i].M24;
+		            fData[14] = value[i].M34;
+		            fData[15] = value[i].M44;
+		        }
+		    }
+		    else if (RowCount == 4 && ColumnCount == 3)
+            {
+                for (var i = 0; i < value.Length; i++)
+                {
+                    var fData = (float[])Elements[i].Data;
+
+                    fData[0] = value[i].M11;
+                    fData[1] = value[i].M21;
+                    fData[2] = value[i].M31;
+                    fData[3] = value[i].M41;
+
+                    fData[4] = value[i].M12;
+                    fData[5] = value[i].M22;
+                    fData[6] = value[i].M32;
+                    fData[7] = value[i].M42;
+
+                    fData[8] = value[i].M13;
+                    fData[9] = value[i].M23;
+                    fData[10] = value[i].M33;
+                    fData[11] = value[i].M43;
+                }
+            }
+            else if (RowCount == 3 && ColumnCount == 4)
+            {
+                for (var i = 0; i < value.Length; i++)
+                {
+                    var fData = (float[])Elements[i].Data;
+
+                    fData[0] = value[i].M11;
+                    fData[1] = value[i].M21;
+                    fData[2] = value[i].M31;
+
+                    fData[3] = value[i].M12;
+                    fData[4] = value[i].M22;
+                    fData[5] = value[i].M32;
+
+                    fData[6] = value[i].M13;
+                    fData[7] = value[i].M23;
+                    fData[8] = value[i].M33;
+
+                    fData[9] = value[i].M14;
+                    fData[10] = value[i].M24;
+                    fData[11] = value[i].M34;
+                }
+            }
+            else if (RowCount == 3 && ColumnCount == 3)
+            {
+                for (var i = 0; i < value.Length; i++)
+                {
+                    var fData = (float[])Elements[i].Data;
+
+                    fData[0] = value[i].M11;
+                    fData[1] = value[i].M21;
+                    fData[2] = value[i].M31;
+
+                    fData[3] = value[i].M12;
+                    fData[4] = value[i].M22;
+                    fData[5] = value[i].M32;
+
+                    fData[6] = value[i].M13;
+                    fData[7] = value[i].M23;
+                    fData[8] = value[i].M33;
+                }
+            }
 
             StateKey = unchecked(NextStateKey++);
 		}
 
 		public void SetValue (Quaternion value)
 		{
-			throw new NotImplementedException();
+            if (ParameterClass != EffectParameterClass.Vector || ParameterType != EffectParameterType.Single)
+                throw new InvalidCastException();
+
+            var fData = (float[])Data;
+            fData[0] = value.X;
+            fData[1] = value.Y;
+            fData[2] = value.Z;
+            fData[3] = value.W;
+            StateKey = unchecked(NextStateKey++);
 		}
 
+        /*
 		public void SetValue (Quaternion[] value)
 		{
 			throw new NotImplementedException();
 		}
+        */
 
 		public void SetValue (Single value)
 		{
             if (ParameterType != EffectParameterType.Single)
                 throw new InvalidCastException();
-
+#if PSM
+            if(Data == null) {
+                return;
+            }
+#endif
 			((float[])Data)[0] = value;
             StateKey = unchecked(NextStateKey++);
 		}
@@ -524,10 +666,12 @@ namespace Microsoft.Xna.Framework.Graphics
             StateKey = unchecked(NextStateKey++);
 		}
 		
+        /*
 		public void SetValue (string value)
 		{
 			throw new NotImplementedException();
 		}
+        */
 
 		public void SetValue (Texture value)
 		{

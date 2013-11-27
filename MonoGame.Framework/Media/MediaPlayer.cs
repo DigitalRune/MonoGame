@@ -103,6 +103,30 @@ namespace Microsoft.Xna.Framework.Media
         // HACK: Need SharpDX to fix this.
         private static readonly Guid MRPolicyVolumeService = Guid.Parse("1abaa2ac-9d3b-47c6-ab48-c59506de784d");
         private static readonly Guid SimpleAudioVolumeGuid = Guid.Parse("089EDF13-CF71-4338-8D13-9E569DBDC319");
+
+	    private static Callback _callback;
+
+	    private class Callback : IAsyncCallback
+	    {
+		    public void Dispose()
+		    {
+		    }
+
+		    public IDisposable Shadow { get; set; }
+		    public void Invoke(AsyncResult asyncResultRef)
+		    {
+			    var ev = _session.EndGetEvent(asyncResultRef);
+			
+			    if (ev.TypeInfo == MediaEventTypes.EndOfPresentation)
+				    OnSongFinishedPlaying(null, null);
+
+			    _session.BeginGetEvent(this, null);
+		    }
+
+		    public AsyncCallbackFlags Flags { get; private set; }
+		    public WorkQueueId WorkQueueId { get; private set; }
+	    }
+
 #elif WINDOWS_PHONE
         internal static MediaElement _mediaElement;
         private static Uri source;
@@ -124,7 +148,7 @@ namespace Microsoft.Xna.Framework.Media
 
                 _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 #elif WINDOWS_MEDIA_SESSION
-            MediaManager.Startup(true);
+            MediaManagerState.CheckStartup();
             MediaFactory.CreateMediaSession(null, out _session);
 #elif WINDOWS_PHONE
             PhoneApplicationService.Current.Activated += (sender, e) =>
@@ -240,12 +264,17 @@ namespace Microsoft.Xna.Framework.Media
 #elif WINDOWS_PHONE
                 TimeSpan pos = TimeSpan.Zero;
                 EventWaitHandle Wait = new AutoResetEvent(false);
-                Deployment.Current.Dispatcher.BeginInvoke(() =>
-                {
+                if(_mediaElement.Dispatcher.CheckAccess()) {
                     pos = _mediaElement.Position;
-                    Wait.Set();
-                });
-                Wait.WaitOne();
+                }
+                else {
+                    Deployment.Current.Dispatcher.BeginInvoke(() =>
+                    {
+                        pos = _mediaElement.Position;
+                        Wait.Set();
+                    });
+                    Wait.WaitOne();
+                }
                 return (pos);
 #else
 				if (_queue.ActiveSong == null)
@@ -402,13 +431,31 @@ namespace Microsoft.Xna.Framework.Media
 
             // Get the volume interface.
             IntPtr volumeObj;
-            MediaFactory.GetService(_session, MRPolicyVolumeService, SimpleAudioVolumeGuid, out volumeObj);
+
+            
+            try
+            {
+                MediaFactory.GetService(_session, MRPolicyVolumeService, SimpleAudioVolumeGuid, out volumeObj);
+            }
+            catch (Exception e)
+            {
+                MediaFactory.GetService(_session, MRPolicyVolumeService, SimpleAudioVolumeGuid, out volumeObj);
+            }  
+          
+
             _volumeController = CppObject.FromPointer<SimpleAudioVolume>(volumeObj);
             _volumeController.Mute = _isMuted;
             _volumeController.MasterVolume = _volume;
 
             // Get the clock.
             _clock = _session.Clock.QueryInterface<PresentationClock>();
+
+			//create the callback if it hasn't been created yet
+			if (_callback == null)
+			{
+				_callback = new Callback();
+				_session.BeginGetEvent(_callback, null);
+			}
 
             // Start playing.
             var varStart = new Variant();
@@ -441,7 +488,7 @@ namespace Microsoft.Xna.Framework.Media
 				_numSongsInQueuePlayed = 0;
 				if (!IsRepeating)
 				{
-					State = MediaState.Stopped;
+					Stop();
 
 					if (ActiveSongChanged != null)
 					{
@@ -529,8 +576,8 @@ namespace Microsoft.Xna.Framework.Media
 
             if (nextSong == null)
                 Stop();
-            else            
-                Play(nextSong);                            
+            else
+                PlaySong(nextSong);
 
             if (ActiveSongChanged != null)
             {
