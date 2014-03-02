@@ -1881,6 +1881,8 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             switch (primitiveType)
             {
+                case PrimitiveType.PointList:
+                    return PrimitiveTopology.PointList;
                 case PrimitiveType.LineList:
                     return PrimitiveTopology.LineList;
                 case PrimitiveType.LineStrip:
@@ -2237,7 +2239,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// Draw geometry by indexing into the vertex buffer.
         /// </summary>
-        /// <param name="primitiveType">The type of primitives in the index buffer.</param>
+        /// <param name="primitiveType">
+        /// The type of primitive to render. <see cref="PrimitiveType.PointList"/> is not supported
+        /// with this method.
+        /// </param>
         /// <param name="baseVertex">Used to offset the vertex range indexed from the vertex buffer.</param>
         /// <param name="minVertexIndex">A hint of the lowest vertex indexed relative to baseVertex.</param>
         /// <param name="numVertices">An hint of the maximum vertex indexed.</param>
@@ -2583,6 +2588,8 @@ namespace Microsoft.Xna.Framework.Graphics
             //TODO: Overview the calculation
             switch (primitiveType)
             {
+                case PrimitiveType.PointList:
+                    return primitiveCount;
                 case PrimitiveType.LineList:
                     return primitiveCount * 2;
                 case PrimitiveType.LineStrip:
