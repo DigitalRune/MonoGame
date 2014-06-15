@@ -38,7 +38,6 @@ purpose and non-infringement.
 */
 #endregion License
 
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
@@ -107,7 +106,7 @@ namespace Microsoft.Xna.Framework
         private void UIElement_PointerWheelChanged(object sender, PointerRoutedEventArgs args)
         {
             var pointerPoint = args.GetCurrentPoint(null);
-            UpdateMouse(pointerPoint);
+            UpdateMouse(pointerPoint, GetPosition(pointerPoint));
             args.Handled = true;
         }
 
@@ -135,7 +134,7 @@ namespace Microsoft.Xna.Framework
 
         private void CoreWindow_PointerWheelChanged(object sender, PointerEventArgs args)
         {
-            UpdateMouse(args.CurrentPoint);
+            UpdateMouse(args.CurrentPoint, GetPosition(args.CurrentPoint));
             args.Handled = true;
         }
 
@@ -143,19 +142,17 @@ namespace Microsoft.Xna.Framework
 
         private void PointerPressed(PointerPoint pointerPoint, UIElement target, Pointer pointer)
         {
-            // To convert from DIPs (device independent pixels) to screen resolution pixels.
-            var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
-            var pos = new Vector2((float)pointerPoint.Position.X, (float)pointerPoint.Position.Y) * dipFactor;
+            var pos = GetPosition(pointerPoint);
 
             var isTouch = pointerPoint.PointerDevice.PointerDeviceType == PointerDeviceType.Touch;
 
             TouchPanel.AddEvent((int)pointerPoint.PointerId, TouchLocationState.Pressed, pos, !isTouch);
             
+            // Mouse or stylus event.
+            UpdateMouse(pointerPoint, pos);
+
             if (!isTouch)
             {
-                // Mouse or stylus event.
-                UpdateMouse(pointerPoint);
-
                 // Capture future pointer events until a release.		
                 if (target != null)
                     target.CapturePointer(pointer);
@@ -164,9 +161,7 @@ namespace Microsoft.Xna.Framework
 
         private void PointerMoved(PointerPoint pointerPoint)
         {
-            // To convert from DIPs (device independent pixels) to actual screen resolution pixels.
-            var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
-            var pos = new Vector2((float)pointerPoint.Position.X, (float)pointerPoint.Position.Y) * dipFactor;
+            var pos = GetPosition(pointerPoint);
 
             var isTouch = pointerPoint.PointerDevice.PointerDeviceType == PointerDeviceType.Touch;
             var touchIsDown = pointerPoint.IsInContact;
@@ -176,49 +171,58 @@ namespace Microsoft.Xna.Framework
                 TouchPanel.AddEvent((int)pointerPoint.PointerId, TouchLocationState.Moved, pos, !isTouch);
             }
 
-            if (!isTouch)
-            {
-                // Mouse or stylus event.
-                UpdateMouse(pointerPoint);
-            }
+            // Mouse or stylus event.
+            UpdateMouse(pointerPoint, pos);
         }
 
         private void PointerReleased(PointerPoint pointerPoint, UIElement target, Pointer pointer)
         {
-            // To convert from DIPs (device independent pixels) to screen resolution pixels.
-            var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
-            var pos = new Vector2((float)pointerPoint.Position.X, (float)pointerPoint.Position.Y) * dipFactor;
+            var pos = GetPosition(pointerPoint);
 
             var isTouch = pointerPoint.PointerDevice.PointerDeviceType == PointerDeviceType.Touch;
 
             TouchPanel.AddEvent((int)pointerPoint.PointerId, TouchLocationState.Released, pos, !isTouch);
 
+            // Mouse or stylus event.
+            UpdateMouse(pointerPoint, pos);
+
             if (!isTouch)
             {
-                // Mouse or stylus event.
-                UpdateMouse(pointerPoint);
-
                 // Release the captured pointer.
                 if (target != null)
                     target.ReleasePointerCapture(pointer);
             }
         }
 
-        private static void UpdateMouse(PointerPoint point)
+        private void UpdateMouse(PointerPoint point, Vector2 position)
         {
-            // To convert from DIPs (device independent pixels) to screen resolution pixels.
-            var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
-            var x = (int)(point.Position.X * dipFactor);
-            var y = (int)(point.Position.Y * dipFactor);
-
             var state = point.Properties;
-
-            Mouse.PrimaryWindow.MouseState.X = x;
-            Mouse.PrimaryWindow.MouseState.Y = y;
+            Mouse.PrimaryWindow.MouseState.X = (int)position.X;
+            Mouse.PrimaryWindow.MouseState.Y = (int)position.Y;
             Mouse.PrimaryWindow.MouseState.ScrollWheelValue += state.MouseWheelDelta;
             Mouse.PrimaryWindow.MouseState.LeftButton = state.IsLeftButtonPressed ? ButtonState.Pressed : ButtonState.Released;
             Mouse.PrimaryWindow.MouseState.RightButton = state.IsRightButtonPressed ? ButtonState.Pressed : ButtonState.Released;
             Mouse.PrimaryWindow.MouseState.MiddleButton = state.IsMiddleButtonPressed ? ButtonState.Pressed : ButtonState.Released;
+        }
+
+
+        // Converts the position from device independent pixels to pixels relative to the 
+        // graphics device back buffer.
+        private Vector2 GetPosition(PointerPoint pointerPoint)
+        {
+            // To convert from DIPs (device independent pixels) to screen resolution pixels.
+            var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
+
+            // To scale from window resolution to graphics device back buffer resolution.
+            var graphicsDeviceManager = Game.Instance.graphicsDeviceManager;
+
+            var clientBounds = MetroGameWindow.Instance.ClientBounds;
+            var backBufferScaleX = graphicsDeviceManager.PreferredBackBufferWidth / (float)clientBounds.Width;
+            var backBufferScaleY = graphicsDeviceManager.PreferredBackBufferHeight / (float)clientBounds.Height;
+
+            return new Vector2(
+                (float)(pointerPoint.Position.X) * dipFactor * backBufferScaleX,
+                (float)(pointerPoint.Position.Y) * dipFactor * backBufferScaleY);
         }
 
         public void UpdateState()
