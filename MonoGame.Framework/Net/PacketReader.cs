@@ -69,8 +69,12 @@ namespace Microsoft.Xna.Framework.Net
 		internal byte[] Data
 		{
 			get {
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#else
 				MemoryStream stream = (MemoryStream)this.BaseStream;
 				return stream.GetBuffer();
+#endif
 			}			
 			set {
 				MemoryStream ms = (MemoryStream)this.BaseStream;

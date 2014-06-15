@@ -64,7 +64,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
             _isDynamic = dynamic;
 
-#if DIRECTX
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
 
             GenerateIfRequired();
 
@@ -163,7 +165,9 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public void GetData<T> (int offsetInBytes, T[] data, int startIndex, int elementCount, int vertexStride) where T : struct
         {
-#if GLES
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif GLES
             // Buffers are write-only on OpenGL ES 1.1 and 2.0.  See the GL_OES_mapbuffer extension for more information.
             // http://www.khronos.org/registry/gles/extensions/OES/OES_mapbuffer.txt
             throw new NotSupportedException("Vertex buffers are write-only on OpenGL ES platforms");
@@ -294,14 +298,18 @@ namespace Microsoft.Xna.Framework.Graphics
         
         public void GetData<T>(T[] data, int startIndex, int elementCount) where T : struct
         {
+#if !PORTABLE
             var elementSizeInByte = Marshal.SizeOf(typeof(T));
             this.GetData<T>(0, data, startIndex, elementCount, elementSizeInByte);
+#endif
         }
 
         public void GetData<T>(T[] data) where T : struct
         {
+#if !PORTABLE
             var elementSizeInByte = Marshal.SizeOf(typeof(T));
             this.GetData<T>(0, data, 0, data.Count(), elementSizeInByte);
+#endif
         }
 
         public void SetData<T>(int offsetInBytes, T[] data, int startIndex, int elementCount, int vertexStride) where T : struct
@@ -330,6 +338,9 @@ namespace Microsoft.Xna.Framework.Graphics
             if ((vertexStride > bufferSize) || (vertexStride < VertexDeclaration.VertexStride))
                 throw new ArgumentOutOfRangeException("One of the following conditions is true:\nThe vertex stride is larger than the vertex buffer.\nThe vertex stride is too small for the type of data requested.");
    
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 #if !PSM
             var elementSizeInBytes = Marshal.SizeOf(typeof(T));
 #endif
@@ -391,6 +402,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 Threading.BlockOnUIThread(() => SetBufferData(bufferSize, elementSizeInBytes, offsetInBytes, data, startIndex, elementCount, vertexStride, options));
             }
 #endif
+#endif
         }
 
 #if OPENGL
@@ -429,7 +441,9 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             if (!IsDisposed)
             {
-#if DIRECTX
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
                 if (disposing)
                 {
                     if (_buffer != null)

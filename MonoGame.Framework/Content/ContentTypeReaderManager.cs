@@ -67,6 +67,7 @@ namespace Microsoft.Xna.Framework.Content
 
 		internal ContentTypeReader[] LoadAssetReaders()
         {
+#if !PORTABLE
 #pragma warning disable 0219, 0649
             // Trick to prevent the linker removing the code, but not actually execute the code
             if (falseflag)
@@ -114,6 +115,7 @@ namespace Microsoft.Xna.Framework.Content
                 var hSongReader = new SongReader();
             }
 #pragma warning restore 0219, 0649
+#endif
 
             int numberOfReaders;
 			

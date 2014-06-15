@@ -34,6 +34,7 @@ namespace Microsoft.Xna.Framework.Audio
 {
     public class WaveBank : IDisposable
     {
+#if !PORTABLE
         internal SoundEffectInstance[] sounds;
         internal string BankName;
 
@@ -79,9 +80,13 @@ namespace Microsoft.Xna.Framework.Audio
         private const int MiniFormatTag_XMA = 0x1;
         private const int MiniFormatTag_ADPCM = 0x2;
         private const int MiniForamtTag_WMA = 0x3;
-        
+#endif
+
         public WaveBank(AudioEngine audioEngine, string nonStreamingWaveBankFilename)
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             //XWB PARSING
             //Adapted from MonoXNA
             //Originally adaped from Luigi Auriemma's unxwb
@@ -424,6 +429,7 @@ namespace Microsoft.Xna.Framework.Audio
             }
 			
 			audioEngine.Wavebanks[BankName] = this;
+#endif
         }
 		
 		public WaveBank(AudioEngine audioEngine, string streamingWaveBankFilename, int offset, short packetsize)

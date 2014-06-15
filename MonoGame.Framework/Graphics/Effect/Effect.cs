@@ -60,9 +60,11 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public EffectTechnique CurrentTechnique { get; set; }
   
+#if !PORTABLE
         internal ConstantBuffer[] ConstantBuffers { get; private set; }
 
         private Shader[] _shaders;
+#endif
 
 	    private readonly bool _isClone;
 
@@ -72,6 +74,10 @@ namespace Microsoft.Xna.Framework.Graphics
 				throw new ArgumentNullException ("Graphics Device Cannot Be Null");
 
 			this.GraphicsDevice = graphicsDevice;
+
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#endif
 		}
 			
 		protected Effect(Effect cloneSource)
@@ -84,6 +90,9 @@ namespace Microsoft.Xna.Framework.Graphics
         public Effect (GraphicsDevice graphicsDevice, byte[] effectCode)
             : this(graphicsDevice)
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 			// By default we currently cache all unique byte streams
 			// and use cloning to populate the effect with parameters,
 			// techniques, and passes.
@@ -127,6 +136,7 @@ namespace Microsoft.Xna.Framework.Graphics
             // Clone it.
             _isClone = true;
             Clone(cloneSource);
+#endif
         }
 
         /// <summary>
@@ -145,6 +155,9 @@ namespace Microsoft.Xna.Framework.Graphics
             Parameters = cloneSource.Parameters.Clone();
             Techniques = cloneSource.Techniques.Clone(this);
 
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             // Make a copy of the immutable constant buffers.
             ConstantBuffers = new ConstantBuffer[cloneSource.ConstantBuffers.Length];
             for (var i = 0; i < cloneSource.ConstantBuffers.Length; i++)
@@ -162,6 +175,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
             // Take a reference to the original shader list.
             _shaders = cloneSource._shaders;
+#endif
         }
 
         /// <summary>
@@ -189,6 +203,9 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 if (disposing)
                 {
+#if PORTABLE
+                    throw MonoGame.Portable.NotImplementedException;
+#else
                     if (!_isClone)
                     {
                         // Only the clone source can dispose the shaders.
@@ -205,6 +222,7 @@ namespace Microsoft.Xna.Framework.Graphics
                             buffer.Dispose();
                         ConstantBuffers = null;
                     }
+#endif
                 }
             }
 
@@ -213,8 +231,12 @@ namespace Microsoft.Xna.Framework.Graphics
 
         internal protected override void GraphicsDeviceResetting()
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             for (var i = 0; i < ConstantBuffers.Length; i++)
                 ConstantBuffers[i].Clear();
+#endif
         }
 
         #region Effect File Reader
@@ -249,7 +271,8 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </remarks>
         private const int MGFXVersion = 5;
 
-#if !PSM
+#if PORTABLE
+#elif !PSM
 
 		private void ReadEffect (BinaryReader reader)
 		{

@@ -88,7 +88,7 @@ namespace Microsoft.Xna.Framework.Media
             _sound = new PSSuiteSong(_name);
 #elif WINDOWS_MEDIA_SESSION 
             GetTopology();      
-#elif !WINDOWS_MEDIA_ENGINE && !WINDOWS_PHONE
+#elif !WINDOWS_MEDIA_ENGINE && !WINDOWS_PHONE && !PORTABLE
             _sound = new SoundEffect(_name).CreateInstance();
 #endif
         }
@@ -374,7 +374,11 @@ namespace Microsoft.Xna.Framework.Media
         {
             get
             {
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#else
 				return Path.GetFileNameWithoutExtension(_name);
+#endif
             }
         }
 

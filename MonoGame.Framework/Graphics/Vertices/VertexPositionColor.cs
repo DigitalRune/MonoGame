@@ -5,7 +5,9 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Xna.Framework.Graphics
 {
     [DataContract]
+#if !PORTABLE
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
+#endif
 	public struct VertexPositionColor : IVertexType
 	{
         [DataMember]

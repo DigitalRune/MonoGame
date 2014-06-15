@@ -21,6 +21,9 @@ namespace Microsoft.Xna.Framework.Content
 
         protected override System.IO.Stream OpenStream(string assetName)
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             object obj = this.resource.GetObject(assetName);
             if (obj == null)
             {
@@ -31,6 +34,7 @@ namespace Microsoft.Xna.Framework.Content
                 throw new ContentLoadException("Resource is not in binary format");
             }
             return new MemoryStream(obj as byte[]);
+#endif
         }
     }
 }

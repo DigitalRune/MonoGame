@@ -145,6 +145,9 @@ namespace Microsoft.Xna.Framework.Graphics
 			if (data == null) 
 				throw new ArgumentNullException("data");
 
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 			var elementSizeInByte = Marshal.SizeOf(typeof(T));
 			var dataHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
 			var dataPtr = (IntPtr)(dataHandle.AddrOfPinnedObject().ToInt64() + startIndex * elementSizeInByte);
@@ -171,6 +174,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 d3dContext.UpdateSubresource(box, GetTexture(), subresourceIndex, region);
 #endif
             dataHandle.Free ();
+#endif
 		}
 
         /// <summary>

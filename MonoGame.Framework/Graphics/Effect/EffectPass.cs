@@ -15,8 +15,10 @@ namespace Microsoft.Xna.Framework.Graphics
     {
         private readonly Effect _effect;
 
+#if !PORTABLE
 		private readonly Shader _pixelShader;
         private readonly Shader _vertexShader;
+#endif
 
         private readonly BlendState _blendState;
         private readonly DepthStencilState _depthStencilState;
@@ -30,6 +32,7 @@ namespace Microsoft.Xna.Framework.Graphics
         internal ShaderProgram _shaderProgram;
 #endif
 
+#if !PORTABLE
         internal EffectPass(    Effect effect, 
                                 string name,
                                 Shader vertexShader, 
@@ -75,6 +78,7 @@ namespace Microsoft.Xna.Framework.Graphics
             _shaderProgram = cloneSource._shaderProgram;
 #endif
         }
+#endif
 
         public void Apply()
         {

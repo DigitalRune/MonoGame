@@ -47,6 +47,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 #elif PSM
 		//TODO
+#elif PORTABLE
 #else
 		PixelInternalFormat glInternalFormat;
 		PixelFormat glFormat;
@@ -68,7 +69,9 @@ namespace Microsoft.Xna.Framework.Graphics
             this._format = format;
             this._levelCount = mipMap ? CalculateMipLevels(size) : 1;
 
-#if DIRECTX
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
 
             _renderTarget = renderTarget;
             _mipMap = mipMap;
@@ -254,6 +257,9 @@ namespace Microsoft.Xna.Framework.Graphics
 		
         public void SetData<T>(CubeMapFace face, int level, Rectangle? rect, T[] data, int startIndex, int elementCount) where T : struct
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             if (data == null) 
                 throw new ArgumentNullException("data");
 
@@ -341,6 +347,7 @@ namespace Microsoft.Xna.Framework.Graphics
             {
                 dataHandle.Free();
             }
+#endif
 		}
 		
 #if OPENGL

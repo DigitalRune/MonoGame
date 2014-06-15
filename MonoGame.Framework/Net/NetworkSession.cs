@@ -42,7 +42,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-#if !WINDOWS_PHONE
+#if !WINDOWS_PHONE && !PORTABLE
 using System.Runtime.Remoting.Messaging;
 #endif
 using System.Threading;
@@ -108,7 +108,9 @@ namespace Microsoft.Xna.Framework.Net
 		private int hostGamerIndex = -1;
 		private NetworkGamer hostingGamer;
 		
+#if !PORTABLE
 		internal MonoGamerPeer networkPeer;
+#endif
 		
 		private NetworkSession (NetworkSessionType sessionType, int maxGamers, int privateGamerSlots, NetworkSessionProperties sessionProperties, bool isHost, int hostGamer)
 			: this(sessionType, maxGamers, privateGamerSlots, sessionProperties, isHost, hostGamer, null)
@@ -117,6 +119,9 @@ namespace Microsoft.Xna.Framework.Net
 		
 		private NetworkSession (NetworkSessionType sessionType, int maxGamers, int privateGamerSlots, NetworkSessionProperties sessionProperties, bool isHost, int hostGamer, AvailableNetworkSession availableSession) : this()
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 			if (sessionProperties == null) {
 				throw new ArgumentNullException ("sessionProperties");
 			}
@@ -160,6 +165,7 @@ namespace Microsoft.Xna.Framework.Net
             			
 			CommandGamerJoined gj = new CommandGamerJoined(hostGamer, this.isHost, true);
 			commandQueue.Enqueue(new CommandEvent(gj));
+#endif
 		}
 		
 		public static NetworkSession Create (
@@ -257,6 +263,7 @@ namespace Microsoft.Xna.Framework.Net
                         gamer.Dispose();
                     }
 
+#if !PORTABLE
                     // Make sure we shut down our server instance as we no longer need it.
                     if (networkPeer != null)
                     {
@@ -266,6 +273,7 @@ namespace Microsoft.Xna.Framework.Net
                     {
                         networkPeer.ShutDown();
                     }
+#endif
                 }
 
                 this._isDisposed = true;
@@ -458,6 +466,9 @@ namespace Microsoft.Xna.Framework.Net
 
         public static NetworkSession EndCreate (IAsyncResult result)
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 			NetworkSession returnValue = null;
 			try {
 #if WINDOWS_PHONE
@@ -481,10 +492,14 @@ namespace Microsoft.Xna.Framework.Net
 			}
 			
 			return returnValue;
+#endif
 		}
 
 		public static AvailableNetworkSessionCollection EndFind (IAsyncResult result)
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 			AvailableNetworkSessionCollection returnValue = null;
 			List<AvailableNetworkSession> networkSessions = new List<AvailableNetworkSession>();
 			
@@ -514,6 +529,7 @@ namespace Microsoft.Xna.Framework.Net
 			}
 			returnValue = new AvailableNetworkSessionCollection(networkSessions);
 			return returnValue;
+#endif
 		}
 
 		public void EndGame ()
@@ -528,6 +544,9 @@ namespace Microsoft.Xna.Framework.Net
 
 		public static NetworkSession EndJoin (IAsyncResult result)
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 			NetworkSession returnValue = null;
 			try {
 #if WINDOWS_PHONE
@@ -548,6 +567,7 @@ namespace Microsoft.Xna.Framework.Net
 				result.AsyncWaitHandle.Close ();
 			}
 			return returnValue;
+#endif
 		}
 
         /*
@@ -609,7 +629,9 @@ namespace Microsoft.Xna.Framework.Net
 					throw new ArgumentOutOfRangeException ( "maxLocalGamers must be between 1 and 4." );
 
 				List<AvailableNetworkSession> availableNetworkSessions = new List<AvailableNetworkSession> ();
+#if !PORTABLE
 				MonoGamerPeer.Find(sessionType);
+#endif
 				return new AvailableNetworkSessionCollection ( availableNetworkSessions );
 			} finally {
 			}
@@ -702,6 +724,9 @@ namespace Microsoft.Xna.Framework.Net
 
 		public void Update ()
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 			// Updates the state of the multiplayer session. 
 			try {
 				while (commandQueue.Count > 0 && networkPeer.IsReady) {
@@ -747,17 +772,21 @@ namespace Microsoft.Xna.Framework.Net
 			}
 			finally {
 			}
+#endif
 		}
 		
 		private void ProcessGamerStateChange(CommandGamerStateChange command) 
 		{
-			
+#if !PORTABLE
 			networkPeer.SendGamerStateChange(command.Gamer);	
+#endif
 		}
 		
 		private void ProcessSendData(CommandSendData command)
 		{
+#if !PORTABLE
 			networkPeer.SendData(command.data, command.options);
+#endif
 
 			NetworkGamer sender;
 			CommandReceiveData crd = new CommandReceiveData (command.sender.RemoteUniqueIdentifier,
@@ -869,6 +898,7 @@ namespace Microsoft.Xna.Framework.Net
 				GamerJoined(this, new GamerJoinedEventArgs(gamer));
 			}
 			
+#if !PORTABLE
 			if (networkPeer !=  null && (command.State & GamerStates.Local) == 0) {
 				
 				networkPeer.SendPeerIntroductions(gamer);
@@ -878,7 +908,7 @@ namespace Microsoft.Xna.Framework.Net
 			{
 				networkPeer.UpdateLiveSession(this);
 			}
-			
+#endif
 			
 		}
 		
@@ -899,10 +929,12 @@ namespace Microsoft.Xna.Framework.Net
 				
 			}
 			
+#if !PORTABLE
 			if (networkPeer != null)
 			{
 				networkPeer.UpdateLiveSession(this);
 			}
+#endif
 		}		
 
 		void HandleGamerPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -1059,7 +1091,7 @@ namespace Microsoft.Xna.Framework.Net
 
 		public TimeSpan SimulatedLatency {
 			get {
-#if DEBUG
+#if DEBUG && !PORTABLE
                 if (networkPeer != null)
                 {
                     return networkPeer.SimulatedLatency;
@@ -1069,7 +1101,7 @@ namespace Microsoft.Xna.Framework.Net
 			}
 			set {
                 defaultSimulatedLatency = value;
-#if DEBUG
+#if DEBUG && !PORTABLE
                 if (networkPeer != null)
                 {
                     networkPeer.SimulatedLatency = value;
@@ -1083,14 +1115,18 @@ namespace Microsoft.Xna.Framework.Net
 
 		public float SimulatedPacketLoss {
 			get {
+#if !PORTABLE
                 if (networkPeer != null)
                 {
                     simulatedPacketLoss = networkPeer.SimulatedPacketLoss;                   
                 }
+#endif
                 return simulatedPacketLoss;
 			}
 			set {
+#if !PORTABLE
                 if (networkPeer != null) networkPeer.SimulatedPacketLoss = value;
+#endif
                 simulatedPacketLoss = value;
 			}
 		}			

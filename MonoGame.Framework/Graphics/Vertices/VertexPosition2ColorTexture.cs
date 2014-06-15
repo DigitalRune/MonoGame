@@ -6,7 +6,9 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
+#if !PORTABLE
 	[StructLayout(LayoutKind.Sequential, Pack=1)]
+#endif
 	// This should really be XNA's VertexPositionColorTexture
 	// but I'm not sure we want to use Vector3s if we don't have to.
     internal struct VertexPosition2ColorTexture : IVertexType

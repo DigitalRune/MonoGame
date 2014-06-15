@@ -53,8 +53,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+#if !PORTABLE
 using System.Windows;
 using Microsoft.Xna.Framework.Storage;
+#endif
 
 #if WINRT
 using System.Threading.Tasks;
@@ -64,7 +66,9 @@ using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.System;
 #else
+#if !PORTABLE
 using System.Runtime.Remoting.Messaging;
+#endif
 #if !(WINDOWS && DIRECTX)
 using Microsoft.Xna.Framework.Net;
 #endif
@@ -307,7 +311,7 @@ namespace Microsoft.Xna.Framework.GamerServices
 				return;
 			}
 
-#if !WINRT && !(WINDOWS && DIRECTX)
+#if !WINRT && !(WINDOWS && DIRECTX) && !PORTABLE
             Microsoft.Xna.Framework.GamerServices.MonoGameGamerServicesHelper.ShowSigninSheet();            
 
             if (GamerServicesComponent.LocalNetworkGamer == null)
@@ -394,10 +398,12 @@ namespace Microsoft.Xna.Framework.GamerServices
 			return null;
 		}
 
+#if !PORTABLE
 		public static StorageDevice EndShowStorageDeviceSelector( IAsyncResult result )
 		{
 			return null;
 		}
+#endif
 
 		#region Properties
 		public static bool IsScreenSaverEnabled 
@@ -461,7 +467,7 @@ namespace Microsoft.Xna.Framework.GamerServices
 
         internal static void Initialise(Game game)
         {
-#if !DIRECTX
+#if !DIRECTX && !PORTABLE
             MonoGameGamerServicesHelper.Initialise(game);
 #endif
         }

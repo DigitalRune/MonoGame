@@ -45,7 +45,7 @@ namespace Microsoft.Xna.Framework.Audio
 		
         public SoundBank(AudioEngine audioEngine, string fileName)
         {
-#if WINRT
+#if WINRT || PORTABLE
             const char notSeparator = '/';
             const char separator = '\\';
 #else
@@ -221,7 +221,11 @@ namespace Microsoft.Xna.Framework.Audio
         }
 		
 		internal SoundEffectInstance GetWave(byte waveBankIndex, uint trackIndex) {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 			return waveBanks[waveBankIndex].sounds[trackIndex];
+#endif
 		}
 		
         public Cue GetCue(string name)

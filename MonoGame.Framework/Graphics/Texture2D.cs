@@ -39,11 +39,13 @@ purpose and non-infringement.
 #endregion License
 
 using System;
+#if !PORTABLE
 #if !PSM
 using System.Drawing;
 #else
 using Sce.PlayStation.Core.Graphics;
 using Sce.PlayStation.Core.Imaging;
+#endif
 #endif
 using System.IO;
 using System.Runtime.InteropServices;
@@ -171,7 +173,9 @@ namespace Microsoft.Xna.Framework.Graphics
 		    if (type == SurfaceType.SwapChainRenderTarget)
 		        return;
 
-#if DIRECTX
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
             _shared = shared;
 
             _renderTarget = (type == SurfaceType.RenderTarget);
@@ -281,6 +285,9 @@ namespace Microsoft.Xna.Framework.Graphics
             if (data == null)
 				throw new ArgumentNullException("data");
 
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 #if OPENGL
             Threading.BlockOnUIThread(() =>
             {
@@ -430,6 +437,7 @@ namespace Microsoft.Xna.Framework.Graphics
 #endif
             });
 #endif
+#endif
         }
 		
 		public void SetData<T>(T[] data, int startIndex, int elementCount) where T : struct
@@ -454,7 +462,8 @@ namespace Microsoft.Xna.Framework.Graphics
             // Reading back a texture from GPU memory is unsupported
             // in OpenGL ES 2.0 and no work around has been implemented.           
             throw new NotSupportedException("OpenGL ES 2.0 does not support texture reads.");
-
+#elif PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
 #elif ANDROID
 
             Rectangle r;
@@ -723,7 +732,9 @@ namespace Microsoft.Xna.Framework.Graphics
 		public static Texture2D FromStream(GraphicsDevice graphicsDevice, Stream stream)
 		{
             //todo: partial classes would be cleaner
-#if IOS || MONOMAC
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif IOS || MONOMAC
             
 
 
@@ -906,7 +917,7 @@ namespace Microsoft.Xna.Framework.Graphics
             });
 
             waitEvent.Wait();
-#elif MONOMAC
+#elif MONOMAC || WINDOWS
 			SaveAsImage(stream, width, height, ImageFormat.Jpeg);
 #else
             throw new NotImplementedException();

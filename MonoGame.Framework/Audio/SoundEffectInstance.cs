@@ -54,13 +54,14 @@ namespace Microsoft.Xna.Framework.Audio
 	public sealed class SoundEffectInstance : IDisposable
 	{
 		private bool isDisposed = false;
-#if !DIRECTX
+#if !DIRECTX && !PORTABLE
         private SoundState soundState = SoundState.Stopped;
 #endif
 #if ANDROID
         private int _streamId = -1;
 #endif
 
+#if !PORTABLE
 #if DIRECTX        
         private SourceVoice _voice { get; set; }
         private SoundEffect _effect { get; set; }
@@ -82,6 +83,7 @@ namespace Microsoft.Xna.Framework.Audio
 			} 
 		}
 #endif
+#endif
 
 #if DIRECTX
         internal SoundEffectInstance(SoundEffect effect, SourceVoice voice)
@@ -89,6 +91,11 @@ namespace Microsoft.Xna.Framework.Audio
             _effect = effect;
             _voice = voice;
         }
+#elif PORTABLE
+	    internal SoundEffectInstance()
+	    {
+	        throw new NotImplementedException();
+	    }
 #else
         internal SoundEffectInstance(){}
 
@@ -128,6 +135,7 @@ namespace Microsoft.Xna.Framework.Audio
 
         public void Dispose()
         {
+#if !PORTABLE
 #if DIRECTX
             if (_voice != null)
             {
@@ -143,6 +151,7 @@ namespace Microsoft.Xna.Framework.Audio
             // When disposing a SoundEffectInstance, the Sound should
             // just be stopped as it will likely be reused later
             _sound.Stop();
+#endif
 #endif
 			isDisposed = true;
 		}
@@ -189,7 +198,9 @@ namespace Microsoft.Xna.Framework.Audio
 		
 		public void Pause ()
         {
-#if DIRECTX         
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX         
             if (_voice != null)
                 _voice.Stop();
             _paused = true;
@@ -210,7 +221,10 @@ namespace Microsoft.Xna.Framework.Audio
         {
             if (State == SoundState.Playing)
                 return;
-#if DIRECTX
+
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
             if (_voice != null)
             {
                 // Choose the correct buffer depending on if we are looped.            
@@ -262,7 +276,9 @@ namespace Microsoft.Xna.Framework.Audio
 
 		public void Resume()
         {
-#if DIRECTX
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
             if (_voice != null)
             {
                 // Restart the sound if (and only if) it stopped playing
@@ -296,7 +312,9 @@ namespace Microsoft.Xna.Framework.Audio
 		
 		public void Stop()
         {
-#if DIRECTX
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
             if (_voice != null)
             {
                 _voice.Stop(0);
@@ -320,7 +338,9 @@ namespace Microsoft.Xna.Framework.Audio
 
         public void Stop(bool immediate)
         {
-#if DIRECTX            
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX            
             if (_voice != null)
                 _voice.Stop(immediate ? 0 : (int)PlayFlags.Tails);
 
@@ -351,7 +371,9 @@ namespace Microsoft.Xna.Framework.Audio
 		{ 
 			get
             {
-#if DIRECTX
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
                 return _loop;
 #else
                 if ( _sound != null )
@@ -367,7 +389,9 @@ namespace Microsoft.Xna.Framework.Audio
 			
 			set
             {
-#if DIRECTX
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
                 _loop = value;
 #else
                 if ( _sound != null )
@@ -390,7 +414,9 @@ namespace Microsoft.Xna.Framework.Audio
 		{ 
 			get
             {
-#if DIRECTX                
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX                
                 return _pan;
 #else
                 if ( _sound != null )
@@ -406,7 +432,9 @@ namespace Microsoft.Xna.Framework.Audio
 			
 			set
             {
-#if DIRECTX       
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX       
                 // According to XNA documentation:
                 // "Panning, ranging from -1.0f (full left) to 1.0f (full right). 0.0f is centered."
                 _pan = MathHelper.Clamp(value, -1.0f, 1.0f);
@@ -510,7 +538,9 @@ namespace Microsoft.Xna.Framework.Audio
 		{             
 	            get
             {
-#if DIRECTX
+#if PORTABLE
+                    throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
                     if (_voice == null)
                         return 0.0f;
 
@@ -532,7 +562,9 @@ namespace Microsoft.Xna.Framework.Audio
 	            }
 	            set
             {
-#if DIRECTX
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
                     if (_voice == null)
                         return;
 
@@ -553,7 +585,9 @@ namespace Microsoft.Xna.Framework.Audio
 		{ 
 			get
             {
-#if DIRECTX           
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX           
                 // If no voice or no buffers queued the sound is stopped.
                 if (_voice == null || _voice.State.BuffersQueued == 0)
                     return SoundState.Stopped;
@@ -592,7 +626,9 @@ namespace Microsoft.Xna.Framework.Audio
 		{ 
 			get
             {
-#if DIRECTX
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
                 if (_voice == null)
                     return 0.0f;
                 else
@@ -611,7 +647,9 @@ namespace Microsoft.Xna.Framework.Audio
 			
 			set
             {
-#if DIRECTX
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
                 if (_voice != null)
                     _voice.SetVolume(value, XAudio2.CommitNow);
 #else

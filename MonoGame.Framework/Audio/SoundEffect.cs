@@ -76,6 +76,7 @@ namespace Microsoft.Xna.Framework.Audio
         private List<SoundEffectInstance> _playingInstances;
         private List<SoundEffectInstance> _availableInstances;
         private List<SoundEffectInstance> _toBeRecycledInstances;
+#elif PORTABLE
 #else
         private string _filename = "";
         internal byte[] _data;
@@ -122,7 +123,7 @@ namespace Microsoft.Xna.Framework.Audio
         {
             Initialize(format, buffer, offset, count, loopStart, loopLength);
         }
-
+#elif PORTABLE
 #else
         internal SoundEffect(string fileName)
         {
@@ -179,7 +180,9 @@ namespace Microsoft.Xna.Framework.Audio
 
         internal SoundEffect(Stream s)
         {
-#if (WINDOWS && OPENGL) || LINUX
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif (WINDOWS && OPENGL) || LINUX
             _data = LoadAudioStream(s, 1.0f, false);
 #elif !DIRECTX
             var data = new byte[s.Length];
@@ -202,7 +205,9 @@ namespace Microsoft.Xna.Framework.Audio
 
         public SoundEffect(byte[] buffer, int sampleRate, AudioChannels channels)
         {
-#if DIRECTX            
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX            
             Initialize(new WaveFormat(sampleRate, (int)channels), buffer, 0, buffer.Length, 0, buffer.Length);
 #elif (WINDOWS && OPENGL) || LINUX
             _data = buffer;
@@ -259,6 +264,9 @@ namespace Microsoft.Xna.Framework.Audio
 
         public SoundEffectInstance CreateInstance()
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 #if DIRECTX
             SourceVoice voice = null;
             if (Device != null)
@@ -272,6 +280,7 @@ namespace Microsoft.Xna.Framework.Audio
             instance.Sound = _sound;
 #endif
             return instance;
+#endif
         }
 
         public static SoundEffect FromStream(Stream stream)
@@ -294,7 +303,9 @@ namespace Microsoft.Xna.Framework.Audio
 
         public bool Play(float volume, float pitch, float pan)
         {
-#if DIRECTX
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX
             if (MasterVolume > 0.0f)
             {
                 if (_playingInstances == null)
@@ -386,7 +397,9 @@ namespace Microsoft.Xna.Framework.Audio
         {
             get
             {
-#if DIRECTX                    
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#elif DIRECTX                    
                 var sampleCount = _buffer.PlayLength;
                 var avgBPS = _format.AverageBytesPerSecond;
                 
@@ -505,7 +518,9 @@ namespace Microsoft.Xna.Framework.Audio
 
         public void Dispose()
         {
-#if (WINDOWS && OPENGL) || LINUX
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#elif (WINDOWS && OPENGL) || LINUX
             // No-op. Note that isDisposed remains false!
 #else
 

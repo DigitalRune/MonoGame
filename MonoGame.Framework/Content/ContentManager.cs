@@ -46,7 +46,9 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#if !PORTABLE
 using Path = System.IO.Path;
+#endif
 using System.Diagnostics;
 
 #if !WINRT
@@ -237,6 +239,9 @@ namespace Microsoft.Xna.Framework.Content
 		
 		protected virtual Stream OpenStream(string assetName)
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 			Stream stream;
 			try
             {
@@ -268,6 +273,7 @@ namespace Microsoft.Xna.Framework.Content
 				throw new ContentLoadException("Opening stream error.", exception);
 			}
 			return stream;
+#endif
 		}
 
 		protected T ReadAsset<T>(string assetName, Action<IDisposable> recordDisposableObject)
@@ -324,7 +330,9 @@ namespace Microsoft.Xna.Framework.Content
             {
 				//MonoGame try to load as a non-content file
 
+#if !PORTABLE
                 assetName = TitleContainer.GetFilename(Path.Combine(RootDirectory, assetName));
+#endif
 
                 assetName = Normalize<T>(assetName);
 	
@@ -355,6 +363,9 @@ namespace Microsoft.Xna.Framework.Content
 
         protected virtual string Normalize<T>(string assetName)
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             if (typeof(T) == typeof(Texture2D) || typeof(T) == typeof(Texture))
             {
                 return Texture2DReader.Normalize(assetName);
@@ -382,6 +393,7 @@ namespace Microsoft.Xna.Framework.Content
                 return EffectReader.Normalize(assetName);
             }
             return null;
+#endif
         }
 
         protected virtual object ReadRawAsset<T>(string assetName, string originalAssetName)
@@ -401,7 +413,7 @@ namespace Microsoft.Xna.Framework.Content
                 //result = new SpriteFont(Texture2D.FromFile(graphicsDeviceService.GraphicsDevice,assetName), null, null, null, 0, 0.0f, null, null);
                 throw new NotImplementedException();
             }
-#if !DIRECTX
+#if !DIRECTX && !PORTABLE
             else if ((typeof(T) == typeof(Song)))
             {
                 return new Song(assetName);
@@ -561,6 +573,9 @@ namespace Microsoft.Xna.Framework.Content
 
 		protected virtual void ReloadGraphicsAssets()
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             foreach (var asset in LoadedAssets)
             {
 #if WINDOWS_STOREAPP
@@ -571,6 +586,7 @@ namespace Microsoft.Xna.Framework.Content
                 var genericMethod = methodInfo.MakeGenericMethod(asset.Value.GetType());
                 genericMethod.Invoke(this, new object[] { asset.Key, Convert.ChangeType(asset.Value, asset.Value.GetType()) }); 
             }
+#endif
         }
 
         protected virtual void ReloadAsset<T>(string originalAssetName, T currentAsset)
@@ -626,7 +642,9 @@ namespace Microsoft.Xna.Framework.Content
 				// Try to reload as a non-xnb file.
                 // Just textures supported for now.
 
+#if !PORTABLE
                 assetName = TitleContainer.GetFilename(Path.Combine(RootDirectory, assetName));
+#endif
 
                 assetName = Normalize<T>(assetName);
 
@@ -674,7 +692,11 @@ namespace Microsoft.Xna.Framework.Content
         {
             get
             {
+#if PORTABLE
+                throw MonoGame.Portable.NotImplementedException;
+#else
                 return Path.Combine(TitleContainer.Location, RootDirectory);
+#endif
             }
         }
 		

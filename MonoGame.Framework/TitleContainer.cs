@@ -108,6 +108,9 @@ namespace Microsoft.Xna.Framework
         /// <returns>A open stream or null if the file is not found.</returns>
         public static Stream OpenStream(string name)
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             // Normalize the file path.
             var safeName = GetFilename(name);
 
@@ -140,6 +143,7 @@ namespace Microsoft.Xna.Framework
             var absolutePath = Path.Combine(Location, safeName);
             return File.OpenRead(absolutePath);
 #endif
+#endif
         }
 
         // TODO: This is just path normalization.  Remove this
@@ -147,7 +151,7 @@ namespace Microsoft.Xna.Framework
         // this same logic is duplicated all over the code base.
         internal static string GetFilename(string name)
         {
-#if WINRT
+#if WINRT || PORTABLE
             // Replace non-windows seperators.
             name = name.Replace('/', '\\');
 #else

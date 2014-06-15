@@ -124,6 +124,9 @@ namespace Microsoft.Xna.Framework.Content
 #else
 		public static string Normalize(string fileName, string[] extensions)
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 #if WINRT
             if (MetroHelper.AppDataFileExists(fileName))
                 return fileName;
@@ -147,6 +150,7 @@ namespace Microsoft.Xna.Framework.Content
             }
 			
 			return null;
+#endif
 		}
 #endif
         #endregion

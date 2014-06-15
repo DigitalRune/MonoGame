@@ -69,7 +69,7 @@ non-infringement.
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-#if !PSM
+#if !PSM && !PORTABLE
 using System.Drawing;
 #endif
 using System.IO;
@@ -417,8 +417,10 @@ namespace Microsoft.Xna.Framework
         public void ResetElapsedTime()
         {
             Platform.ResetElapsedTime();
+#if !PORTABLE
             _gameTimer.Reset();
             _gameTimer.Start();
+#endif
             _accumulatedElapsedTime = TimeSpan.Zero;
             _gameTime.ElapsedGameTime = TimeSpan.Zero;
         }
@@ -484,10 +486,15 @@ namespace Microsoft.Xna.Framework
 
         private TimeSpan _accumulatedElapsedTime;
         private readonly GameTime _gameTime = new GameTime();
+#if !PORTABLE
         private Stopwatch _gameTimer = Stopwatch.StartNew();
+#endif
 
         public void Tick()
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             // NOTE: This code is very sensitive and can break very badly
             // with even what looks like a safe change.  Be sure to test 
             // any change fully in both the fixed and variable timestep 
@@ -566,6 +573,7 @@ namespace Microsoft.Xna.Framework
             {
                 DoDraw(_gameTime);
             }
+#endif
         }
 
         #endregion
