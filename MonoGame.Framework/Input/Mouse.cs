@@ -53,6 +53,14 @@ using MonoMac.Foundation;
 using MonoMac.AppKit;
 #endif
 #endif
+#if WINDOWS && DIRECTX
+using SharpDX.Multimedia;
+using SharpDX.RawInput;
+#endif
+#if WINDOWS_STOREAPP
+using Windows.Devices.Input;
+#endif
+
 
 namespace Microsoft.Xna.Framework.Input
 {
@@ -65,9 +73,71 @@ namespace Microsoft.Xna.Framework.Input
 
         private static readonly MouseState _defaultState = new MouseState();
 
+        // Fields for relative mouse movement info:
+        // For a first person shooter, the mouse position info needs to be relative and not be 
+        // limited by the screen border. This can be achieved by calling SetPosition() each frame
+        // and measuring the position change between the current pos and the pos specified in 
+        // SetPosition(). However, this is not accurate when the frame rate is high (>>60 Hz).
+        // (Mouse seems to be slow.) In WINDOWS && DIRECTX we can use the raw mouse device for
+        // accurate mouse movement. (See also SetPosition() and MouseState.DeltaX/DeltaY.)
+        private static int _defaultPositionX;
+        private static int _defaultPositionY;
+        private static bool _isRelative;
+#if (WINDOWS && DIRECTX) || WINDOWS_STOREAPP
+        private static int _deltaX;
+        private static int _deltaY;
+#endif
+
 #if (WINDOWS && OPENGL) || LINUX
 	private static OpenTK.Input.MouseDevice _mouse = null;			
 #endif
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the game requires relative mouse movement data
+        /// instead of absolute mouse movement data.
+        /// </summary>
+        /// <value>
+        /// <see langword="true" /> if the game requires relative mouse movement data; otherwise, 
+        /// <see langword="false" />.
+        /// </value>
+        /// <remarks>
+        /// Absolute mouse movement is used in desktop applications. Relative mouse movement is 
+        /// required, for example, for first person shooter controls. When <see cref="IsRelative"/> 
+        /// is <see langword="true"/>, the mouse cursor is not limited by the screen boundaries,
+        /// and <see cref="MouseState.DeltaX"/> and <see cref="MouseState.DeltaY"/> can be used
+        /// to get the relative mouse movement since the last <see cref="SetPosition"/> call.
+        /// </remarks>
+        public static bool IsRelative
+        {
+            get { return _isRelative; }
+            set
+            {
+                _isRelative = value;
+
+#if WINDOWS && DIRECTX || WINDOWS_STOREAPP
+                if (_isRelative)
+                {
+#if WINDOWS && DIRECTX
+                    // Register the raw mouse device once, and never unregister the device or event.
+                    Device.RegisterDevice(UsagePage.Generic, UsageId.GenericMouse, DeviceFlags.InputSink, WindowHandle);
+                    Device.MouseInput += OnRawMouseInput;
+#elif WINDOWS_STOREAPP
+                    MouseDevice.GetForCurrentView().MouseMoved += OnWinStoreMouseMoved;
+#endif
+                }
+                else
+                {
+#if WINDOWS && DIRECTX
+                    Device.MouseInput -= OnRawMouseInput;
+#elif WINDOWS_STOREAPP
+                    // We have to unregister the event handler because while the event is handled 
+                    // the mouse behaves differently than the default absolute mouse.
+                    MouseDevice.GetForCurrentView().MouseMoved -= OnWinStoreMouseMoved;
+#endif
+                }
+#endif
+            }
+        }
 
 #if (WINDOWS && OPENGL)
 
@@ -173,7 +243,17 @@ namespace Microsoft.Xna.Framework.Input
 	    window.MouseState.ScrollWheelValue = (int)( _mouse.WheelPrecise * 120 );
 #endif
 
-            return window.MouseState;
+            var state = window.MouseState;
+
+#if WINDOWS && DIRECTX || WINDOWS_STOREAPP
+            state.DeltaX = _deltaX;
+            state.DeltaY = _deltaY;
+#else
+            state.DeltaX = state.X - _defaultPositionX;
+            state.DeltaY = state.Y - _defaultPositionY;
+#endif
+
+            return state;
         }
 
         /// <summary>
@@ -210,6 +290,13 @@ namespace Microsoft.Xna.Framework.Input
         /// <param name="y">Relative vertical position of the cursor.</param>
         public static void SetPosition(int x, int y)
         {
+            _defaultPositionX = x;
+            _defaultPositionY = y;
+#if WINDOWS && DIRECTX || WINDOWS_STOREAPP
+            _deltaX = 0;
+            _deltaY = 0;
+#endif
+
             UpdateStatePosition(x, y);
 
 #if (WINDOWS && (OPENGL || DIRECTX)) || LINUX
@@ -248,7 +335,24 @@ namespace Microsoft.Xna.Framework.Input
         }
 
         #endregion Public methods
-    
+
+
+#if WINDOWS && DIRECTX
+        private static void OnRawMouseInput(object sender, MouseInputEventArgs mouseEventArgs)
+        {
+            _deltaX += mouseEventArgs.X;
+            _deltaY += mouseEventArgs.Y;
+        }
+#endif
+        
+#if WINDOWS_STOREAPP
+        private static void OnWinStoreMouseMoved(MouseDevice sender, MouseEventArgs mouseEventArgs)
+        {
+            _deltaX += mouseEventArgs.MouseDelta.X;
+            _deltaY += mouseEventArgs.MouseDelta.Y;
+        }
+#endif
+
         private static void UpdateStatePosition(int x, int y)
         {
             PrimaryWindow.MouseState.X = x;

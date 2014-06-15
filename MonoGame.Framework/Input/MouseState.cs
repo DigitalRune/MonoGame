@@ -47,6 +47,7 @@ namespace Microsoft.Xna.Framework.Input
 	public struct MouseState
 	{
 		int _x, _y;
+        private int _deltaX, _deltaY;
 		int _scrollWheelValue;
 		ButtonState _leftButton;
 		ButtonState _rightButton;
@@ -76,6 +77,8 @@ namespace Microsoft.Xna.Framework.Input
 		{
 			_x = x;
 			_y = y;
+            _deltaX = 0;
+            _deltaY = 0;
 			_scrollWheelValue = scrollWheel;
 			_leftButton = leftButton;
 			_middleButton = middleButton;
@@ -92,6 +95,8 @@ namespace Microsoft.Xna.Framework.Input
 		{
 			return left._x == right._x &&
 				   left._y == right._y &&
+                   left.DeltaX == right.DeltaX &&
+                   left.DeltaY == right.DeltaY &&
 				   left._leftButton == right._leftButton &&
 				   left._middleButton == right._middleButton &&
 				   left._rightButton == right._rightButton &&
@@ -153,6 +158,47 @@ namespace Microsoft.Xna.Framework.Input
 				_y = value;
 			}
 		}
+
+
+        /// <summary>
+        /// Gets the horizontal position change of the cursor.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This value is equal to the horizontal distance to the position specified in 
+        /// <see cref="Mouse.SetPosition"/>. This value is undefined if 
+        /// <see cref="Mouse.SetPosition"/> was not called.
+        /// </para>
+        /// <para>
+        /// Note: This property exists in MonoGame but not in XNA.
+        /// </para>
+        /// </remarks>
+        public int DeltaX
+        {
+            get { return _deltaX; }
+            internal set { _deltaX = value; }
+        }
+
+
+        /// <summary>
+        /// Gets the vertical position change of the cursor.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This value is equal to the vertical distance to the position specified in 
+        /// <see cref="Mouse.SetPosition"/>. This value is undefined if 
+        /// <see cref="Mouse.SetPosition"/> was not called.
+        /// </para>
+        /// <para>
+        /// Note: This property exists in MonoGame but not in XNA.
+        /// </para>
+        /// </remarks>
+        public int DeltaY
+        {
+            get { return _deltaY; }
+            internal set { _deltaY = value; }
+        }
+
 
         /// <summary>
         /// Gets cursor position.
