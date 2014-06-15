@@ -957,7 +957,7 @@ namespace Microsoft.Xna.Framework.Graphics
 #endif
         }
 
-#if MONOMAC
+#if MONOMAC || WINDOWS
 		private void SaveAsImage(Stream stream, int width, int height, ImageFormat format)
 		{
 			if (stream == null)
