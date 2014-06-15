@@ -6,6 +6,7 @@ using SharpDX;
 using SharpDX.Direct3D11;
 using Microsoft.Phone.Controls;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using Windows.Graphics.Display;
 using Windows.Phone.Input.Interop;
@@ -38,6 +39,8 @@ namespace MonoGame.Framework.WindowsPhone
                 var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
                 var pos = new Vector2((float)pointerPoint.Position.X, (float)pointerPoint.Position.Y) * dipFactor;
                 TouchPanel.AddEvent((int)pointerPoint.PointerId, TouchLocationState.Pressed, pos);
+
+                UpdateMouse(pos, ButtonState.Pressed);
             }
 
             private static void OnPointerMoved(DrawingSurfaceManipulationHost sender, PointerEventArgs args)
@@ -48,6 +51,8 @@ namespace MonoGame.Framework.WindowsPhone
                 var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
                 var pos = new Vector2((float)pointerPoint.Position.X, (float)pointerPoint.Position.Y) * dipFactor;
                 TouchPanel.AddEvent((int)pointerPoint.PointerId, TouchLocationState.Moved, pos);
+
+                UpdateMouse(pos, ButtonState.Pressed);
             }
 
             private static void OnPointerReleased(DrawingSurfaceManipulationHost sender, PointerEventArgs args)
@@ -58,6 +63,15 @@ namespace MonoGame.Framework.WindowsPhone
                 var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
                 var pos = new Vector2((float)pointerPoint.Position.X, (float)pointerPoint.Position.Y) * dipFactor;
                 TouchPanel.AddEvent((int)pointerPoint.PointerId, TouchLocationState.Released, pos);
+
+                UpdateMouse(pos, ButtonState.Released);
+            }
+
+            private static void UpdateMouse(Vector2 position, ButtonState buttonState)
+            {
+                Mouse.PrimaryWindow.MouseState.X = (int)position.X;
+                Mouse.PrimaryWindow.MouseState.Y = (int)position.Y;
+                Mouse.PrimaryWindow.MouseState.LeftButton = buttonState;
             }
         }
 
