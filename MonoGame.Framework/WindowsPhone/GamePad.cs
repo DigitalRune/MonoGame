@@ -36,5 +36,10 @@ namespace Microsoft.Xna.Framework.Input
 
             return state;
         }
+
+        public static GamePadState GetState(PlayerIndex playerIndex, GamePadDeadZone deadZoneMode)
+        {
+            return GetState(playerIndex);
+        }
     }
 }
