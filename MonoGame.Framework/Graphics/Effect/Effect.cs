@@ -64,27 +64,32 @@ namespace Microsoft.Xna.Framework.Graphics
         internal ConstantBuffer[] ConstantBuffers { get; private set; }
 
         private Shader[] _shaders;
-#endif
 
 	    private readonly bool _isClone;
+#endif
 
         internal Effect(GraphicsDevice graphicsDevice)
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
+
 			if (graphicsDevice == null)
 				throw new ArgumentNullException ("Graphics Device Cannot Be Null");
 
 			this.GraphicsDevice = graphicsDevice;
-
-#if PORTABLE
-            throw MonoGame.Portable.NotImplementedException;
 #endif
 		}
 			
 		protected Effect(Effect cloneSource)
             : this(cloneSource.GraphicsDevice)
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             _isClone = true;
             Clone(cloneSource);
+#endif
 		}
 
         public Effect (GraphicsDevice graphicsDevice, byte[] effectCode)
@@ -149,15 +154,15 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="cloneSource">The source effect to clone from.</param>
         private void Clone(Effect cloneSource)
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             Debug.Assert(_isClone, "Cannot clone into non-cloned effect!");
 
             // Copy the mutable members of the effect.
             Parameters = cloneSource.Parameters.Clone();
             Techniques = cloneSource.Techniques.Clone(this);
 
-#if PORTABLE
-            throw MonoGame.Portable.NotImplementedException;
-#else
             // Make a copy of the immutable constant buffers.
             ConstantBuffers = new ConstantBuffer[cloneSource.ConstantBuffers.Length];
             for (var i = 0; i < cloneSource.ConstantBuffers.Length; i++)
@@ -199,13 +204,11 @@ namespace Microsoft.Xna.Framework.Graphics
 
         protected override void Dispose(bool disposing)
         {
+#if !PORTABLE
             if (!IsDisposed)
             {
                 if (disposing)
                 {
-#if PORTABLE
-                    throw MonoGame.Portable.NotImplementedException;
-#else
                     if (!_isClone)
                     {
                         // Only the clone source can dispose the shaders.
@@ -222,11 +225,11 @@ namespace Microsoft.Xna.Framework.Graphics
                             buffer.Dispose();
                         ConstantBuffers = null;
                     }
-#endif
                 }
             }
 
             base.Dispose(disposing);
+#endif
         }
 
         internal protected override void GraphicsDeviceResetting()

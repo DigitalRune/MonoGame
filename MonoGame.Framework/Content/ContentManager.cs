@@ -62,7 +62,7 @@ namespace Microsoft.Xna.Framework.Content
 	{
 		private string _rootDirectory = string.Empty;
 		private IServiceProvider serviceProvider;
-		private IGraphicsDeviceService graphicsDeviceService;
+		private IGraphicsDeviceService graphicsDeviceService = null;
         private Dictionary<string, object> loadedAssets = new Dictionary<string, object>();
 		private List<IDisposable> disposableAssets = new List<IDisposable>();
         private bool disposed;
@@ -279,6 +279,9 @@ namespace Microsoft.Xna.Framework.Content
 
 		protected T ReadAsset<T>(string assetName, Action<IDisposable> recordDisposableObject)
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 			if (string.IsNullOrEmpty(assetName))
 			{
 				throw new ArgumentNullException("assetName");
@@ -331,9 +334,7 @@ namespace Microsoft.Xna.Framework.Content
             {
 				//MonoGame try to load as a non-content file
 
-#if !PORTABLE
                 assetName = TitleContainer.GetFilename(Path.Combine(RootDirectory, assetName));
-#endif
 
                 assetName = Normalize<T>(assetName);
 	
@@ -360,6 +361,7 @@ namespace Microsoft.Xna.Framework.Content
 				throw new ContentLoadException("Could not load " + originalAssetName + " asset!");
 
 			return (T)result;
+#endif
 		}
 
         protected virtual string Normalize<T>(string assetName)
@@ -593,6 +595,9 @@ namespace Microsoft.Xna.Framework.Content
 
         protected virtual void ReloadAsset<T>(string originalAssetName, T currentAsset)
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
 			string assetName = originalAssetName;
 			if (string.IsNullOrEmpty(assetName))
 			{
@@ -644,14 +649,13 @@ namespace Microsoft.Xna.Framework.Content
 				// Try to reload as a non-xnb file.
                 // Just textures supported for now.
 
-#if !PORTABLE
                 assetName = TitleContainer.GetFilename(Path.Combine(RootDirectory, assetName));
-#endif
 
                 assetName = Normalize<T>(assetName);
 
                 ReloadRawAsset(currentAsset, assetName, originalAssetName);
             }
+#endif
 		}
 
         protected virtual void ReloadRawAsset<T>(T asset, string assetName, string originalAssetName)

@@ -255,6 +255,7 @@ namespace Microsoft.Xna.Framework.Net
 		
 		public void Dispose (bool disposing) 
 		{
+#if !PORTABLE
             if (!_isDisposed)
             {
                 if (disposing)
@@ -264,7 +265,6 @@ namespace Microsoft.Xna.Framework.Net
                         gamer.Dispose();
                     }
 
-#if !PORTABLE
                     // Make sure we shut down our server instance as we no longer need it.
                     if (networkPeer != null)
                     {
@@ -274,11 +274,11 @@ namespace Microsoft.Xna.Framework.Net
                     {
                         networkPeer.ShutDown();
                     }
-#endif
                 }
 
                 this._isDisposed = true;
             }
+#endif
 		}
 
 	#endregion
@@ -625,17 +625,20 @@ namespace Microsoft.Xna.Framework.Net
 			int maxLocalGamers,
 			NetworkSessionProperties searchProperties)
 		{
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
+
 			try {
 				if (maxLocalGamers < 1 || maxLocalGamers > 4)
 					throw new ArgumentOutOfRangeException ( "maxLocalGamers must be between 1 and 4." );
 
 				List<AvailableNetworkSession> availableNetworkSessions = new List<AvailableNetworkSession> ();
-#if !PORTABLE
 				MonoGamerPeer.Find(sessionType);
-#endif
 				return new AvailableNetworkSessionCollection ( availableNetworkSessions );
 			} finally {
 			}
+#endif
 		}
 		
 		public NetworkGamer FindGamerById (byte gamerId)
