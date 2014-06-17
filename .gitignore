@@ -38,9 +38,6 @@ _ReSharper*/
 *.resharper
 [Tt]est[Rr]esult*
 
-#Project files
-[Bb]uild/
-
 #Subversion files
 .svn
 
@@ -52,5 +49,16 @@ monodroid*.msi
 
 #Unix temporary files
 *~
+
+# Output docs
+Documentation/Output/
+
+# Protobuild Generated Files
+#MonoGame.Framework.Content.Pipeline/*.csproj
+#MonoGame.Framework/*.csproj
+#/*.sln
+*.speccache
+
+# DigitalRune
 *.DotSettings
 /DigitalRune

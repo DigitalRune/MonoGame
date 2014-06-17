@@ -8,6 +8,9 @@ using System.Diagnostics;
 using Sce.PlayStation.Core.Graphics;
 #endif
 
+#if PORTABLE
+#pragma warning disable 0649  // Disable warning: Field is never assigned to.
+#endif
 
 namespace Microsoft.Xna.Framework.Graphics
 {
@@ -163,6 +166,9 @@ namespace Microsoft.Xna.Framework.Graphics
             Sce.PlayStation.Core.Matrix4 matrix4 = PSSHelper.ToPssMatrix4(data);
             matrix4 = matrix4.Transpose (); //When .Data is set the matrix is transposed, we need to do it again to undo it
             _shaderProgram.SetUniformValue(0, ref matrix4);
+            
+            if (_effect.Parameters["Texture0"].Data != null && _effect.Parameters["Texture0"].Data != null)
+                _effect.GraphicsDevice._graphics.SetTexture(0, ((Texture2D)_effect.Parameters["Texture0"].Data)._texture2D);
 #endif
         }
 		

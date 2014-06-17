@@ -80,7 +80,7 @@ namespace MonoGame.Framework
 {
     class WinFormsGamePlatform : GamePlatform
     {
-        internal static string LaunchParameters;
+        //internal static string LaunchParameters;
 
         private WinFormsGameWindow _window;
         private readonly List<XnaKeys> _keyState;
@@ -149,7 +149,7 @@ namespace MonoGame.Framework
         {
         }
 
-        public void ResetWindowBounds(bool toggleFullScreen)
+        public void ResetWindowBounds()
         {
             _window.ChangeClientSize(new Size(Game.graphicsDeviceManager.PreferredBackBufferWidth, Game.graphicsDeviceManager.PreferredBackBufferHeight));
         }
@@ -183,6 +183,8 @@ namespace MonoGame.Framework
                     _window.Dispose();
                     _window = null;
                     Window = null;
+
+                    Microsoft.Xna.Framework.Media.MediaManagerState.CheckShutdown();
                 }
             }
 

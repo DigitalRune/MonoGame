@@ -262,12 +262,23 @@ namespace Microsoft.Xna.Framework.Graphics
 			return new Vector2(vecInfo[0],vecInfo[1]);
 		}
 
-        /*
-		public Vector2[] GetValueVector2Array ()
+		public Vector2[] GetValueVector2Array()
 		{
-			throw new NotImplementedException();
+            if (ParameterClass != EffectParameterClass.Vector || ParameterType != EffectParameterType.Single)
+                throw new InvalidCastException();
+			if (Elements != null && Elements.Count > 0)
+			{
+				Vector2[] result = new Vector2[Elements.Count];
+				for (int i = 0; i < Elements.Count; i++)
+				{
+					var v = Elements[i].GetValueSingleArray();
+					result[i] = new Vector2(v[0], v[1]);
+				}
+			return result;
+			}
+			
+		return null;
 		}
-        */
 
 		public Vector3 GetValueVector3 ()
 		{
@@ -278,12 +289,24 @@ namespace Microsoft.Xna.Framework.Graphics
 			return new Vector3(vecInfo[0],vecInfo[1],vecInfo[2]);
 		}
 
-        /*
-		public Vector3[] GetValueVector3Array ()
-		{
-			throw new NotImplementedException();
-		}
-        */
+       public Vector3[] GetValueVector3Array()
+        {
+            if (ParameterClass != EffectParameterClass.Vector || ParameterType != EffectParameterType.Single)
+                throw new InvalidCastException();
+
+            if (Elements != null && Elements.Count > 0)
+            {
+                Vector3[] result = new Vector3[Elements.Count];
+                for (int i = 0; i < Elements.Count; i++)
+                {
+                    var v = Elements[i].GetValueSingleArray();
+                    result[i] = new Vector3(v[0], v[1], v[2]);
+                }
+                return result;
+            }
+            return null;
+        }
+
 
 		public Vector4 GetValueVector4 ()
 		{
@@ -294,12 +317,23 @@ namespace Microsoft.Xna.Framework.Graphics
 			return new Vector4(vecInfo[0],vecInfo[1],vecInfo[2],vecInfo[3]);
 		}
         
-        /*
-		public Vector4[] GetValueVector4Array ()
-		{
-			throw new NotImplementedException();
-		}
-        */
+          public Vector4[] GetValueVector4Array()
+        {
+            if (ParameterClass != EffectParameterClass.Vector || ParameterType != EffectParameterType.Single)
+                throw new InvalidCastException();
+
+            if (Elements != null && Elements.Count > 0)
+            {
+                Vector4[] result = new Vector4[Elements.Count];
+                for (int i = 0; i < Elements.Count; i++)
+                {
+                    var v = Elements[i].GetValueSingleArray();
+                    result[i] = new Vector4(v[0], v[1],v[2], v[3]);
+                }
+                return result;
+            }
+            return null;
+        }
 
 		public void SetValue (bool value)
 		{
@@ -431,6 +465,18 @@ namespace Microsoft.Xna.Framework.Graphics
                 fData[7] = value.M23;
                 fData[8] = value.M33;
             }
+            else if (RowCount == 3 && ColumnCount == 2)
+            {
+                var fData = (float[])Data;
+
+                fData[0] = value.M11;
+                fData[1] = value.M21;
+                fData[2] = value.M31;
+
+                fData[3] = value.M12;
+                fData[4] = value.M22;
+                fData[5] = value.M32;
+            }
 
             StateKey = unchecked(NextStateKey++);
         }
@@ -520,6 +566,18 @@ namespace Microsoft.Xna.Framework.Graphics
                 fData[6] = value.M31;
                 fData[7] = value.M32;
                 fData[8] = value.M33;
+            }
+            else if (RowCount == 3 && ColumnCount == 2)
+            {
+                var fData = (float[])Data;
+
+                fData[0] = value.M11;
+                fData[1] = value.M12;
+                fData[2] = value.M13;
+
+                fData[3] = value.M21;
+                fData[4] = value.M22;
+                fData[5] = value.M23;
             }
 
 			StateKey = unchecked(NextStateKey++);
@@ -619,6 +677,21 @@ namespace Microsoft.Xna.Framework.Graphics
                     fData[6] = value[i].M13;
                     fData[7] = value[i].M23;
                     fData[8] = value[i].M33;
+                }
+            }
+            else if (RowCount == 3 && ColumnCount == 2)
+            {
+                for (var i = 0; i < value.Length; i++)
+                {
+                    var fData = (float[])Elements[i].Data;
+
+                    fData[0] = value[i].M11;
+                    fData[1] = value[i].M21;
+                    fData[2] = value[i].M31;
+
+                    fData[3] = value[i].M12;
+                    fData[4] = value[i].M22;
+                    fData[5] = value[i].M32;
                 }
             }
 

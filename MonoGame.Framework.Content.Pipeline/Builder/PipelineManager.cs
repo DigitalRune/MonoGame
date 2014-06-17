@@ -13,11 +13,13 @@ using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using Microsoft.Xna.Framework.Graphics;
 using System.Globalization;
 using Microsoft.Xna.Framework.Content.Pipeline.Builder.Convertors;
+using System.Diagnostics;
 
 namespace MonoGame.Framework.Content.Pipeline.Builder
 {
     public class PipelineManager
     {
+        [DebuggerDisplay("ImporterInfo: {type.Name}")]
         private struct ImporterInfo
         {
             public ContentImporterAttribute attribue;
@@ -26,6 +28,7 @@ namespace MonoGame.Framework.Content.Pipeline.Builder
 
         private List<ImporterInfo> _importers;
 
+        [DebuggerDisplay("ProcessorInfo: {type.Name}")]
         private struct ProcessorInfo
         {
             public ContentProcessorAttribute attribue;
@@ -135,8 +138,9 @@ namespace MonoGame.Framework.Content.Pipeline.Builder
                         exportedTypes = a.GetExportedTypes();
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Logger.LogWarning(null, null, "Failed to load assembly '{0}': {1}", assemblyPath, e.Message);
                     // The assembly failed to load... nothing
                     // we can do but ignore it.
                     continue;
@@ -272,6 +276,20 @@ namespace MonoGame.Framework.Content.Pipeline.Builder
             return null;
         }
 
+        public void ResolveImporterAndProcessor(string sourceFilepath, ref string importerName, ref string processorName)
+        {
+            // Resolve the importer name.
+            if (string.IsNullOrEmpty(importerName))
+                importerName = FindImporterByExtension(Path.GetExtension(sourceFilepath));
+            if (string.IsNullOrEmpty(importerName))
+                throw new Exception(string.Format("Couldn't find a default importer for '{0}'!", sourceFilepath));
+
+            // Resolve the processor name.
+            if (string.IsNullOrEmpty(processorName))
+                processorName = FindDefaultProcessor(importerName);
+            if (string.IsNullOrEmpty(processorName))
+                throw new Exception(string.Format("Couldn't find a default processor for importer '{0}'!", importerName));
+        }
 
         public IContentProcessor CreateProcessor(string name, OpaqueDataDictionary processorParameters)
         {
@@ -377,14 +395,8 @@ namespace MonoGame.Framework.Content.Pipeline.Builder
         {
             sourceFilepath = PathHelper.Normalize(sourceFilepath);
             ResolveOutputFilepath(sourceFilepath, ref outputFilepath);
-
-            // Resolve the importer name.
-            if (string.IsNullOrEmpty(importerName))
-                importerName = FindImporterByExtension(Path.GetExtension(sourceFilepath));
-
-            // Resolve the processor name.
-            if (string.IsNullOrEmpty(processorName))
-                processorName = FindDefaultProcessor(importerName);
+            
+            ResolveImporterAndProcessor(sourceFilepath, ref importerName, ref processorName);
 
             // Record what we're building and how.
             var contentEvent = new PipelineBuildEvent
@@ -408,7 +420,7 @@ namespace MonoGame.Framework.Content.Pipeline.Builder
         public void BuildContent(PipelineBuildEvent pipelineEvent, PipelineBuildEvent cachedEvent, string eventFilepath)
         {
             if (!File.Exists(pipelineEvent.SourceFile))
-                throw new PipelineException("The source file does not exist!");
+                throw new PipelineException("The source file '{0}' does not exist!", pipelineEvent.SourceFile);
 
             Logger.PushFile(pipelineEvent.SourceFile);            
 
@@ -448,55 +460,8 @@ namespace MonoGame.Framework.Content.Pipeline.Builder
             {
                 Logger.LogMessage("{0}", pipelineEvent.SourceFile);
 
-                // Make sure we can find the importer and processor.
-                var importer = CreateImporter(pipelineEvent.Importer);
-                if (importer == null)
-                    throw new PipelineException("Failed to create importer '{0}'", pipelineEvent.Importer);
-                var processor = CreateProcessor(pipelineEvent.Processor, pipelineEvent.Parameters);
-                if (processor == null)
-                    throw new PipelineException("Failed to create processor '{0}'", pipelineEvent.Processor);
-                
-                // Try importing the content.
-                object importedObject;
-                try
-                {
-                    var importContext = new PipelineImporterContext(this);
-                    importedObject = importer.Import(pipelineEvent.SourceFile, importContext);
-                }
-                catch (PipelineException)
-                {
-                    throw;
-                }
-                catch (Exception inner)
-                {
-                    throw new PipelineException(string.Format("Importer '{0}' had unexpected failure!", pipelineEvent.Importer), inner);
-                }
-
-                // Make sure the input type is valid.
-                if (!processor.InputType.IsAssignableFrom(importedObject.GetType()))
-                {
-                    throw new PipelineException(
-                        string.Format("The type '{0}' cannot be processed by {1} as a {2}!",
-                        importedObject.GetType().FullName, 
-                        pipelineEvent.Processor, 
-                        processor.InputType.FullName));
-                }
-
-                // Process the imported object.
-                object processedObject;
-                try
-                {
-                    var processContext = new PipelineProcessorContext(this, pipelineEvent);
-                    processedObject = processor.Process(importedObject, processContext);
-                }
-                catch (PipelineException)
-                {
-                    throw;
-                }
-                catch (Exception inner)
-                {
-                    throw new PipelineException(string.Format("Processor '{0}' had unexpected failure!", pipelineEvent.Processor), inner);
-                }
+                // Import and process the content.
+                var processedObject = ProcessContent(pipelineEvent);
 
                 // Write the content to disk.
                 WriteXnb(processedObject, pipelineEvent);
@@ -510,6 +475,68 @@ namespace MonoGame.Framework.Content.Pipeline.Builder
             }
 
             Logger.PopFile();
+        }
+
+        public object ProcessContent(PipelineBuildEvent pipelineEvent)
+        {
+            if (!File.Exists(pipelineEvent.SourceFile))
+                throw new PipelineException("The source file '{0}' does not exist!", pipelineEvent.SourceFile);
+
+            // Store the last write time of the source file
+            // so we can detect if it has been changed.
+            pipelineEvent.SourceTime = File.GetLastWriteTime(pipelineEvent.SourceFile);
+
+            // Make sure we can find the importer and processor.
+            var importer = CreateImporter(pipelineEvent.Importer);
+            if (importer == null)
+                throw new PipelineException("Failed to create importer '{0}'", pipelineEvent.Importer);
+            var processor = CreateProcessor(pipelineEvent.Processor, pipelineEvent.Parameters);
+            if (processor == null)
+                throw new PipelineException("Failed to create processor '{0}'", pipelineEvent.Processor);
+
+            // Try importing the content.
+            object importedObject;
+            try
+            {
+                var importContext = new PipelineImporterContext(this);
+                importedObject = importer.Import(pipelineEvent.SourceFile, importContext);
+            }
+            catch (PipelineException)
+            {
+                throw;
+            }
+            catch (Exception inner)
+            {
+                throw new PipelineException(string.Format("Importer '{0}' had unexpected failure!", pipelineEvent.Importer), inner);
+            }
+
+            // Make sure the input type is valid.
+            if (!processor.InputType.IsAssignableFrom(importedObject.GetType()))
+            {
+                throw new PipelineException(
+                    string.Format("The type '{0}' cannot be processed by {1} as a {2}!",
+                    importedObject.GetType().FullName,
+                    pipelineEvent.Processor,
+                    processor.InputType.FullName));
+            }
+
+            // Process the imported object.
+            object processedObject;
+            try
+            {
+                var processContext = new PipelineProcessorContext(this, pipelineEvent);
+                processedObject = processor.Process(importedObject, processContext);
+            }
+            catch (PipelineException)
+            {
+                throw;
+            }
+            catch (Exception inner)
+            {
+                throw new PipelineException(string.Format("Processor '{0}' had unexpected failure!", pipelineEvent.Processor), inner);
+            }
+
+            return processedObject;
         }
 
         public void CleanContent(string sourceFilepath, string outputFilepath = null)
@@ -536,7 +563,13 @@ namespace MonoGame.Framework.Content.Pipeline.Builder
 
                     // Give the asset a chance to rebuild.                    
                     CleanContent(string.Empty, asset);
-                }                
+                }
+
+                foreach (var asset in cachedEvent.BuildOutput)
+                {
+                    Logger.LogMessage("Cleaning {0}", asset);
+                    FileHelper.DeleteIfExists(asset);
+                }
             }
 
             Logger.LogMessage("Cleaning {0}", outputFilepath);

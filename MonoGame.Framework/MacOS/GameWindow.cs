@@ -58,6 +58,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 
 namespace Microsoft.Xna.Framework
 {
+	[CLSCompliant(false)]
 	public class GameWindow : MonoMacGameView
 	{
 		//private readonly Rectangle clientBounds;
@@ -65,6 +66,7 @@ namespace Microsoft.Xna.Framework
 		private Game _game;
 		private MacGamePlatform _platform;
         internal MouseState MouseState;
+        internal TouchPanelState TouchPanelState;
 
 		private NSTrackingArea _trackingArea;
 		private bool _needsToResetElapsedTime = false;
@@ -82,6 +84,7 @@ namespace Microsoft.Xna.Framework
                 throw new ArgumentNullException("game");
             _game = game;
             _platform = (MacGamePlatform)_game.Services.GetService(typeof(MacGamePlatform));
+            TouchPanelState = new TouchPanelState(this);
 
 			//LayerRetainsBacking = false; 
 			//LayerColorFormat	= EAGLColorFormat.RGBA8;
@@ -152,6 +155,7 @@ namespace Microsoft.Xna.Framework
 		protected override void OnLoad (EventArgs e)
 		{
 			base.OnLoad (e);
+			Title = MonoGame.Utilities.AssemblyHelper.GetDefaultWindowTitle();
 		}
 
 		protected override void OnRenderFrame (FrameEventArgs e)
@@ -165,6 +169,11 @@ namespace Microsoft.Xna.Framework
             //        Game.Tick-centric architecture may eliminate this problem
             //        automatically.
 			if (_game != null && _platform.IsRunning) {
+                if (_needsToResetElapsedTime) 
+                {
+                    _game.ResetElapsedTime ();
+					_needsToResetElapsedTime = false;
+                }
 				_game.Tick();
 			}
 		}
@@ -419,6 +428,11 @@ namespace Microsoft.Xna.Framework
 		public event EventHandler<EventArgs> ClientSizeChanged;
 		public event EventHandler<EventArgs> OrientationChanged;
 		public event EventHandler<EventArgs> ScreenDeviceNameChanged;
+
+		private bool SuppressEventHandlerWarningsUntilEventsAreProperlyImplemented()
+		{
+			return ScreenDeviceNameChanged != null;
+		}
 		
 		// make sure we get mouse move events.
 		public override bool AcceptsFirstResponder ()
@@ -665,19 +679,25 @@ namespace Microsoft.Xna.Framework
 		}
 		
 		public override void ScrollWheel (NSEvent theEvent)
-		{
-			PointF loc = theEvent.LocationInWindow;
-			UpdateMousePosition(loc);
-			
-			switch (theEvent.Type) {
-				case NSEventType.ScrollWheel:
-					if (theEvent.DeltaY > 0) {
-						Mouse.ScrollWheelValue += (theEvent.DeltaY*0.1f+0.09f)*1200;
-					} else {
-						Mouse.ScrollWheelValue += (theEvent.DeltaY*0.1f-0.09f)*1200;
-					}
-				break;
-			}	
+		{ 
+			PointF loc = theEvent.LocationInWindow; 
+			UpdateMousePosition (loc); 
+			switch (theEvent.Type) 
+			{ 
+			case NSEventType.ScrollWheel: 
+				if (theEvent.ScrollingDeltaY != 0) 
+				{ 
+					if (theEvent.ScrollingDeltaY > 0) 
+					{ 
+						Mouse.ScrollWheelValue += (theEvent.ScrollingDeltaY * 0.1f + 0.09f) * 1200; 
+					} 
+					else 
+					{ 
+						Mouse.ScrollWheelValue += (theEvent.ScrollingDeltaY * 0.1f - 0.09f) * 1200; 
+					} 
+				} 
+				break; 
+			} 
 		}
 
 		public override void MouseMoved (NSEvent theEvent)

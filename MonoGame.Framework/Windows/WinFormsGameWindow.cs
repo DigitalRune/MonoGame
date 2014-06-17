@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 /*
 Microsoft Public License (Ms-PL)
 XnaTouch - Copyright © 2009 The XnaTouch Team
@@ -58,7 +58,7 @@ using XnaPoint = Microsoft.Xna.Framework.Point;
 
 namespace MonoGame.Framework
 {
-    public class WinFormsGameWindow : GameWindow
+    class WinFormsGameWindow : GameWindow
     {
         internal WinFormsGameForm _form;
 
@@ -71,6 +71,8 @@ namespace MonoGame.Framework
         private bool _isMouseHidden;
 
         private bool _isMouseInBounds;
+
+        private MouseButtons _mouseDownButtonsState;
 
         #region Internal Properties
 
@@ -109,6 +111,16 @@ namespace MonoGame.Framework
                     return;
                 _form.FormBorderStyle = _isResizable ? FormBorderStyle.Sizable : FormBorderStyle.FixedSingle;
             }
+        }
+
+        public override bool AllowAltF4
+        {
+             get { return base.AllowAltF4; }
+             set
+             {
+                 _form.AllowAltF4 = value;
+                 base.AllowAltF4 = value;
+             }
         }
 
         public override DisplayOrientation CurrentOrientation
@@ -155,21 +167,22 @@ namespace MonoGame.Framework
             _platform = platform;
             Game = platform.Game;
 
-            _form = new WinFormsGameForm();
+            _form = new WinFormsGameForm(this);
             
             // When running unit tests this can return null.
             var assembly = Assembly.GetEntryAssembly();
             if (assembly != null)
                 _form.Icon = Icon.ExtractAssociatedIcon(assembly.Location);
+            Title = Utilities.AssemblyHelper.GetDefaultWindowTitle();
 
             _form.MaximizeBox = false;
             _form.FormBorderStyle = FormBorderStyle.FixedSingle;
             _form.StartPosition = FormStartPosition.CenterScreen;           
 
             // Capture mouse events.
-            _form.MouseDown += OnMouseState;
+            _form.MouseDown += OnMouseDown;
             _form.MouseMove += OnMouseState;
-            _form.MouseUp += OnMouseState;
+            _form.MouseUp += OnMouseUp;
             _form.MouseWheel += OnMouseState;
             _form.MouseEnter += OnMouseEnter;
             _form.MouseLeave += OnMouseLeave;            
@@ -187,6 +200,11 @@ namespace MonoGame.Framework
 
         private void OnActivated(object sender, EventArgs eventArgs)
         {
+            var buttons = Control.MouseButtons;
+            var position = Control.MousePosition;
+            _mouseDownButtonsState = buttons;
+            OnMouseState(null, new MouseEventArgs(buttons, 0, position.X, position.Y, 0));
+
             _platform.IsActive = true;
         }
 
@@ -198,15 +216,27 @@ namespace MonoGame.Framework
                 KeyState.Clear();
         }
 
+        private void OnMouseDown(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _mouseDownButtonsState |= mouseEventArgs.Button;
+            OnMouseState(sender, mouseEventArgs);
+        }
+
+        private void OnMouseUp(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _mouseDownButtonsState &= ~mouseEventArgs.Button;
+            OnMouseState(sender, mouseEventArgs);
+        }
+
         private void OnMouseState(object sender, MouseEventArgs mouseEventArgs)
         {
             var previousState = MouseState.LeftButton;
 
             MouseState.X = mouseEventArgs.X;
             MouseState.Y = mouseEventArgs.Y;
-            MouseState.LeftButton = (mouseEventArgs.Button & MouseButtons.Left) == MouseButtons.Left ? ButtonState.Pressed : ButtonState.Released;
-            MouseState.MiddleButton = (mouseEventArgs.Button & MouseButtons.Middle) == MouseButtons.Middle ? ButtonState.Pressed : ButtonState.Released;
-            MouseState.RightButton = (mouseEventArgs.Button & MouseButtons.Right) == MouseButtons.Right ? ButtonState.Pressed : ButtonState.Released;
+            MouseState.LeftButton = (_mouseDownButtonsState & MouseButtons.Left) == MouseButtons.Left ? ButtonState.Pressed : ButtonState.Released;
+            MouseState.MiddleButton = (_mouseDownButtonsState & MouseButtons.Middle) == MouseButtons.Middle ? ButtonState.Pressed : ButtonState.Released;
+            MouseState.RightButton = (_mouseDownButtonsState & MouseButtons.Right) == MouseButtons.Right ? ButtonState.Pressed : ButtonState.Released;
             MouseState.ScrollWheelValue += mouseEventArgs.Delta;
             
             TouchLocationState? touchState = null;
@@ -219,7 +249,7 @@ namespace MonoGame.Framework
                 touchState = TouchLocationState.Released;
 
             if (touchState.HasValue)
-                 TouchPanel.AddEvent(0, touchState.Value, new Vector2(MouseState.X, MouseState.Y), true);
+                TouchPanelState.AddEvent(0, touchState.Value, new Vector2(MouseState.X, MouseState.Y), true);
         } 
 
         private void OnMouseEnter(object sender, EventArgs e)
@@ -272,15 +302,10 @@ namespace MonoGame.Framework
                     break;
             }
 
-            if ((args.State == SharpDX.RawInput.KeyState.KeyDown || args.State == SharpDX.RawInput.KeyState.SystemKeyDown))
-            {
-                if (!KeyState.Contains(xnaKey))
-                    KeyState.Add(xnaKey);
-            }
+            if ((args.State == SharpDX.RawInput.KeyState.KeyDown || args.State == SharpDX.RawInput.KeyState.SystemKeyDown) && !KeyState.Contains(xnaKey))
+                KeyState.Add(xnaKey);
             else if (args.State == SharpDX.RawInput.KeyState.KeyUp || args.State == SharpDX.RawInput.KeyState.SystemKeyUp)
-            {
                 KeyState.Remove(xnaKey);
-            }
         }
 
         private void OnKeyPress(object sender, KeyPressEventArgs e)
@@ -340,7 +365,6 @@ namespace MonoGame.Framework
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        [CLSCompliant(false)]
         public struct NativeMessage
         {
             public IntPtr handle;

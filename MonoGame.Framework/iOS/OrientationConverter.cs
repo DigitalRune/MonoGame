@@ -73,6 +73,7 @@ namespace Microsoft.Xna.Framework
 {
     public static class OrientationConverter
     {
+        [CLSCompliant(false)]
         public static DisplayOrientation UIDeviceOrientationToDisplayOrientation(UIDeviceOrientation orientation)
         {
             switch (orientation)
@@ -89,6 +90,7 @@ namespace Microsoft.Xna.Framework
             }
         }
 
+        [CLSCompliant(false)]
         public static DisplayOrientation ToDisplayOrientation(UIInterfaceOrientation orientation)
         {
             switch (orientation)
@@ -103,6 +105,7 @@ namespace Microsoft.Xna.Framework
             }
         }
 
+        [CLSCompliant(false)]
         public static UIInterfaceOrientationMask ToUIInterfaceOrientationMask (DisplayOrientation orientation)
         {
             switch (Normalize(orientation))
@@ -110,9 +113,11 @@ namespace Microsoft.Xna.Framework
                 case((DisplayOrientation)0):
                 case((DisplayOrientation)3):
                     return UIInterfaceOrientationMask.Landscape;
-                case((DisplayOrientation)1):
-                    return UIInterfaceOrientationMask.LandscapeLeft;
+                // NOTE: in XNA, Orientation Left is a 90 degree rotation counterclockwise, while on iOS
+		// it is a 90 degree rotation CLOCKWISE. They are BACKWARDS! 
                 case((DisplayOrientation)2):
+                    return UIInterfaceOrientationMask.LandscapeLeft;
+                case((DisplayOrientation)1):
                     return UIInterfaceOrientationMask.LandscapeRight;
                 case((DisplayOrientation)4):
                     return UIInterfaceOrientationMask.Portrait;
@@ -130,7 +135,7 @@ namespace Microsoft.Xna.Framework
             var normalized = orientation;
 			
 			// Xna's "default" displayorientation is Landscape Left/Right.
-            if ((normalized & DisplayOrientation.Default) != 0)
+            if (normalized == DisplayOrientation.Default)
             {
                 normalized |= DisplayOrientation.LandscapeLeft;
 				normalized |= DisplayOrientation.LandscapeRight;

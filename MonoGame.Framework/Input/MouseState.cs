@@ -52,6 +52,8 @@ namespace Microsoft.Xna.Framework.Input
 		ButtonState _leftButton;
 		ButtonState _rightButton;
 		ButtonState _middleButton;
+        ButtonState _xButton1;
+        ButtonState _xButton2;
 		
         /// <summary>
         /// Initializes a new instance of the MouseState.
@@ -64,7 +66,7 @@ namespace Microsoft.Xna.Framework.Input
         /// <param name="rightButton">Right mouse button's state.</param>
         /// <param name="xButton1">XBUTTON1's state.</param>
         /// <param name="xButton2">XBUTTON2's state.</param>
-        /// <remarks>Normally <see cref="Mouse.GetState"/> should be used to get mouse current state. The constructor is provided for simulating mouse input.</remarks>
+        /// <remarks>Normally <see cref="Mouse.GetState()"/> should be used to get mouse current state. The constructor is provided for simulating mouse input.</remarks>
 		public MouseState (
 			int x,
 			int y,
@@ -83,6 +85,8 @@ namespace Microsoft.Xna.Framework.Input
 			_leftButton = leftButton;
 			_middleButton = middleButton;
 			_rightButton = rightButton;
+            _xButton1 = xButton1;
+            _xButton2 = xButton2;
 		}
 		
         /// <summary>
@@ -253,8 +257,11 @@ namespace Microsoft.Xna.Framework.Input
         /// </summary>
 		public ButtonState XButton1 { 
 			get {
-				return ButtonState.Released;
+                return _xButton1;
 			}
+            set {
+                _xButton1 = value;
+            }
 		}
 
         /// <summary>
@@ -262,8 +269,11 @@ namespace Microsoft.Xna.Framework.Input
         /// </summary>
 		public ButtonState XButton2 { 
 			get {
-				return ButtonState.Released;
+                return _xButton2;
 			}
+            set {
+                _xButton2 = value;
+            }
 		}
 	}
 }

@@ -1,17 +1,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.Xna.Framework.Graphics
+namespace TwoMGFX
 {
 	internal class MojoShader
     {
-#if IOS
-		const string mojoshader_dll = "__Internal";
-#elif WINDOWS
-		const string mojoshader_dll = "libmojoshader_32.dll";
-#else
-		const string mojoshader_dll = "libmojoshader.dll";
-#endif
+		const string mojoshader_dll = "libmojoshader_64.dll";
 
 		public partial class NativeConstants {
 		    
@@ -91,11 +85,11 @@ namespace Microsoft.Xna.Framework.Graphics
 		    /// MOJOSHADER_SRC_PROFILE_HLSL_PS_3_0 -> "hlsl_ps_3_0"
 		    public const string MOJOSHADER_SRC_PROFILE_HLSL_PS_3_0 = "hlsl_ps_3_0";
 		    
-		    /// MOJOSHADER_AST_DATATYPE_CONST -> (1 << 31)
+		    // MOJOSHADER_AST_DATATYPE_CONST -> (1 << 31)
 		    public const int MOJOSHADER_AST_DATATYPE_CONST = (1) << (31);
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_uniform {
 		    
 		    /// MOJOSHADER_uniformType->Anonymous_cf91fd71_65e4_4c31_a6d5_9488d7f3d32a
@@ -111,11 +105,11 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int constant;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string name;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_constant {
 		    
 		    /// MOJOSHADER_uniformType->Anonymous_cf91fd71_65e4_4c31_a6d5_9488d7f3d32a
@@ -128,7 +122,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public Anonymous_5371dd6a_e42a_47c1_91d1_a2af9a8283be value;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_sampler {
 		    
 		    /// MOJOSHADER_samplerType->Anonymous_a752a39b_b479_42b0_9502_e39ba7d86100
@@ -138,14 +132,14 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int index;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string name;
 		    
 		    /// int
 		    public int texbem;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_samplerMap {
 		    
 		    /// int
@@ -155,7 +149,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public MOJOSHADER_samplerType type;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_attribute {
 		    
 		    /// MOJOSHADER_usage->Anonymous_9c01433d_7bb5_4c50_bf77_e65cef0661b5
@@ -165,11 +159,11 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int index;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string name;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+		[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
 		public struct MOJOSHADER_swizzle {
 		    
 		    /// MOJOSHADER_usage->Anonymous_9c01433d_7bb5_4c50_bf77_e65cef0661b5
@@ -179,11 +173,11 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public uint index;
 		    
 		    /// unsigned char[4]
-		    [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst=4)]
+		    [MarshalAs(UnmanagedType.ByValTStr, SizeConst=4)]
 		    public string swizzles;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_symbolTypeInfo {
 		    
 		    /// MOJOSHADER_symbolClass->Anonymous_681c4b26_94f7_4142_a8e9_b970fe0b60df
@@ -208,22 +202,22 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr members;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_symbolStructMember {
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string name;
 		    
 		    /// MOJOSHADER_symbolTypeInfo
 		    public MOJOSHADER_symbolTypeInfo info;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_symbol {
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string name;
 		    
 		    /// MOJOSHADER_symbolRegisterSet->Anonymous_9ff7ac54_131c_43b0_a295_9830d24ac76b
@@ -239,15 +233,15 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public MOJOSHADER_symbolTypeInfo info;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_error {
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string error;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string filename;
 		    
 		    /// int
@@ -348,7 +342,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    MOJOSHADER_PRESHADEROPERAND_UNKN = 255,
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_preshaderOperand {
 		    
 		    /// MOJOSHADER_preshaderOperandType
@@ -364,7 +358,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public uint indexingIndex;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_preshaderInstruction {
 		    
 		    /// MOJOSHADER_preshaderOpcode
@@ -377,11 +371,11 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public uint operand_count;
 		    
 		    /// MOJOSHADER_preshaderOperand[4]
-		    [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst=4, ArraySubType=UnmanagedType.Struct)]
+		    [MarshalAs(UnmanagedType.ByValArray, SizeConst=4, ArraySubType=UnmanagedType.Struct)]
 		    public MOJOSHADER_preshaderOperand[] operands;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_preshader {
 		    
 		    /// unsigned int
@@ -406,7 +400,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr instructions;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_parseData {
 		    
 		    /// int
@@ -416,11 +410,11 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr errors;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string profile;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string output;
 		    
 		    /// int
@@ -493,30 +487,30 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr malloc_data;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_effectParam {
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string name;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string semantic;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_effectState {
 		    
 		    /// unsigned int
 		    public uint type;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_effectPass {
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string name;
 		    
 		    /// unsigned int
@@ -526,11 +520,11 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr states;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_effectTechnique {
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string name;
 		    
 		    /// unsigned int
@@ -540,18 +534,18 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr passes;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_effectTexture {
 		    
 		    /// unsigned int
 		    public uint param;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string name;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_effectShader {
 		    
 		    /// unsigned int
@@ -564,7 +558,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr shader;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_effect {
 		    
 		    /// int
@@ -574,7 +568,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr errors;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string profile;
 		    
 		    /// int
@@ -611,19 +605,19 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr malloc_data;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_preprocessorDefine {
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string identifier;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string definition;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_preprocessData {
 		    
 		    /// int
@@ -633,7 +627,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr errors;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string output;
 		    
 		    /// int
@@ -658,14 +652,14 @@ namespace Microsoft.Xna.Framework.Graphics
 		///m: MOJOSHADER_malloc
 		///f: MOJOSHADER_free
 		///d: void*
-		public delegate int MOJOSHADER_includeOpen(MOJOSHADER_includeType inctype, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string fname, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string parent, ref IntPtr outdata, ref uint outbytes, IntPtr m, IntPtr f, IntPtr d);
+		public delegate int MOJOSHADER_includeOpen(MOJOSHADER_includeType inctype, [In()] [MarshalAs(UnmanagedType.LPStr)] string fname, [In()] [MarshalAs(UnmanagedType.LPStr)] string parent, ref IntPtr outdata, ref uint outbytes, IntPtr m, IntPtr f, IntPtr d);
 		
 		/// Return Type: void
 		///data: char*
 		///m: MOJOSHADER_malloc
 		///f: MOJOSHADER_free
 		///d: void*
-		public delegate void MOJOSHADER_includeClose([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string data, IntPtr m, IntPtr f, IntPtr d);
+		public delegate void MOJOSHADER_includeClose([In()] [MarshalAs(UnmanagedType.LPStr)] string data, IntPtr m, IntPtr f, IntPtr d);
 		
 		public enum MOJOSHADER_astDataTypeType {
 		    
@@ -716,18 +710,18 @@ namespace Microsoft.Xna.Framework.Graphics
 		    MOJOSHADER_AST_DATATYPE_USER,
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astDataTypeStructMember {
 		    
 		    /// MOJOSHADER_astDataType*
 		    public IntPtr datatype;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string identifier;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astDataTypeStruct {
 		    
 		    /// MOJOSHADER_astDataTypeType
@@ -740,7 +734,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int member_count;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astDataTypeArray {
 		    
 		    /// MOJOSHADER_astDataTypeType
@@ -753,7 +747,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int elements;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astDataTypeMatrix {
 		    
 		    /// MOJOSHADER_astDataTypeType
@@ -769,7 +763,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int columns;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astDataTypeBuffer {
 		    
 		    /// MOJOSHADER_astDataTypeType
@@ -779,7 +773,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr @base;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astDataTypeFunction {
 		    
 		    /// MOJOSHADER_astDataTypeType
@@ -798,7 +792,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int intrinsic;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astDataTypeUser {
 		    
 		    /// MOJOSHADER_astDataTypeType
@@ -811,39 +805,39 @@ namespace Microsoft.Xna.Framework.Graphics
             public IntPtr name;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Explicit)]
+		[StructLayout(LayoutKind.Explicit)]
 		public struct MOJOSHADER_astDataType {
 		    
 		    /// MOJOSHADER_astDataTypeType
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astDataTypeType type;
 		    
 		    /// MOJOSHADER_astDataTypeArray
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astDataTypeArray array;
 		    
 		    /// MOJOSHADER_astDataTypeStruct
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astDataTypeStruct structure;
 		    
 		    /// MOJOSHADER_astDataTypeVector->MOJOSHADER_astDataTypeArray
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astDataTypeArray vector;
 		    
 		    /// MOJOSHADER_astDataTypeMatrix
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astDataTypeMatrix matrix;
 		    
 		    /// MOJOSHADER_astDataTypeBuffer
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astDataTypeBuffer buffer;
 		    
 		    /// MOJOSHADER_astDataTypeUser
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astDataTypeUser user;
 		    
 		    /// MOJOSHADER_astDataTypeFunction
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astDataTypeFunction function;
 		}
 		
@@ -1046,7 +1040,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    MOJOSHADER_AST_END_RANGE,
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astNodeInfo {
 		    
 		    /// MOJOSHADER_astNodeType
@@ -1061,31 +1055,31 @@ namespace Microsoft.Xna.Framework.Graphics
 		
 		public enum MOJOSHADER_astVariableAttributes {
 		    
-		    /// MOJOSHADER_AST_VARATTR_EXTERN -> (1<<0)
+		    // MOJOSHADER_AST_VARATTR_EXTERN -> (1<<0)
 		    MOJOSHADER_AST_VARATTR_EXTERN = (1) << (0),
 		    
-		    /// MOJOSHADER_AST_VARATTR_NOINTERPOLATION -> (1<<1)
+		    // MOJOSHADER_AST_VARATTR_NOINTERPOLATION -> (1<<1)
 		    MOJOSHADER_AST_VARATTR_NOINTERPOLATION = (1) << (1),
 		    
-		    /// MOJOSHADER_AST_VARATTR_SHARED -> (1<<2)
+		    // MOJOSHADER_AST_VARATTR_SHARED -> (1<<2)
 		    MOJOSHADER_AST_VARATTR_SHARED = (1) << (2),
 		    
-		    /// MOJOSHADER_AST_VARATTR_STATIC -> (1<<3)
+		    // MOJOSHADER_AST_VARATTR_STATIC -> (1<<3)
 		    MOJOSHADER_AST_VARATTR_STATIC = (1) << (3),
 		    
-		    /// MOJOSHADER_AST_VARATTR_UNIFORM -> (1<<4)
+		    // MOJOSHADER_AST_VARATTR_UNIFORM -> (1<<4)
 		    MOJOSHADER_AST_VARATTR_UNIFORM = (1) << (4),
 		    
-		    /// MOJOSHADER_AST_VARATTR_VOLATILE -> (1<<5)
+		    // MOJOSHADER_AST_VARATTR_VOLATILE -> (1<<5)
 		    MOJOSHADER_AST_VARATTR_VOLATILE = (1) << (5),
 		    
-		    /// MOJOSHADER_AST_VARATTR_CONST -> (1<<6)
+		    // MOJOSHADER_AST_VARATTR_CONST -> (1<<6)
 		    MOJOSHADER_AST_VARATTR_CONST = (1) << (6),
 		    
-		    /// MOJOSHADER_AST_VARATTR_ROWMAJOR -> (1<<7)
+		    // MOJOSHADER_AST_VARATTR_ROWMAJOR -> (1<<7)
 		    MOJOSHADER_AST_VARATTR_ROWMAJOR = (1) << (7),
 		    
-		    /// MOJOSHADER_AST_VARATTR_COLUMNMAJOR -> (1<<8)
+		    // MOJOSHADER_AST_VARATTR_COLUMNMAJOR -> (1<<8)
 		    MOJOSHADER_AST_VARATTR_COLUMNMAJOR = (1) << (8),
 		}
 		
@@ -1119,14 +1113,14 @@ namespace Microsoft.Xna.Framework.Graphics
 		    MOJOSHADER_AST_SWITCHATTR_CALL,
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astGeneric {
 		    
 		    /// MOJOSHADER_astNodeInfo
 		    public MOJOSHADER_astNodeInfo ast;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpression {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1136,7 +1130,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr datatype;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astArguments {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1149,7 +1143,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr next;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionUnary {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1162,7 +1156,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr operand;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionBinary {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1178,7 +1172,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr right;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionTernary {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1197,7 +1191,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr right;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionIdentifier {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1213,7 +1207,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int index;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionIntLiteral {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1226,7 +1220,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int value;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionFloatLiteral {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1239,7 +1233,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public double value;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionStringLiteral {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1252,7 +1246,7 @@ namespace Microsoft.Xna.Framework.Graphics
             public IntPtr @string;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionBooleanLiteral {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1265,7 +1259,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int value;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionConstructor {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1278,7 +1272,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr args;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionDerefStruct {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1300,7 +1294,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int member_index;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionCallFunction {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1316,7 +1310,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr args;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionCast {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1329,7 +1323,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr operand;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astCompilationUnit {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1374,7 +1368,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    MOJOSHADER_AST_INTERPMOD_SAMPLE,
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astFunctionParameters {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1402,7 +1396,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr next;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astFunctionSignature {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1424,7 +1418,7 @@ namespace Microsoft.Xna.Framework.Graphics
             public IntPtr semantic;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astScalarOrArray {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1440,7 +1434,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr dimension;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astAnnotations {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1456,7 +1450,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr next;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astPackOffset {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1469,7 +1463,7 @@ namespace Microsoft.Xna.Framework.Graphics
             public IntPtr ident2;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astVariableLowLevel {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1482,7 +1476,7 @@ namespace Microsoft.Xna.Framework.Graphics
             public IntPtr register_name;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astStructMembers {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1504,7 +1498,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr next;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astStructDeclaration {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1520,7 +1514,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr members;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astVariableDeclaration {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1554,7 +1548,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr next;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astStatement {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1564,7 +1558,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr next;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astBlockStatement {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1577,7 +1571,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr statements;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astReturnStatement {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1590,7 +1584,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr expr;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astExpressionStatement {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1603,7 +1597,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr expr;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astIfStatement {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1625,7 +1619,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr else_statement;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astSwitchCases {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1641,7 +1635,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr next;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astSwitchStatement {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1660,7 +1654,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr cases;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astWhileStatement {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1679,7 +1673,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr statement;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astForStatement {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1707,7 +1701,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr statement;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astTypedef {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1723,7 +1717,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr details;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astTypedefStatement {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1736,7 +1730,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr type_info;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astVarDeclStatement {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1749,7 +1743,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr declaration;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astStructStatement {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1762,7 +1756,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr struct_info;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astCompilationUnitFunction {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1781,7 +1775,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int index;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astCompilationUnitTypedef {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1794,7 +1788,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr type_info;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astCompilationUnitStruct {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1807,7 +1801,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr struct_info;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astCompilationUnitVariable {
 		    
 		    /// MOJOSHADER_astNodeInfo
@@ -1820,203 +1814,203 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr declaration;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Explicit)]
+		[StructLayout(LayoutKind.Explicit)]
 		public struct MOJOSHADER_astNode {
 		    
 		    /// MOJOSHADER_astNodeInfo
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astNodeInfo ast;
 		    
 		    /// MOJOSHADER_astGeneric
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astGeneric generic;
 		    
 		    /// MOJOSHADER_astExpression
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpression expression;
 		    
 		    /// MOJOSHADER_astArguments
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astArguments arguments;
 		    
 		    /// MOJOSHADER_astExpressionUnary
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionUnary unary;
 		    
 		    /// MOJOSHADER_astExpressionBinary
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionBinary binary;
 		    
 		    /// MOJOSHADER_astExpressionTernary
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionTernary ternary;
 		    
 		    /// MOJOSHADER_astExpressionIdentifier
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionIdentifier identifier;
 		    
 		    /// MOJOSHADER_astExpressionIntLiteral
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionIntLiteral intliteral;
 		    
 		    /// MOJOSHADER_astExpressionFloatLiteral
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionFloatLiteral floatliteral;
 		    
 		    /// MOJOSHADER_astExpressionStringLiteral
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionStringLiteral stringliteral;
 		    
 		    /// MOJOSHADER_astExpressionBooleanLiteral
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionBooleanLiteral boolliteral;
 		    
 		    /// MOJOSHADER_astExpressionConstructor
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionConstructor constructor;
 		    
 		    /// MOJOSHADER_astExpressionDerefStruct
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionDerefStruct derefstruct;
 		    
 		    /// MOJOSHADER_astExpressionCallFunction
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionCallFunction callfunc;
 		    
 		    /// MOJOSHADER_astExpressionCast
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionCast cast;
 		    
 		    /// MOJOSHADER_astCompilationUnit
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astCompilationUnit compunit;
 		    
 		    /// MOJOSHADER_astFunctionParameters
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astFunctionParameters @params;
 		    
 		    /// MOJOSHADER_astFunctionSignature
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astFunctionSignature funcsig;
 		    
 		    /// MOJOSHADER_astScalarOrArray
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astScalarOrArray soa;
 		    
 		    /// MOJOSHADER_astAnnotations
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astAnnotations annotations;
 		    
 		    /// MOJOSHADER_astPackOffset
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astPackOffset packoffset;
 		    
 		    /// MOJOSHADER_astVariableLowLevel
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astVariableLowLevel varlowlevel;
 		    
 		    /// MOJOSHADER_astStructMembers
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astStructMembers structmembers;
 		    
 		    /// MOJOSHADER_astStructDeclaration
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astStructDeclaration structdecl;
 		    
 		    /// MOJOSHADER_astVariableDeclaration
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astVariableDeclaration vardecl;
 		    
 		    /// MOJOSHADER_astStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astStatement stmt;
 		    
 		    /// MOJOSHADER_astEmptyStatement->MOJOSHADER_astStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astStatement emptystmt;
 		    
 		    /// MOJOSHADER_astBreakStatement->MOJOSHADER_astStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astStatement breakstmt;
 		    
 		    /// MOJOSHADER_astContinueStatement->MOJOSHADER_astStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astStatement contstmt;
 		    
 		    /// MOJOSHADER_astDiscardStatement->MOJOSHADER_astStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astStatement discardstmt;
 		    
 		    /// MOJOSHADER_astBlockStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astBlockStatement blockstmt;
 		    
 		    /// MOJOSHADER_astReturnStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astReturnStatement returnstmt;
 		    
 		    /// MOJOSHADER_astExpressionStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astExpressionStatement exprstmt;
 		    
 		    /// MOJOSHADER_astIfStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astIfStatement ifstmt;
 		    
 		    /// MOJOSHADER_astSwitchCases
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astSwitchCases cases;
 		    
 		    /// MOJOSHADER_astSwitchStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astSwitchStatement switchstmt;
 		    
 		    /// MOJOSHADER_astWhileStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astWhileStatement whilestmt;
 		    
 		    /// MOJOSHADER_astDoStatement->MOJOSHADER_astWhileStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astWhileStatement dostmt;
 		    
 		    /// MOJOSHADER_astForStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astForStatement forstmt;
 		    
 		    /// MOJOSHADER_astTypedef
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astTypedef typdef;
 		    
 		    /// MOJOSHADER_astTypedefStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astTypedefStatement typedefstmt;
 		    
 		    /// MOJOSHADER_astVarDeclStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astVarDeclStatement vardeclstmt;
 		    
 		    /// MOJOSHADER_astStructStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astStructStatement structstmt;
 		    
 		    /// MOJOSHADER_astCompilationUnitFunction
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astCompilationUnitFunction funcunit;
 		    
 		    /// MOJOSHADER_astCompilationUnitTypedef
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astCompilationUnitTypedef typedefunit;
 		    
 		    /// MOJOSHADER_astCompilationUnitStruct
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astCompilationUnitStruct structunit;
 		    
 		    /// MOJOSHADER_astCompilationUnitVariable
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_astCompilationUnitVariable varunit;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_astData {
 		    
 		    /// int
@@ -2026,7 +2020,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr errors;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string source_profile;
 		    
 		    /// MOJOSHADER_astNode*
@@ -2098,7 +2092,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    MOJOSHADER_IR_END_RANGE,
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irNodeInfo {
 		    
 		    /// MOJOSHADER_irNodeType
@@ -2111,7 +2105,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public uint line;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irGeneric {
 		    
 		    /// MOJOSHADER_irNodeInfo
@@ -2160,7 +2154,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    MOJOSHADER_IR_COND_UNKNOWN,
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irExprInfo {
 		    
 		    /// MOJOSHADER_irNodeInfo
@@ -2173,7 +2167,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int elements;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irConstant {
 		    
 		    /// MOJOSHADER_irExprInfo
@@ -2183,7 +2177,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public Anonymous_3a13e6d2_72d8_4c86_b5bf_9aff36c73111 value;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irTemp {
 		    
 		    /// MOJOSHADER_irExprInfo
@@ -2193,7 +2187,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int index;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irBinOp {
 		    
 		    /// MOJOSHADER_irExprInfo
@@ -2209,7 +2203,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr right;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irMemory {
 		    
 		    /// MOJOSHADER_irExprInfo
@@ -2219,7 +2213,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int index;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irCall {
 		    
 		    /// MOJOSHADER_irExprInfo
@@ -2232,7 +2226,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr args;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irESeq {
 		    
 		    /// MOJOSHADER_irExprInfo
@@ -2245,7 +2239,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr expr;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irArray {
 		    
 		    /// MOJOSHADER_irExprInfo
@@ -2258,7 +2252,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr element;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irConvert {
 		    
 		    /// MOJOSHADER_irExprInfo
@@ -2268,7 +2262,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr expr;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+		[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
 		public struct MOJOSHADER_irSwizzle {
 		    
 		    /// MOJOSHADER_irExprInfo
@@ -2281,7 +2275,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr channels;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irConstruct {
 		    
 		    /// MOJOSHADER_irExprInfo
@@ -2291,59 +2285,59 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr args;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Explicit)]
+		[StructLayout(LayoutKind.Explicit)]
 		public struct MOJOSHADER_irExpression {
 		    
 		    /// MOJOSHADER_irNodeInfo
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irNodeInfo ir;
 		    
 		    /// MOJOSHADER_irExprInfo
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irExprInfo info;
 		    
 		    /// MOJOSHADER_irConstant
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irConstant constant;
 		    
 		    /// MOJOSHADER_irTemp
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irTemp temp;
 		    
 		    /// MOJOSHADER_irBinOp
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irBinOp binop;
 		    
 		    /// MOJOSHADER_irMemory
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irMemory memory;
 		    
 		    /// MOJOSHADER_irCall
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irCall call;
 		    
 		    /// MOJOSHADER_irESeq
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irESeq eseq;
 		    
 		    /// MOJOSHADER_irArray
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irArray array;
 		    
 		    /// MOJOSHADER_irConvert
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irConvert convert;
 		    
 		    /// MOJOSHADER_irSwizzle
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irSwizzle swizzle;
 		    
 		    /// MOJOSHADER_irConstruct
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irConstruct construct;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irMove {
 		    
 		    /// MOJOSHADER_irNodeInfo
@@ -2359,7 +2353,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int writemask;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irExprStmt {
 		    
 		    /// MOJOSHADER_irNodeInfo
@@ -2369,7 +2363,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr expr;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irJump {
 		    
 		    /// MOJOSHADER_irNodeInfo
@@ -2379,7 +2373,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int label;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irCJump {
 		    
 		    /// MOJOSHADER_irNodeInfo
@@ -2401,7 +2395,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int iffalse;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irSeq {
 		    
 		    /// MOJOSHADER_irNodeInfo
@@ -2414,7 +2408,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr next;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irLabel {
 		    
 		    /// MOJOSHADER_irNodeInfo
@@ -2424,47 +2418,47 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public int index;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Explicit)]
+		[StructLayout(LayoutKind.Explicit)]
 		public struct MOJOSHADER_irStatement {
 		    
 		    /// MOJOSHADER_irNodeInfo
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irNodeInfo ir;
 		    
 		    /// MOJOSHADER_irGeneric
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irGeneric generic;
 		    
 		    /// MOJOSHADER_irMove
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irMove move;
 		    
 		    /// MOJOSHADER_irExprStmt
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irExprStmt expr;
 		    
 		    /// MOJOSHADER_irJump
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irJump jump;
 		    
 		    /// MOJOSHADER_irCJump
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irCJump cjump;
 		    
 		    /// MOJOSHADER_irSeq
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irSeq seq;
 		    
 		    /// MOJOSHADER_irLabel
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irLabel label;
 		    
 		    /// MOJOSHADER_irDiscard->MOJOSHADER_irGeneric
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irGeneric discard;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_irExprList {
 		    
 		    /// MOJOSHADER_irNodeInfo
@@ -2477,47 +2471,47 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr next;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Explicit)]
+		[StructLayout(LayoutKind.Explicit)]
 		public struct MOJOSHADER_irMisc {
 		    
 		    /// MOJOSHADER_irNodeInfo
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irNodeInfo ir;
 		    
 		    /// MOJOSHADER_irGeneric
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irGeneric generic;
 		    
 		    /// MOJOSHADER_irExprList
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irExprList exprlist;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Explicit)]
+		[StructLayout(LayoutKind.Explicit)]
 		public struct MOJOSHADER_irNode {
 		    
 		    /// MOJOSHADER_irNodeInfo
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irNodeInfo ir;
 		    
 		    /// MOJOSHADER_irGeneric
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irGeneric generic;
 		    
 		    /// MOJOSHADER_irExpression
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irExpression expr;
 		    
 		    /// MOJOSHADER_irStatement
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irStatement stmt;
 		    
 		    /// MOJOSHADER_irMisc
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public MOJOSHADER_irMisc misc;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct MOJOSHADER_compileData {
 		    
 		    /// int
@@ -2533,11 +2527,11 @@ namespace Microsoft.Xna.Framework.Graphics
 		    public IntPtr warnings;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string source_profile;
 		    
 		    /// char*
-		    [MarshalAsAttribute(UnmanagedType.LPStr)]
+		    [MarshalAs(UnmanagedType.LPStr)]
 		    public string output;
 		    
 		    /// int
@@ -2562,37 +2556,37 @@ namespace Microsoft.Xna.Framework.Graphics
 		/// Return Type: void*
 		///fnname: char*
 		///data: void*
-		public delegate IntPtr MOJOSHADER_glGetProcAddress([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string fnname, IntPtr data);
+		public delegate IntPtr MOJOSHADER_glGetProcAddress([In()] [MarshalAs(UnmanagedType.LPStr)] string fnname, IntPtr data);
 		
-		[StructLayoutAttribute(LayoutKind.Explicit)]
+		[StructLayout(LayoutKind.Explicit)]
 		public struct Anonymous_5371dd6a_e42a_47c1_91d1_a2af9a8283be {
 		    
 		    /// float[4]
-		    [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst=4, ArraySubType=UnmanagedType.R4)]
-		    [FieldOffsetAttribute(0)]
+		    [MarshalAs(UnmanagedType.ByValArray, SizeConst=4, ArraySubType=UnmanagedType.R4)]
+		    [FieldOffset(0)]
 		    public IntPtr f;
 		    
 		    /// int[4]
-		    [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst=4, ArraySubType=UnmanagedType.I4)]
-		    [FieldOffsetAttribute(0)]
+		    [MarshalAs(UnmanagedType.ByValArray, SizeConst=4, ArraySubType=UnmanagedType.I4)]
+		    [FieldOffset(0)]
 		    public IntPtr i;
 		    
 		    /// int
-		    [FieldOffsetAttribute(0)]
+		    [FieldOffset(0)]
 		    public int b;
 		}
 		
-		[StructLayoutAttribute(LayoutKind.Explicit)]
+		[StructLayout(LayoutKind.Explicit)]
 		public struct Anonymous_3a13e6d2_72d8_4c86_b5bf_9aff36c73111 {
 		    
 		    /// int[16]
-		    [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst=16, ArraySubType=UnmanagedType.I4)]
-		    [FieldOffsetAttribute(0)]
+		    [MarshalAs(UnmanagedType.ByValArray, SizeConst=16, ArraySubType=UnmanagedType.I4)]
+		    [FieldOffset(0)]
 		    public IntPtr ival;
 		    
 		    /// float[16]
-		    [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst=16, ArraySubType=UnmanagedType.R4)]
-		    [FieldOffsetAttribute(0)]
+		    [MarshalAs(UnmanagedType.ByValArray, SizeConst=16, ArraySubType=UnmanagedType.R4)]
+		    [FieldOffset(0)]
             public IntPtr fval;
 		}
 		
@@ -2729,19 +2723,19 @@ namespace Microsoft.Xna.Framework.Graphics
 		
 		public enum MOJOSHADER_shaderType {
 		    
-		    /// MOJOSHADER_TYPE_UNKNOWN -> 0
+		    // MOJOSHADER_TYPE_UNKNOWN -> 0
 		    MOJOSHADER_TYPE_UNKNOWN = 0,
 		    
-		    /// MOJOSHADER_TYPE_PIXEL -> (1<<0)
+		    // MOJOSHADER_TYPE_PIXEL -> (1<<0)
 		    MOJOSHADER_TYPE_PIXEL = (1) << (0),
 		    
-		    /// MOJOSHADER_TYPE_VERTEX -> (1<<1)
+		    // MOJOSHADER_TYPE_VERTEX -> (1<<1)
 		    MOJOSHADER_TYPE_VERTEX = (1) << (1),
 		    
-		    /// MOJOSHADER_TYPE_GEOMETRY -> (1<<2)
+		    // MOJOSHADER_TYPE_GEOMETRY -> (1<<2)
 		    MOJOSHADER_TYPE_GEOMETRY = (1) << (2),
 		    
-		    /// MOJOSHADER_TYPE_ANY -> 0xFFFFFFFF
+		    // MOJOSHADER_TYPE_ANY -> 0xFFFFFFFF
 		    MOJOSHADER_TYPE_ANY = -1,
 		}
 		
@@ -2754,7 +2748,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		
 		public enum MOJOSHADER_attributeType {
 		    
-		    /// MOJOSHADER_ATTRIBUTE_UNKNOWN -> -1
+		    // MOJOSHADER_ATTRIBUTE_UNKNOWN -> -1
 		    MOJOSHADER_ATTRIBUTE_UNKNOWN = -1,
 		    
 		    MOJOSHADER_ATTRIBUTE_BYTE,
@@ -2779,19 +2773,19 @@ namespace Microsoft.Xna.Framework.Graphics
 		public partial class NativeMethods {
 		    
 		    /// Return Type: int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_version")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_version")]
 		public static extern  int MOJOSHADER_version() ;
 		
 		    
 		    /// Return Type: char*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_changeset")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_changeset")]
 		public static extern  IntPtr MOJOSHADER_changeset() ;
 		
 		    
 		    /// Return Type: int
 		    ///profile: char*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_maxShaderModel")]
-		public static extern  int MOJOSHADER_maxShaderModel([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string profile) ;
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_maxShaderModel")]
+		public static extern  int MOJOSHADER_maxShaderModel([In()] [MarshalAs(UnmanagedType.LPStr)] string profile) ;
 		
 		    
 		    /// Return Type: MOJOSHADER_parseData*
@@ -2800,15 +2794,15 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///m: MOJOSHADER_malloc
 		    ///f: MOJOSHADER_free
 		    ///d: void*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_parseExpression")]
-		public static extern  IntPtr MOJOSHADER_parseExpression([InAttribute()] byte[] tokenbuf, int bufsize, IntPtr m, IntPtr f, IntPtr d) ;
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_parseExpression")]
+		public static extern  IntPtr MOJOSHADER_parseExpression([In()] byte[] tokenbuf, int bufsize, IntPtr m, IntPtr f, IntPtr d) ;
 		
 		    
 		    /// Return Type: void
 		    ///param0: MOJOSHADER_preshader*
 		    ///param1: float*
 		    ///param2: float*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_runPreshader")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_runPreshader")]
 		public static extern  void MOJOSHADER_runPreshader(ref MOJOSHADER_preshader param0, ref float param1, ref float param2) ;
 		
 		    
@@ -2823,13 +2817,13 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///m: MOJOSHADER_malloc
 		    ///f: MOJOSHADER_free
 		    ///d: void*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_parse")]
-		public static extern  IntPtr MOJOSHADER_parse([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string profile, [InAttribute()] byte[] tokenbuf, int bufsize, IntPtr swiz, int swizcount, IntPtr smap, int smapcount, IntPtr m, IntPtr f, IntPtr d) ;
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_parse")]
+		public static extern  IntPtr MOJOSHADER_parse([In()] [MarshalAs(UnmanagedType.LPStr)] string profile, [In()] byte[] tokenbuf, int bufsize, IntPtr swiz, int swizcount, IntPtr smap, int smapcount, IntPtr m, IntPtr f, IntPtr d) ;
 		
 		    
 		    /// Return Type: void
 		    ///data: MOJOSHADER_parseData*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_freeParseData")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_freeParseData")]
 		public static extern  void MOJOSHADER_freeParseData(ref MOJOSHADER_parseData data) ;
 		
 		    
@@ -2844,13 +2838,13 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///m: MOJOSHADER_malloc
 		    ///f: MOJOSHADER_free
 		    ///d: void*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_parseEffect")]
-		public static extern  IntPtr MOJOSHADER_parseEffect([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string profile, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string buf, int _len, ref MOJOSHADER_swizzle swiz, int swizcount, ref MOJOSHADER_samplerMap smap, int smapcount, IntPtr m, IntPtr f, IntPtr d) ;
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_parseEffect")]
+		public static extern  IntPtr MOJOSHADER_parseEffect([In()] [MarshalAs(UnmanagedType.LPStr)] string profile, [In()] [MarshalAs(UnmanagedType.LPStr)] string buf, int _len, ref MOJOSHADER_swizzle swiz, int swizcount, ref MOJOSHADER_samplerMap smap, int smapcount, IntPtr m, IntPtr f, IntPtr d) ;
 		
 		    
 		    /// Return Type: void
 		    ///effect: MOJOSHADER_effect*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_freeEffect")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_freeEffect")]
 		public static extern  void MOJOSHADER_freeEffect(ref MOJOSHADER_effect effect) ;
 		
 		    
@@ -2865,13 +2859,13 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///m: MOJOSHADER_malloc
 		    ///f: MOJOSHADER_free
 		    ///d: void*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_preprocess")]
-		public static extern  IntPtr MOJOSHADER_preprocess([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string filename, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string source, uint sourcelen, ref MOJOSHADER_preprocessorDefine defines, uint define_count, MOJOSHADER_includeOpen include_open, MOJOSHADER_includeClose include_close, IntPtr m, IntPtr f, IntPtr d) ;
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_preprocess")]
+		public static extern  IntPtr MOJOSHADER_preprocess([In()] [MarshalAs(UnmanagedType.LPStr)] string filename, [In()] [MarshalAs(UnmanagedType.LPStr)] string source, uint sourcelen, ref MOJOSHADER_preprocessorDefine defines, uint define_count, MOJOSHADER_includeOpen include_open, MOJOSHADER_includeClose include_close, IntPtr m, IntPtr f, IntPtr d) ;
 		
 		    
 		    /// Return Type: void
 		    ///data: MOJOSHADER_preprocessData*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_freePreprocessData")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_freePreprocessData")]
 		public static extern  void MOJOSHADER_freePreprocessData(ref MOJOSHADER_preprocessData data) ;
 		
 		    
@@ -2890,8 +2884,8 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///m: MOJOSHADER_malloc
 		    ///f: MOJOSHADER_free
 		    ///d: void*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_assemble")]
-		public static extern  IntPtr MOJOSHADER_assemble([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string filename, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string source, uint sourcelen, ref IntPtr comments, uint comment_count, ref MOJOSHADER_symbol symbols, uint symbol_count, ref MOJOSHADER_preprocessorDefine defines, uint define_count, MOJOSHADER_includeOpen include_open, MOJOSHADER_includeClose include_close, IntPtr m, IntPtr f, IntPtr d) ;
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_assemble")]
+		public static extern  IntPtr MOJOSHADER_assemble([In()] [MarshalAs(UnmanagedType.LPStr)] string filename, [In()] [MarshalAs(UnmanagedType.LPStr)] string source, uint sourcelen, ref IntPtr comments, uint comment_count, ref MOJOSHADER_symbol symbols, uint symbol_count, ref MOJOSHADER_preprocessorDefine defines, uint define_count, MOJOSHADER_includeOpen include_open, MOJOSHADER_includeClose include_close, IntPtr m, IntPtr f, IntPtr d) ;
 		
 		    
 		    /// Return Type: MOJOSHADER_astData*
@@ -2906,13 +2900,13 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///m: MOJOSHADER_malloc
 		    ///f: MOJOSHADER_free
 		    ///d: void*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_parseAst")]
-		public static extern  IntPtr MOJOSHADER_parseAst([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string srcprofile, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string filename, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string source, uint sourcelen, ref MOJOSHADER_preprocessorDefine defs, uint define_count, MOJOSHADER_includeOpen include_open, MOJOSHADER_includeClose include_close, IntPtr m, IntPtr f, IntPtr d) ;
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_parseAst")]
+		public static extern  IntPtr MOJOSHADER_parseAst([In()] [MarshalAs(UnmanagedType.LPStr)] string srcprofile, [In()] [MarshalAs(UnmanagedType.LPStr)] string filename, [In()] [MarshalAs(UnmanagedType.LPStr)] string source, uint sourcelen, ref MOJOSHADER_preprocessorDefine defs, uint define_count, MOJOSHADER_includeOpen include_open, MOJOSHADER_includeClose include_close, IntPtr m, IntPtr f, IntPtr d) ;
 		
 		    
 		    /// Return Type: void
 		    ///data: MOJOSHADER_astData*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_freeAstData")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_freeAstData")]
 		public static extern  void MOJOSHADER_freeAstData(ref MOJOSHADER_astData data) ;
 		
 		    
@@ -2928,13 +2922,13 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///m: MOJOSHADER_malloc
 		    ///f: MOJOSHADER_free
 		    ///d: void*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_compile")]
-		public static extern  IntPtr MOJOSHADER_compile([InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string srcprofile, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string filename, [InAttribute()] [MarshalAsAttribute(UnmanagedType.LPStr)] string source, uint sourcelen, ref MOJOSHADER_preprocessorDefine defs, uint define_count, MOJOSHADER_includeOpen include_open, MOJOSHADER_includeClose include_close, IntPtr m, IntPtr f, IntPtr d) ;
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_compile")]
+		public static extern  IntPtr MOJOSHADER_compile([In()] [MarshalAs(UnmanagedType.LPStr)] string srcprofile, [In()] [MarshalAs(UnmanagedType.LPStr)] string filename, [In()] [MarshalAs(UnmanagedType.LPStr)] string source, uint sourcelen, ref MOJOSHADER_preprocessorDefine defs, uint define_count, MOJOSHADER_includeOpen include_open, MOJOSHADER_includeClose include_close, IntPtr m, IntPtr f, IntPtr d) ;
 		
 		    
 		    /// Return Type: void
 		    ///data: MOJOSHADER_compileData*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_freeCompileData")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_freeCompileData")]
 		public static extern  void MOJOSHADER_freeCompileData(ref MOJOSHADER_compileData data) ;
 		
 		    
@@ -2943,25 +2937,25 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///d: void*
 		    ///profs: char**
 		    ///size: int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glAvailableProfiles")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glAvailableProfiles")]
 		public static extern  int MOJOSHADER_glAvailableProfiles(MOJOSHADER_glGetProcAddress lookup, IntPtr d, ref IntPtr profs, int size) ;
 		
 		    
 		    /// Return Type: char*
 		    ///lookup: MOJOSHADER_glGetProcAddress
 		    ///d: void*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glBestProfile")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glBestProfile")]
 		public static extern  IntPtr MOJOSHADER_glBestProfile(MOJOSHADER_glGetProcAddress lookup, IntPtr d) ;
 		
 		    
 		    /// Return Type: char*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glGetError")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glGetError")]
 		public static extern  IntPtr MOJOSHADER_glGetError() ;
 		
 		    
 		    /// Return Type: int
 		    ///shader_type: MOJOSHADER_shaderType->Anonymous_96517ad6_cc69_4542_8537_054e63919d54
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glMaxUniforms")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glMaxUniforms")]
 		public static extern  int MOJOSHADER_glMaxUniforms(MOJOSHADER_shaderType shader_type) ;
 		
 		    
@@ -2969,7 +2963,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: float*
 		    ///vec4count: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glSetVertexShaderUniformF")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glSetVertexShaderUniformF")]
 		public static extern  void MOJOSHADER_glSetVertexShaderUniformF(uint idx, ref float data, uint vec4count) ;
 		
 		    
@@ -2977,7 +2971,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: float*
 		    ///vec4count: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glGetVertexShaderUniformF")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glGetVertexShaderUniformF")]
 		public static extern  void MOJOSHADER_glGetVertexShaderUniformF(uint idx, ref float data, uint vec4count) ;
 		
 		    
@@ -2985,7 +2979,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: int*
 		    ///ivec4count: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glSetVertexShaderUniformI")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glSetVertexShaderUniformI")]
 		public static extern  void MOJOSHADER_glSetVertexShaderUniformI(uint idx, ref int data, uint ivec4count) ;
 		
 		    
@@ -2993,7 +2987,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: int*
 		    ///ivec4count: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glGetVertexShaderUniformI")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glGetVertexShaderUniformI")]
 		public static extern  void MOJOSHADER_glGetVertexShaderUniformI(uint idx, ref int data, uint ivec4count) ;
 		
 		    
@@ -3001,7 +2995,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: int*
 		    ///bcount: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glSetVertexShaderUniformB")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glSetVertexShaderUniformB")]
 		public static extern  void MOJOSHADER_glSetVertexShaderUniformB(uint idx, ref int data, uint bcount) ;
 		
 		    
@@ -3009,7 +3003,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: int*
 		    ///bcount: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glGetVertexShaderUniformB")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glGetVertexShaderUniformB")]
 		public static extern  void MOJOSHADER_glGetVertexShaderUniformB(uint idx, ref int data, uint bcount) ;
 		
 		    
@@ -3017,7 +3011,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: float*
 		    ///vec4count: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glSetPixelShaderUniformF")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glSetPixelShaderUniformF")]
 		public static extern  void MOJOSHADER_glSetPixelShaderUniformF(uint idx, ref float data, uint vec4count) ;
 		
 		    
@@ -3025,7 +3019,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: float*
 		    ///vec4count: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glGetPixelShaderUniformF")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glGetPixelShaderUniformF")]
 		public static extern  void MOJOSHADER_glGetPixelShaderUniformF(uint idx, ref float data, uint vec4count) ;
 		
 		    
@@ -3033,7 +3027,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: int*
 		    ///ivec4count: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glSetPixelShaderUniformI")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glSetPixelShaderUniformI")]
 		public static extern  void MOJOSHADER_glSetPixelShaderUniformI(uint idx, ref int data, uint ivec4count) ;
 		
 		    
@@ -3041,7 +3035,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: int*
 		    ///ivec4count: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glGetPixelShaderUniformI")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glGetPixelShaderUniformI")]
 		public static extern  void MOJOSHADER_glGetPixelShaderUniformI(uint idx, ref int data, uint ivec4count) ;
 		
 		    
@@ -3049,7 +3043,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: int*
 		    ///bcount: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glSetPixelShaderUniformB")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glSetPixelShaderUniformB")]
 		public static extern  void MOJOSHADER_glSetPixelShaderUniformB(uint idx, ref int data, uint bcount) ;
 		
 		    
@@ -3057,7 +3051,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: int*
 		    ///bcount: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glGetPixelShaderUniformB")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glGetPixelShaderUniformB")]
 		public static extern  void MOJOSHADER_glGetPixelShaderUniformB(uint idx, ref int data, uint bcount) ;
 		
 		    
@@ -3069,7 +3063,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///mat11: float
 		    ///lscale: float
 		    ///loffset: float
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glSetLegacyBumpMapEnv")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glSetLegacyBumpMapEnv")]
 		public static extern  void MOJOSHADER_glSetLegacyBumpMapEnv(uint sampler, float mat00, float mat01, float mat10, float mat11, float lscale, float loffset) ;
 		
 		    
@@ -3081,7 +3075,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///normalized: int
 		    ///stride: unsigned int
 		    ///ptr: void*
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glSetVertexAttribute")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glSetVertexAttribute")]
 		public static extern  void MOJOSHADER_glSetVertexAttribute(MOJOSHADER_usage usage, int index, uint size, MOJOSHADER_attributeType type, int normalized, uint stride, IntPtr ptr) ;
 		
 		    
@@ -3089,7 +3083,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: float*
 		    ///vec4n: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glSetVertexPreshaderUniformF")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glSetVertexPreshaderUniformF")]
 		public static extern  void MOJOSHADER_glSetVertexPreshaderUniformF(uint idx, ref float data, uint vec4n) ;
 		
 		    
@@ -3097,7 +3091,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: float*
 		    ///vec4n: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glGetVertexPreshaderUniformF")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glGetVertexPreshaderUniformF")]
 		public static extern  void MOJOSHADER_glGetVertexPreshaderUniformF(uint idx, ref float data, uint vec4n) ;
 		
 		    
@@ -3105,7 +3099,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: float*
 		    ///vec4n: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glSetPixelPreshaderUniformF")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glSetPixelPreshaderUniformF")]
 		public static extern  void MOJOSHADER_glSetPixelPreshaderUniformF(uint idx, ref float data, uint vec4n) ;
 		
 		    
@@ -3113,12 +3107,12 @@ namespace Microsoft.Xna.Framework.Graphics
 		    ///idx: unsigned int
 		    ///data: float*
 		    ///vec4n: unsigned int
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glGetPixelPreshaderUniformF")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glGetPixelPreshaderUniformF")]
 		public static extern  void MOJOSHADER_glGetPixelPreshaderUniformF(uint idx, ref float data, uint vec4n) ;
 		
 		    
 		    /// Return Type: void
-		    [DllImportAttribute(mojoshader_dll, EntryPoint="MOJOSHADER_glProgramReady")]
+		    [DllImport(mojoshader_dll, EntryPoint="MOJOSHADER_glProgramReady")]
 		public static extern  void MOJOSHADER_glProgramReady() ;
 		
 		}

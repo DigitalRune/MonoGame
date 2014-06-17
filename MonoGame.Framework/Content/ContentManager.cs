@@ -85,6 +85,7 @@ namespace Microsoft.Xna.Framework.Content
             'p', // PlayStationMobile
             'M', // WindowsPhone8
             'r', // RaspberryPi
+            'P', // PlayStation4
         };
 
         private static void AddContentManager(ContentManager contentManager)
@@ -383,10 +384,6 @@ namespace Microsoft.Xna.Framework.Content
             {
                 return SoundEffectReader.Normalize(assetName);
             }
-            else if ((typeof(T) == typeof(Video)))
-            {
-                return Video.Normalize(assetName);
-            }
 #endif
             else if ((typeof(T) == typeof(Effect)))
             {
@@ -420,11 +417,12 @@ namespace Microsoft.Xna.Framework.Content
             }
             else if ((typeof(T) == typeof(SoundEffect)))
             {
+#if ANDROID
                 return new SoundEffect(assetName);
-            }
-            else if ((typeof(T) == typeof(Video)))
-            {
-                return new Video(assetName);
+#else
+                using (Stream s = TitleContainer.OpenStream(assetName))
+                    return SoundEffect.FromStream(s);
+#endif
             }
 #endif
             else if ((typeof(T) == typeof(Effect)))
@@ -472,7 +470,6 @@ namespace Microsoft.Xna.Framework.Content
                 //thanks to ShinAli (https://bitbucket.org/alisci01/xnbdecompressor)
                 int compressedSize = xnbLength - 14;
                 int decompressedSize = xnbReader.ReadInt32();
-                int newFileSize = decompressedSize + 10;
 
                 MemoryStream decompressedStream = new MemoryStream(decompressedSize);
 
@@ -527,7 +524,7 @@ namespace Microsoft.Xna.Framework.Content
                     if (block_size == 0 || frame_size == 0)
                         break;
 
-                    int lzxRet = dec.Decompress(stream, block_size, decompressedStream, frame_size);
+                    dec.Decompress(stream, block_size, decompressedStream, frame_size);
                     pos += block_size;
                     decodedBytes += frame_size;
 
@@ -578,6 +575,11 @@ namespace Microsoft.Xna.Framework.Content
 #else
             foreach (var asset in LoadedAssets)
             {
+                // This never executes as asset.Key is never null.  This just forces the 
+                // linker to include the ReloadAsset function when AOT compiled.
+                if (asset.Key == null)
+                    ReloadAsset(asset.Key, Convert.ChangeType(asset.Value, asset.Value.GetType()));
+
 #if WINDOWS_STOREAPP
                 var methodInfo = typeof(ContentManager).GetType().GetTypeInfo().GetDeclaredMethod("ReloadAsset");
 #else

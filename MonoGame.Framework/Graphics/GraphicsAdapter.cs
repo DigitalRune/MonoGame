@@ -70,12 +70,6 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             _screen = screen;
         }
-#elif ANDROID
-        private View _view;
-        internal GraphicsAdapter(View screen)
-        {
-            _view = screen;
-        }
 #else
         internal GraphicsAdapter()
         {
@@ -105,7 +99,8 @@ namespace Microsoft.Xna.Framework.Graphics
                        60,
                        SurfaceFormat.Color);
 #elif ANDROID
-                return new DisplayMode(_view.Width, _view.Height, 60, SurfaceFormat.Color);
+                View view = ((AndroidGameWindow)Game.Instance.Window).GameView;
+                return new DisplayMode(view.Width, view.Height, 60, SurfaceFormat.Color);
 #elif (WINDOWS && OPENGL) || LINUX
 
                 return new DisplayMode(OpenTK.DisplayDevice.Default.Width, OpenTK.DisplayDevice.Default.Height, (int)OpenTK.DisplayDevice.Default.RefreshRate, SurfaceFormat.Color);
@@ -134,7 +129,7 @@ namespace Microsoft.Xna.Framework.Graphics
 					adapters = new ReadOnlyCollection<GraphicsAdapter>(
 						new GraphicsAdapter[] {new GraphicsAdapter(UIScreen.MainScreen)});
 #elif ANDROID
-                    adapters = new ReadOnlyCollection<GraphicsAdapter>(new GraphicsAdapter[] { new GraphicsAdapter(Game.Instance.Window) });
+                    adapters = new ReadOnlyCollection<GraphicsAdapter>(new GraphicsAdapter[] { new GraphicsAdapter() });
 #else
                     adapters = new ReadOnlyCollection<GraphicsAdapter>(
 						new GraphicsAdapter[] {new GraphicsAdapter()});
@@ -257,7 +252,25 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
                     List<DisplayMode> modes = new List<DisplayMode>(new DisplayMode[] { CurrentDisplayMode, });
 #if (WINDOWS && OPENGL) || LINUX
-                    IList<OpenTK.DisplayDevice> displays = OpenTK.DisplayDevice.AvailableDisplays;
+                    
+					//IList<OpenTK.DisplayDevice> displays = OpenTK.DisplayDevice.AvailableDisplays;
+					var displays = new List<OpenTK.DisplayDevice>();
+
+					OpenTK.DisplayIndex[] displayIndices = {
+						OpenTK.DisplayIndex.First,
+						OpenTK.DisplayIndex.Second,
+						OpenTK.DisplayIndex.Third,
+						OpenTK.DisplayIndex.Fourth,
+						OpenTK.DisplayIndex.Fifth,
+						OpenTK.DisplayIndex.Sixth,
+					};
+
+					foreach(var displayIndex in displayIndices) 
+					{
+						var currentDisplay = OpenTK.DisplayDevice.GetDisplay(displayIndex);
+						if(currentDisplay!= null) displays.Add(currentDisplay);
+					}
+
                     if (displays.Count > 0)
                     {
                         modes.Clear();
@@ -300,6 +313,24 @@ namespace Microsoft.Xna.Framework.Graphics
             }
         }
         */
+
+        /// <summary>
+        /// Gets a <see cref="System.Boolean"/> indicating whether
+        /// <see cref="GraphicsAdapter.CurrentDisplayMode"/> has a
+        /// Width:Height ratio corresponding to a widescreen <see cref="DisplayMode"/>.
+        /// Common widescreen modes include 16:9, 16:10 and 2:1.
+        /// </summary>
+        public bool IsWideScreen
+        {
+            get
+            {
+                // Common non-widescreen modes: 4:3, 5:4, 1:1
+                // Common widescreen modes: 16:9, 16:10, 2:1
+                // XNA does not appear to account for rotated displays on the desktop
+                const float limit = 4.0f / 3.0f;
+                float aspect = CurrentDisplayMode.AspectRatio;
+                return aspect > limit;
+            }
+        }
     }
 }
-

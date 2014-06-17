@@ -52,6 +52,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler
             'p', // PlayStationMobile
             'M', // WindowsPhone8
             'r', // RaspberryPi
+            'P', // PlayStation4
         };
 
         /// <summary>
@@ -85,7 +86,9 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler
             this.targetProfile = targetProfile;
             this.compressContent = compressContent;
             this.rootDirectory = rootDirectory;
-            this.referenceRelocationPath = referenceRelocationPath;
+
+            // Normalize the directory format so PathHelper.GetRelativePath will compute external references correctly.
+            this.referenceRelocationPath = PathHelper.NormalizeDirectory(referenceRelocationPath);
 
             outputStream = this.OutStream;
             headerStream = new MemoryStream();
@@ -239,14 +242,24 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler
             {
                 int index = typeWriters.Count;
                 typeWriter = compiler.GetTypeWriter(type);
+
                 typeWriters.Add(typeWriter);
-		if (!typeWriterMap.ContainsKey(typeWriter.GetType()))
-			typeWriterMap.Add(typeWriter.GetType(), index);
+			    typeWriterMap.Add(typeWriter.GetType(), index);
                 typeMap.Add(type, typeWriter);
 
-                var args = type.GetGenericArguments();
-                foreach (var arg in args)
-                    GetTypeWriter(arg);
+                // TODO: This is kinda messy.. seems like there could
+                // be a better way for generics and arrays to register
+                // their inner types with the typeWriterMap.
+                if (type.IsGenericType)
+                {
+                    var args = type.GetGenericArguments();
+                    foreach (var arg in args)
+                        GetTypeWriter(arg);
+                }
+                else if (type.IsArray)
+                {
+                    GetTypeWriter(type.GetElementType());
+                }
             }
             return typeWriter;
         }
@@ -328,7 +341,8 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler
             else
             {
 		    Type objectType = typeof (T);
-		    if (!objectType.IsValueType) {
+            if (!objectType.IsValueType && !typeWriter.TargetType.IsValueType)
+            {
 			    var index = typeWriterMap[typeWriter.GetType ()];
 			    // Because zero means null object, we add one to the index before writing it to the file
 			    Write7BitEncodedInt (index + 1);

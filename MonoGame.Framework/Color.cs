@@ -26,6 +26,7 @@ SOFTWARE.
 #endregion License
 
 using System;
+using System.Text;
 using System.Runtime.Serialization;
 
 namespace Microsoft.Xna.Framework
@@ -314,8 +315,8 @@ namespace Microsoft.Xna.Framework
             B = (byte)MathHelper.Clamp(b * 255, Byte.MinValue, Byte.MaxValue);
             A = (byte)MathHelper.Clamp(alpha * 255, Byte.MinValue, Byte.MaxValue);
         }
-        
-	/// <summary>
+
+        /// <summary>
         /// Gets or sets the blue component of <see cref="Color"/>.
         /// </summary>
         [DataMember]
@@ -323,15 +324,18 @@ namespace Microsoft.Xna.Framework
         {
             get
             {
-                return (byte)(this._packedValue >> 16);
+                unchecked
+                {
+                    return (byte) (this._packedValue >> 16);
+                }
             }
             set
             {
-                this._packedValue = (this._packedValue & 0xff00ffff) | (uint)(value << 16);
+                this._packedValue = (this._packedValue & 0xff00ffff) | ((uint)value << 16);
             }
         }
-	
-	/// <summary>
+
+        /// <summary>
         /// Gets or sets the green component of <see cref="Color"/>.
         /// </summary>
         [DataMember]
@@ -339,15 +343,18 @@ namespace Microsoft.Xna.Framework
         {
             get
             {
-                return (byte)(this._packedValue >> 8);
+                unchecked
+                {
+                    return (byte)(this._packedValue >> 8);
+                }
             }
             set
             {
-                this._packedValue = (this._packedValue & 0xffff00ff) | ((uint)(value << 8));
+                this._packedValue = (this._packedValue & 0xffff00ff) | ((uint)value << 8);
             }
         }
-	
-	/// <summary>
+
+        /// <summary>
         /// Gets or sets the red component of <see cref="Color"/>.
         /// </summary>
         [DataMember]
@@ -355,7 +362,10 @@ namespace Microsoft.Xna.Framework
         {
             get
             {
-                return (byte)(this._packedValue);
+                unchecked
+                {
+                    return (byte) this._packedValue;
+                }
             }
             set
             {
@@ -363,7 +373,7 @@ namespace Microsoft.Xna.Framework
             }
         }
 
-	/// <summary>
+        /// <summary>
         /// Gets or sets the alpha component of <see cref="Color"/>.
         /// </summary>
         [DataMember]
@@ -371,11 +381,14 @@ namespace Microsoft.Xna.Framework
         {
             get
             {
-                return (byte)(this._packedValue >> 24);
+                unchecked
+                {
+                    return (byte)(this._packedValue >> 24);
+                }
             }
             set
             {
-                this._packedValue = (this._packedValue & 0x00ffffff) | ((uint)(value << 24));
+                this._packedValue = (this._packedValue & 0x00ffffff) | ((uint)value << 24);
             }
         }
 		
@@ -1773,7 +1786,17 @@ namespace Microsoft.Xna.Framework
         /// <returns>The string representation of the color value of this instance.</returns>
 	public override string ToString ()
 	{
-	    return string.Format("[Color: R={0}, G={1}, B={2}, A={3}, PackedValue={4}]", R, G, B, A, PackedValue);
+        StringBuilder sb = new StringBuilder(25);
+        sb.Append("{R:");
+        sb.Append(R);
+        sb.Append(" G:");
+        sb.Append(G);
+        sb.Append(" B:");
+        sb.Append(B);
+        sb.Append(" A:");
+        sb.Append(A);
+        sb.Append("}");
+        return sb.ToString();
 	}
 	
 	/// <summary>

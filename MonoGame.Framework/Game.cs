@@ -68,12 +68,6 @@ non-infringement.
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-#if !PSM && !PORTABLE
-using System.Drawing;
-#endif
-using System.IO;
-using System.Reflection;
 using System.Diagnostics;
 #if WINRT
 using System.Threading.Tasks;
@@ -82,11 +76,11 @@ using Windows.ApplicationModel.Activation;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using Microsoft.Xna.Framework.GamerServices;
 
+#if PORTABLE
+#pragma warning disable 0414  // Disable warning: The field is assigned but its value is never used.
+#endif
 
 namespace Microsoft.Xna.Framework
 {
@@ -133,6 +127,7 @@ namespace Microsoft.Xna.Framework
         public Game()
         {
             _instance = this;
+
             LaunchParameters = new LaunchParameters();
             _services = new GameServiceContainer();
             _components = new GameComponentCollection();
@@ -145,29 +140,6 @@ namespace Microsoft.Xna.Framework
 
 #if WINDOWS_STOREAPP
             Platform.ViewStateChanged += Platform_ApplicationViewChanged;
-#endif
-
-#if MONOMAC || WINDOWS || LINUX
-            
-            // Set the window title.
-            // TODO: Get the title from the WindowsPhoneManifest.xml for WP7 projects.
-            string windowTitle = string.Empty;
-
-            // When running unit tests this can return null.
-            var assembly = Assembly.GetEntryAssembly();
-            if (assembly != null)
-            {
-                //Use the Title attribute of the Assembly if possible.
-                var assemblyTitleAtt = ((AssemblyTitleAttribute)AssemblyTitleAttribute.GetCustomAttribute(assembly, typeof(AssemblyTitleAttribute)));
-                if (assemblyTitleAtt != null)
-                    windowTitle = assemblyTitleAtt.Title;
-
-                // Otherwise, fallback to the Name of the assembly.
-                if (string.IsNullOrEmpty(windowTitle))
-                    windowTitle = assembly.GetName().Name;
-            }
-
-            Window.Title = windowTitle;
 #endif
         }
 
@@ -234,22 +206,12 @@ namespace Microsoft.Xna.Framework
                     Effect.FlushCache();
                     ContentTypeReaderManager.ClearTypeCreators();
 
-#if WINDOWS_PHONE
-                    TouchPanel.ResetState();                    
-#endif
-
-#if WINDOWS_MEDIA_SESSION
-                    Media.MediaManagerState.CheckShutdown();
-#endif
-
-#if DIRECTX
-                    SoundEffect.Shutdown();
+                    SoundEffect.PlatformShutdown();
 
                     BlendState.ResetStates();
                     DepthStencilState.ResetStates();
                     RasterizerState.ResetStates();
                     SamplerState.ResetStates();
-#endif
                 }
 #if ANDROID
                 Activity = null;
@@ -275,8 +237,8 @@ namespace Microsoft.Xna.Framework
         #region Properties
 
 #if ANDROID
-		[CLSCompliant(false)]
-        public static AndroidGameActivity Activity { get; set; }
+        [CLSCompliant(false)]
+        public static AndroidGameActivity Activity { get; internal set; }
 #endif
         private static Game _instance = null;
         internal static Game Instance { get { return Game._instance; } }
@@ -360,18 +322,11 @@ namespace Microsoft.Xna.Framework
             }
         }
 
-#if ANDROID
-		[CLSCompliant(false)]
-        public AndroidGameWindow Window
-        {
-            get { return Platform.Window; }
-        }
-#else
+        [CLSCompliant(false)]
         public GameWindow Window
         {
             get { return Platform.Window; }
         }
-#endif
 
         #endregion Properties
 
@@ -409,20 +364,25 @@ namespace Microsoft.Xna.Framework
 
         #region Public Methods
 
+#if IOS || WINDOWS_STOREAPP
+        [Obsolete("This platform's policy does not allow programmatically closing.", true)]
+#endif
         public void Exit()
         {
             Platform.Exit();
+            _suppressDraw = true;
         }
 
         public void ResetElapsedTime()
         {
-            Platform.ResetElapsedTime();
 #if !PORTABLE
+            Platform.ResetElapsedTime();
             _gameTimer.Reset();
             _gameTimer.Start();
-#endif
             _accumulatedElapsedTime = TimeSpan.Zero;
             _gameTime.ElapsedGameTime = TimeSpan.Zero;
+            _previousTicks = 0L;
+#endif
         }
 
         public void SuppressDraw()
@@ -457,9 +417,16 @@ namespace Microsoft.Xna.Framework
 
         public void Run(GameRunBehavior runBehavior)
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             AssertNotDisposed();
             if (!Platform.BeforeRun())
+            {
+                BeginRun();
+                _gameTimer = Stopwatch.StartNew();
                 return;
+            }
 
             if (!_initialized) {
                 DoInitialize ();
@@ -467,6 +434,7 @@ namespace Microsoft.Xna.Framework
             }
 
             BeginRun();
+            _gameTimer = Stopwatch.StartNew();
             switch (runBehavior)
             {
             case GameRunBehavior.Asynchronous:
@@ -482,12 +450,15 @@ namespace Microsoft.Xna.Framework
                 throw new ArgumentException(string.Format(
                     "Handling for the run behavior {0} is not implemented.", runBehavior));
             }
+#endif
         }
 
+#if !PORTABLE
         private TimeSpan _accumulatedElapsedTime;
         private readonly GameTime _gameTime = new GameTime();
-#if !PORTABLE
-        private Stopwatch _gameTimer = Stopwatch.StartNew();
+        private Stopwatch _gameTimer;
+        private long _previousTicks = 0;
+        private int _updateFrameLag;
 #endif
 
         public void Tick()
@@ -503,9 +474,9 @@ namespace Microsoft.Xna.Framework
         RetryTick:
 
             // Advance the accumulated elapsed time.
-            _accumulatedElapsedTime += _gameTimer.Elapsed;
-            _gameTimer.Reset();
-            _gameTimer.Start();
+            var currentTicks = _gameTimer.Elapsed.Ticks;
+            _accumulatedElapsedTime += TimeSpan.FromTicks(currentTicks - _previousTicks);
+            _previousTicks = currentTicks;
 
             // If we're in the fixed timestep mode and not enough time has elapsed
             // to perform an update we sleep off the the remaining time to save battery
@@ -529,16 +500,10 @@ namespace Microsoft.Xna.Framework
             if (_accumulatedElapsedTime > _maxElapsedTime)
                 _accumulatedElapsedTime = _maxElapsedTime;
 
-            // http://msdn.microsoft.com/en-us/library/microsoft.xna.framework.gametime.isrunningslowly.aspx
-            // Calculate IsRunningSlowly for the fixed time step, but only when the accumulated time
-            // exceeds the target time.
-
             if (IsFixedTimeStep)
             {
                 _gameTime.ElapsedGameTime = TargetElapsedTime;
                 var stepCount = 0;
-
-                _gameTime.IsRunningSlowly = (_accumulatedElapsedTime > TargetElapsedTime);
 
                 // Perform as many full fixed length time steps as we can.
                 while (_accumulatedElapsedTime >= TargetElapsedTime)
@@ -550,6 +515,25 @@ namespace Microsoft.Xna.Framework
                     DoUpdate(_gameTime);
                 }
 
+                //Every update after the first accumulates lag
+                _updateFrameLag += Math.Max(0, stepCount - 1);
+
+                //If we think we are running slowly, wait until the lag clears before resetting it
+                if (_gameTime.IsRunningSlowly)
+                {
+                    if (_updateFrameLag == 0)
+                        _gameTime.IsRunningSlowly = false;
+                }
+                else if (_updateFrameLag >= 5)
+                {
+                    //If we lag more than 5 frames, start thinking we are running slowly
+                    _gameTime.IsRunningSlowly = true;
+                }
+
+                //Every time we just do one update and one draw, then we are not running slowly, so decrease the lag
+                if (stepCount == 1 && _updateFrameLag > 0)
+                    _updateFrameLag--;
+
                 // Draw needs to know the total elapsed time
                 // that occured for the fixed length updates.
                 _gameTime.ElapsedGameTime = TimeSpan.FromTicks(TargetElapsedTime.Ticks * stepCount);
@@ -560,8 +544,6 @@ namespace Microsoft.Xna.Framework
                 _gameTime.ElapsedGameTime = _accumulatedElapsedTime;
                 _gameTime.TotalGameTime += _accumulatedElapsedTime;
                 _accumulatedElapsedTime = TimeSpan.Zero;
-                // Always set the RunningSlowly flag to false here when we are in fast-as-possible mode.
-                _gameTime.IsRunningSlowly = false;
 
                 DoUpdate(_gameTime);
             }
@@ -716,7 +698,18 @@ namespace Microsoft.Xna.Framework
         {
             AssertNotDisposed();
             if (Platform.BeforeUpdate(gameTime))
+            {
+                // Once per frame, we need to check currently 
+                // playing sounds to see if they've stopped,
+                // and return them back to the pool if so.
+                SoundEffectInstancePool.Update();
+                
+                //The TouchPanel needs to know the time for when touches arrive
+                TouchPanelState.Update(gameTime);
+
                 Update(gameTime);
+            }
+                
         }
 
         internal void DoDraw(GameTime gameTime)
@@ -752,24 +745,7 @@ namespace Microsoft.Xna.Framework
 		{
 			OnExiting(this, EventArgs.Empty);
 			UnloadContent();
-
-#if DIRECTX
-		    SoundEffect.Shutdown();
-#endif
-
-#if WINDOWS_MEDIA_SESSION
-            Media.MediaManagerState.CheckShutdown();
-#endif
 		}
-
-        internal void ResizeWindow(bool changed)
-        {
-#if LINUX || (WINDOWS && OPENGL)
-            ((OpenTKGamePlatform)Platform).ResetWindowBounds(changed);
-#elif WINDOWS && DIRECTX
-            ((MonoGame.Framework.WinFormsGamePlatform)Platform).ResetWindowBounds(changed);
-#endif
-        }
 
         #endregion Internal Methods
 
@@ -852,8 +828,8 @@ namespace Microsoft.Xna.Framework
         class SortingFilteringCollection<T> : ICollection<T>
         {
             private readonly List<T> _items;
-            private readonly List<AddJournalEntry> _addJournal;
-            private readonly Comparison<AddJournalEntry> _addJournalSortComparison;
+            private readonly List<AddJournalEntry<T>> _addJournal;
+            private readonly Comparison<AddJournalEntry<T>> _addJournalSortComparison;
             private readonly List<int> _removeJournal;
             private readonly List<T> _cachedFilteredItems;
             private bool _shouldRebuildCache;
@@ -874,7 +850,7 @@ namespace Microsoft.Xna.Framework
                 Action<T, EventHandler<EventArgs>> sortChangedUnsubscriber)
             {
                 _items = new List<T>();
-                _addJournal = new List<AddJournalEntry>();
+                _addJournal = new List<AddJournalEntry<T>>();
                 _removeJournal = new List<int>();
                 _cachedFilteredItems = new List<T>();
                 _shouldRebuildCache = true;
@@ -889,9 +865,9 @@ namespace Microsoft.Xna.Framework
                 _addJournalSortComparison = CompareAddJournalEntry;
             }
 
-            private int CompareAddJournalEntry(AddJournalEntry x, AddJournalEntry y)
+            private int CompareAddJournalEntry(AddJournalEntry<T> x, AddJournalEntry<T> y)
             {
-                int result = _sort((T)x.Item, (T)y.Item);
+                int result = _sort(x.Item, y.Item);
                 if (result != 0)
                     return result;
                 return x.Order - y.Order;
@@ -927,13 +903,13 @@ namespace Microsoft.Xna.Framework
             {
                 // NOTE: We subscribe to item events after items in _addJournal
                 //       have been merged.
-                _addJournal.Add(new AddJournalEntry(_addJournal.Count, item));
+                _addJournal.Add(new AddJournalEntry<T>(_addJournal.Count, item));
                 InvalidateCache();
             }
 
             public bool Remove(T item)
             {
-                if (_addJournal.Remove(AddJournalEntry.CreateKey(item)))
+                if (_addJournal.Remove(AddJournalEntry<T>.CreateKey(item)))
                     return true;
 
                 var index = _items.IndexOf(item);
@@ -1022,7 +998,7 @@ namespace Microsoft.Xna.Framework
 
                 while (iItems < _items.Count && iAddJournal < _addJournal.Count)
                 {
-                    var addJournalItem = (T)_addJournal[iAddJournal].Item;
+                    var addJournalItem = _addJournal[iAddJournal].Item;
                     // If addJournalItem is less than (belongs before)
                     // _items[iItems], insert it.
                     if (_sort(addJournalItem, _items[iItems]) < 0)
@@ -1040,7 +1016,7 @@ namespace Microsoft.Xna.Framework
                 // If _addJournal had any "tail" items, append them all now.
                 for (; iAddJournal < _addJournal.Count; ++iAddJournal)
                 {
-                    var addJournalItem = (T)_addJournal[iAddJournal].Item;
+                    var addJournalItem = _addJournal[iAddJournal].Item;
                     SubscribeToItemEvents(addJournalItem);
                     _items.Add(addJournalItem);
                 }
@@ -1075,7 +1051,7 @@ namespace Microsoft.Xna.Framework
                 var item = (T)sender;
                 var index = _items.IndexOf(item);
 
-                _addJournal.Add(new AddJournalEntry(_addJournal.Count, item));
+                _addJournal.Add(new AddJournalEntry<T>(_addJournal.Count, item));
                 _removeJournal.Add(index);
 
                 // Until the item is back in place, we don't care about its
@@ -1085,23 +1061,20 @@ namespace Microsoft.Xna.Framework
             }
         }
 
-        // For iOS, the AOT compiler can't seem to handle a
-        // List<AddJournalEntry<T>>, so unfortunately we'll use object
-        // for storage.
-        private struct AddJournalEntry
+        private struct AddJournalEntry<T>
         {
             public readonly int Order;
-            public readonly object Item;
+            public readonly T Item;
 
-            public AddJournalEntry(int order, object item)
+            public AddJournalEntry(int order, T item)
             {
                 Order = order;
                 Item = item;
             }
 
-            public static AddJournalEntry CreateKey(object item)
+            public static AddJournalEntry<T> CreateKey(T item)
             {
-                return new AddJournalEntry(-1, item);
+                return new AddJournalEntry<T>(-1, item);
             }
 
             public override int GetHashCode()
@@ -1111,10 +1084,10 @@ namespace Microsoft.Xna.Framework
 
             public override bool Equals(object obj)
             {
-                if (!(obj is AddJournalEntry))
+                if (!(obj is AddJournalEntry<T>))
                     return false;
 
-                return object.Equals(Item, ((AddJournalEntry)obj).Item);
+                return object.Equals(Item, ((AddJournalEntry<T>)obj).Item);
             }
         }
     }

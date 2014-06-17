@@ -67,6 +67,7 @@ non-infringement.
 #endregion License
 
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using System;
 
 #if WINRT
@@ -93,7 +94,7 @@ namespace Microsoft.Xna.Framework
             return new iOSGamePlatform(game);
 #elif MONOMAC
             return new MacGamePlatform(game);
-#elif (WINDOWS && OPENGL) || LINUX
+#elif (WINDOWS && OPENGL) || LINUX || ANGLE
             return new OpenTKGamePlatform(game);
 #elif ANDROID
             return new AndroidGamePlatform(game);
@@ -107,6 +108,8 @@ namespace Microsoft.Xna.Framework
             return new MetroGamePlatform(game);
 #elif PORTABLE
             throw MonoGame.Portable.NotImplementedException;
+#elif WEB
+            return new WebGamePlatform(game);
 #endif
         }
 
@@ -185,16 +188,19 @@ namespace Microsoft.Xna.Framework
         }
 #endif
 
-#if ANDROID
-        public AndroidGameWindow Window
+#if PSM
+        private PSSGameWindow _window;
+        public PSSGameWindow Window
         {
-            get; protected set;
+            get { return _window; }
+            protected set
+            {
+                if (_window == null)
+                    TouchPanel.PrimaryWindow = value;
+
+                _window = value;
+            }
         }
-#elif PSM
-		public PSSGameWindow Window
-		{
-			get; protected set;
-		}
 #else
         private GameWindow _window;
         public GameWindow Window
@@ -205,23 +211,16 @@ namespace Microsoft.Xna.Framework
             protected set
             {
                 if (_window == null)
+                {
                     Mouse.PrimaryWindow = value;
+                    TouchPanel.PrimaryWindow = value;
+                }
 
                 _window = value;
             }
         }
 #endif
-  
-        public virtual bool VSyncEnabled
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set {
-            }
-        }
-        
+
         #endregion
 
         #region Events
@@ -268,9 +267,6 @@ namespace Microsoft.Xna.Framework
             {
                 var graphicsDeviceManager = Game.Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;			   
                 graphicsDeviceManager.CreateDevice();
-#if ANDROID
-                Window.TouchEnabled = true;
-#endif
             }
         }
 

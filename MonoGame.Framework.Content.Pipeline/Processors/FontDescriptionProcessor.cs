@@ -83,12 +83,13 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Processors
 					GlyphCropper.Crop(glyph);
 				}
 
-				Bitmap outputBitmap = GlyphPacker.ArrangeGlyphs(glyphs, true, true);
+                var systemBitmap = GlyphPacker.ArrangeGlyphs(glyphs, true, true);
 
 				//outputBitmap.Save ("/Users/Jimmy/Desktop/Cocos2D-XNAImages/fontglyphs.png");
 
 				// Adjust line and character spacing.
 				lineSpacing += input.Spacing;
+				output.VerticalLineSpacing = (int)lineSpacing;
 
 				foreach (Glyph glyph in glyphs)
 				{
@@ -96,19 +97,15 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Processors
 					if (!output.CharacterMap.Contains(glyph.Character))
 						output.CharacterMap.Add(glyph.Character);
 					output.Glyphs.Add(new Rectangle(glyph.Subrect.X, glyph.Subrect.Y, glyph.Subrect.Width, glyph.Subrect.Height));
-					output.Cropping.Add(new Rectangle(0,0,glyph.Subrect.Width, glyph.Subrect.Height));
+                    output.Cropping.Add(new Rectangle(0, (int)(glyph.YOffset + glyphs.Select(x => x.YOffset).Max()), glyph.Subrect.Width, glyph.Subrect.Height));
 					ABCFloat abc = glyph.CharacterWidths;
 					output.Kerning.Add(new Vector3(abc.A, abc.B, abc.C));
 				}
 
-//				outputBitmap.Save("/Users/Jimmy/Desktop/Cocos2D-XNAImages/test.png");
-				output.Texture._bitmap = outputBitmap;
+                output.Texture.Faces.Add(new MipmapChain(systemBitmap.ToXnaBitmap()));
+			    systemBitmap.Dispose();
 
-				var bitmapContent = new PixelBitmapContent<Color>(outputBitmap.Width, outputBitmap.Height);
-				bitmapContent.SetPixelData(outputBitmap.GetData());
-				output.Texture.Faces.Add(new MipmapChain(bitmapContent));
-
-            	GraphicsUtil.CompressTexture(output.Texture, context, false, false);
+                GraphicsUtil.CompressTexture(context.TargetProfile, output.Texture, context, false, false);
 			}
 			catch(Exception ex) {
 				context.Logger.LogImportantMessage("{0}", ex.ToString());
@@ -126,7 +123,6 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Processors
 			var BitmapFileExtensions = new List<string> { ".bmp", ".png", ".gif" };
 
 			string fileExtension = Path.GetExtension(fontName).ToLowerInvariant();
-			context.Logger.LogMessage ("Building Font {0}", fontName);
 
 			//			if (BitmapFileExtensions.Contains(fileExtension))
 			//			{

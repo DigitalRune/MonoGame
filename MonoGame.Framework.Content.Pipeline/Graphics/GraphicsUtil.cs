@@ -6,6 +6,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using Microsoft.Xna.Framework.Graphics;
 using Nvidia.TextureTools;
 
 namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
@@ -75,31 +76,66 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
     
     public static class GraphicsUtil
     {
-        public static byte[] GetData(this Bitmap bmp)
+        internal static Bitmap ToSystemBitmap(this BitmapContent bitmapContent)
+        {
+            var srcBmp = bitmapContent;
+            var srcData = srcBmp.GetPixelData();
+
+            var srcDataHandle = GCHandle.Alloc(srcData, GCHandleType.Pinned);
+            var srcDataPtr = (IntPtr)(srcDataHandle.AddrOfPinnedObject().ToInt64());
+
+            // stride must be aligned on a 32 bit boundary or 4 bytes
+            int stride = ((srcBmp.Width * 32 + 31) & ~31) >> 3;
+
+            var systemBitmap = new Bitmap(srcBmp.Width, srcBmp.Height, stride, PixelFormat.Format32bppArgb | PixelFormat.Alpha, srcDataPtr);
+            srcDataHandle.Free();
+
+            return systemBitmap;
+        }
+
+        internal static void Resize(this TextureContent content, int newWidth, int newHeight)
+        {
+            var source = content.Faces[0][0].ToSystemBitmap();
+
+            var destination = new Bitmap(newWidth, newHeight);
+            using (var graphics = System.Drawing.Graphics.FromImage(destination))
+            {
+                graphics.DrawImage(source, 0, 0, newWidth, newHeight);
+                source.Dispose();
+            }
+
+            content.Faces.Clear();
+            content.Faces.Add(new MipmapChain(destination.ToXnaBitmap()));
+        }
+
+        public static BitmapContent ToXnaBitmap(this Bitmap systemBitmap)
         {
             // Any bitmap using this function should use 32bpp ARGB pixel format, since we have to
             // swizzle the channels later
-            System.Diagnostics.Debug.Assert(bmp.PixelFormat == PixelFormat.Format32bppArgb);
+            System.Diagnostics.Debug.Assert(systemBitmap.PixelFormat == PixelFormat.Format32bppArgb);
 
-            var bitmapData = bmp.LockBits(new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height),
+            var bitmapData = systemBitmap.LockBits(new System.Drawing.Rectangle(0, 0, systemBitmap.Width, systemBitmap.Height),
                                     ImageLockMode.ReadOnly,
-                                    bmp.PixelFormat);
+                                    systemBitmap.PixelFormat);
 
             var length = bitmapData.Stride * bitmapData.Height;
-            var output = new byte[length];
+            var pixelData = new byte[length];
 
             // Copy bitmap to byte[]
-            Marshal.Copy(bitmapData.Scan0, output, 0, length);
-            bmp.UnlockBits(bitmapData);
+            Marshal.Copy(bitmapData.Scan0, pixelData, 0, length);
+            systemBitmap.UnlockBits(bitmapData);
 
             // NOTE: According to http://msdn.microsoft.com/en-us/library/dd183449%28VS.85%29.aspx
             // and http://stackoverflow.com/questions/8104461/pixelformat-format32bppargb-seems-to-have-wrong-byte-order
             // Image data from any GDI based function are stored in memory as BGRA/BGR, even if the format says RGBA.
             // Because of this we flip the R and B channels.
 
-            BGRAtoRGBA(output);
-  
-            return output;
+            BGRAtoRGBA(pixelData);
+
+            var xnaBitmap = new PixelBitmapContent<Color>(systemBitmap.Width, systemBitmap.Height);
+            xnaBitmap.SetPixelData(pixelData);
+
+            return xnaBitmap;
         }
 
         public static void BGRAtoRGBA(byte[] data)
@@ -155,10 +191,10 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
         /// <summary>
         /// Compresses TextureContent in a format appropriate to the platform
         /// </summary>
-        public static void CompressTexture(TextureContent content, ContentProcessorContext context, bool generateMipmaps, bool premultipliedAlpha)
+        public static void CompressTexture(GraphicsProfile profile, TextureContent content, ContentProcessorContext context, bool generateMipmaps, bool premultipliedAlpha)
         {
             // TODO: At the moment, only DXT compression from windows machine is supported
-            // Add more here as they become available.
+            //       Add more here as they become available.
             switch (context.TargetPlatform)
             {
                 case TargetPlatform.Windows:
@@ -171,11 +207,11 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
                 case TargetPlatform.MacOSX:
                 case TargetPlatform.NativeClient:
                 case TargetPlatform.Xbox360:
-					context.Logger.LogMessage ("Detected {0} using DXT Compression", context.TargetPlatform);
-				    CompressDxt(content, generateMipmaps);
+					context.Logger.LogMessage("Using DXT Compression");
+				    CompressDxt(profile, content, generateMipmaps);
 				    break;
                 case TargetPlatform.iOS:
-					context.Logger.LogMessage ("Detected {0} using PVRTC Compression", context.TargetPlatform);
+					context.Logger.LogMessage("Using PVRTC Compression");
                     CompressPvrtc(content, generateMipmaps, premultipliedAlpha);
                     break;
 
@@ -250,12 +286,15 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             }
         }
 
-        private static void CompressDxt(TextureContent content, bool generateMipmaps)
+        private static void CompressDxt(GraphicsProfile profile, TextureContent content, bool generateMipmaps)
         {
             var texData = content.Faces[0][0];
 
-            if (!IsPowerOfTwo(texData.Width) || !IsPowerOfTwo(texData.Height))
-                throw new PipelineException("DXT Compressed textures width and height must be powers of two.");
+            if (profile == GraphicsProfile.Reach)
+            {
+                if (!IsPowerOfTwo(texData.Width) || !IsPowerOfTwo(texData.Height))
+                    throw new PipelineException("DXT Compressed textures width and height must be powers of two in GraphicsProfile.Reach.");                
+            }
 
             var _dxtCompressor = new Compressor();
             var inputOptions = new InputOptions();
@@ -300,27 +339,6 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             }
 
             return false;
-        }
-
-        internal static void Resize(this TextureContent content, int newWidth, int newHeight)
-        {
-            var resizedBmp = new Bitmap(newWidth, newHeight);
-
-            using (var graphics = System.Drawing.Graphics.FromImage(resizedBmp))
-            {
-                graphics.DrawImage(content._bitmap, 0, 0, newWidth, newHeight);
-
-                content._bitmap.Dispose();
-                content._bitmap = resizedBmp;
-            }
-
-            var imageData = content._bitmap.GetData();
-
-            var bitmapContent = new PixelBitmapContent<Color>(content._bitmap.Width, content._bitmap.Height);
-            bitmapContent.SetPixelData(imageData);
-
-            content.Faces.Clear();
-            content.Faces.Add(new MipmapChain(bitmapContent));
-        }
+        }        
     }
 }

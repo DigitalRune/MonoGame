@@ -40,7 +40,7 @@
 // 
 using System;
 using System.IO;
-
+using System.Text;
 #if WINRT
 using System.Threading.Tasks;
 #elif IOS
@@ -51,6 +51,7 @@ using MonoMac.Foundation;
 #elif PSM
 using Sce.PlayStation.Core;
 #endif
+using Microsoft.Xna.Framework.Utilities;
 
 namespace Microsoft.Xna.Framework
 {
@@ -151,14 +152,7 @@ namespace Microsoft.Xna.Framework
         // this same logic is duplicated all over the code base.
         internal static string GetFilename(string name)
         {
-#if WINRT || PORTABLE
-            // Replace non-windows seperators.
-            name = name.Replace('/', '\\');
-#else
-            // Replace Windows path separators with local path separators
-            name = name.Replace('\\', Path.DirectorySeparatorChar);
-#endif
-            return name;
+            return FileHelpers.NormalizeFilePathSeparators(new Uri("file:///" + name).LocalPath.Substring(1));
         }
     }
 }

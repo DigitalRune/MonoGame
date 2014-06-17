@@ -67,6 +67,7 @@ non-infringement.
 #endregion License
 
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.ComponentModel;
 
@@ -78,6 +79,13 @@ namespace Microsoft.Xna.Framework {
 		public abstract bool AllowUserResizing { get; set; }
 
 		public abstract Rectangle ClientBounds { get; }
+
+	    internal bool _allowAltF4 = true;
+
+        /// <summary>
+        /// Gets or sets the bool that enables the Alt+F4 usage for window closing(on all platforms, except WinRT). Its true by default.
+        /// </summary>
+        public virtual bool AllowAltF4 { get { return _allowAltF4; } set { _allowAltF4 = value; } } 
 
 #if WINDOWS && DIRECTX
         /// <summary>
@@ -123,6 +131,12 @@ namespace Microsoft.Xna.Framework {
         }
 
         internal MouseState MouseState;
+	    internal TouchPanelState TouchPanelState;
+
+        protected GameWindow()
+        {
+            TouchPanelState = new TouchPanelState(this);
+        }
 
 		#endregion Properties
 
@@ -132,9 +146,9 @@ namespace Microsoft.Xna.Framework {
 		public event EventHandler<EventArgs> OrientationChanged;
 		public event EventHandler<EventArgs> ScreenDeviceNameChanged;
 
-#if WINDOWS || LINUX
+#if WINDOWS || LINUX || ANGLE
 
-		/// <summary>
+        /// <summary>
 		/// Use this event to retrieve text for objects like textbox's.
 		/// This event is not raised by noncharacter keys.
 		/// This event also supports key repeat.
@@ -189,7 +203,7 @@ namespace Microsoft.Xna.Framework {
 				ScreenDeviceNameChanged (this, EventArgs.Empty);
 		}
 
-#if WINDOWS || LINUX
+#if WINDOWS || LINUX || ANGLE
 		protected void OnTextInput(object sender, TextInputEventArgs e)
 		{
 			if (TextInput != null)
@@ -205,6 +219,7 @@ namespace Microsoft.Xna.Framework {
         {
             var window = new MonoGame.Framework.WinFormsGameWindow((MonoGame.Framework.WinFormsGamePlatform)game.Platform);
             window.Initialize(width, height);
+
             return window;
         }
 #endif
