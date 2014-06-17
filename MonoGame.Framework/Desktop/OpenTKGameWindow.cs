@@ -58,7 +58,7 @@ namespace Microsoft.Xna.Framework
     {
         private bool _isResizable;
         private bool _isBorderless;
-        private bool _isMouseInBounds;
+        //private bool _isMouseInBounds;  // Commented out because this field is never read!?
 
 		//private DisplayOrientation _currentOrientation;
         private IntPtr _windowHandle;
@@ -279,7 +279,7 @@ namespace Microsoft.Xna.Framework
 #if WINDOWS
         private void OnMouseEnter(object sender, EventArgs e)
         {
-            _isMouseInBounds = true;
+            //_isMouseInBounds = true;
         }
 
         private void OnMouseLeave(object sender, EventArgs e)
@@ -288,7 +288,7 @@ namespace Microsoft.Xna.Framework
             //is down while the cursor is still in the window bounds.
             if (Mouse.GetState().LeftButton == ButtonState.Released)
             {
-                _isMouseInBounds = false;
+                //_isMouseInBounds = false;
             }
         }
 #endif

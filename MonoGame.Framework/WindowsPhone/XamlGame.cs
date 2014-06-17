@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Microsoft.Xna.Framework.Input;
 using SharpDX;
 using SharpDX.Direct3D11;
 using Microsoft.Phone.Controls;

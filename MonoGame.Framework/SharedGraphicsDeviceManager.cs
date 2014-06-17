@@ -60,13 +60,13 @@ namespace Microsoft.Xna.Framework
         [CLSCompliant(false)]
         public SwapChainBackgroundPanel SwapChainBackgroundPanel { get; set; }
 
-        public event EventHandler<EventArgs> DeviceCreated;
+        public event EventHandler<EventArgs> DeviceCreated { add {} remove {} }
 
-        public event EventHandler<EventArgs> DeviceDisposing;
+        public event EventHandler<EventArgs> DeviceDisposing { add {} remove {} }
 
-        public event EventHandler<EventArgs> DeviceReset;
+        public event EventHandler<EventArgs> DeviceReset { add {} remove {} }
 
-        public event EventHandler<EventArgs> DeviceResetting;
+        public event EventHandler<EventArgs> DeviceResetting { add {} remove {} }
 
         public static SharedGraphicsDeviceManager Current { get; private set; }
 

@@ -173,7 +173,9 @@ namespace Microsoft.Xna.Framework
                 {
                     action();
                 }
+#pragma warning disable 0168          // Disable warning: The variable 'ex' is declared but never used.
                 catch (UnauthorizedAccessException ex)
+#pragma warning restore 0168
                 {
                     // Need to be on a different thread
 #if WINDOWS_PHONE

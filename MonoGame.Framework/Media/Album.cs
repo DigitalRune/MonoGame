@@ -188,10 +188,10 @@ namespace Microsoft.Xna.Framework.Media
 #endif
         }
 
+#if WINDOWS_PHONE || WINDOWS_STOREAPP
         /// <summary>
         /// Returns the stream that contains the album art image data.
         /// </summary>
-#if WINDOWS_PHONE || WINDOWS_STOREAPP
         public Stream GetAlbumArt()
         {
 #if WINDOWS_PHONE
@@ -199,9 +199,9 @@ namespace Microsoft.Xna.Framework.Media
 #elif WINDOWS_STOREAPP
             if (this.HasArt)
                 return this.thumbnail.AsStream();
-#endif
 
             return null;
+#endif
         }
 
 #elif IOS
@@ -211,10 +211,10 @@ namespace Microsoft.Xna.Framework.Media
         }
 #endif
 
+#if WINDOWS_PHONE || WINDOWS_STOREAPP
         /// <summary>
         /// Returns the stream that contains the album thumbnail image data.
         /// </summary>
-#if WINDOWS_PHONE || WINDOWS_STOREAPP
         public Stream GetThumbnail()
         {
 #if WINDOWS_PHONE

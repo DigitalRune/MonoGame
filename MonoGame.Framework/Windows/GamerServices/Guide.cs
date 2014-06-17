@@ -85,7 +85,9 @@ namespace Microsoft.Xna.Framework.GamerServices
 	public static class Guide
 	{
 		private static bool isScreenSaverEnabled;
+#if !DEBUG && !WINDOWS_PHONE
 		private static bool isTrialMode = false;
+#endif
 		private static bool isVisible;
 		private static bool simulateTrialMode;
 

@@ -51,6 +51,10 @@ using Microsoft.Xna.Framework.GamerServices;
 
 #endregion Using clause
 
+#if PORTABLE
+#pragma warning disable 0649  // Disable warning: Field is never assigned to.
+#endif
+
 namespace Microsoft.Xna.Framework.Net
 {
 	// The delegate must have the same signature as the method
