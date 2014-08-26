@@ -52,10 +52,7 @@ using MGXna_Framework = global::Microsoft.Xna.Framework;
 #endif
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 
 #if WINRT
 using System.Threading.Tasks;
@@ -454,7 +451,11 @@ namespace Microsoft.Xna.Framework.GamerServices
 		{ 
 			get
 			{
+#if WINDOWS_PHONE
+				return MsXna_Guide.IsVisible;
+#else
 				return isVisible;
+#endif
 			}
 			set
 			{

@@ -1,7 +1,7 @@
 #region License
 /*
 Microsoft Public License (Ms-PL)
-MonoGame - Copyright © 2009 The MonoGame Team
+MonoGame - Copyright Â© 2009 The MonoGame Team
 
 All rights reserved.
 
@@ -113,13 +113,7 @@ namespace Microsoft.Xna.Framework
         /// <exception cref="InvalidOperationException">Thrown if the code is not currently running on the UI thread.</exception>
         public static void EnsureUIThread()
         {
-#if WINDOWS_PHONE
-            if (!Deployment.Current.Dispatcher.CheckAccess())
-#elif WINDOWS_STOREAPP
-            if (mainThreadId != Environment.CurrentManagedThreadId)
-#else
-            if (mainThreadId != Thread.CurrentThread.ManagedThreadId)
-#endif
+            if (!IsOnUIThread())
                 throw new InvalidOperationException("Operation not called on UI thread.");
         }
 
@@ -169,21 +163,20 @@ namespace Microsoft.Xna.Framework
             // If we are already on the UI thread, just call the action and be done with it
             if (IsOnUIThread())
             {
+#if WINDOWS_PHONE
                 try
                 {
                     action();
                 }
-#pragma warning disable 0168          // Disable warning: The variable 'ex' is declared but never used.
-                catch (UnauthorizedAccessException ex)
-#pragma warning restore 0168
+                catch (UnauthorizedAccessException)
+
                 {
                     // Need to be on a different thread
-#if WINDOWS_PHONE
                     BlockOnContainerThread(Deployment.Current.Dispatcher, action);
-#else
-                    throw (ex);
-#endif
                 }
+#else
+                action();
+#endif
                 return;
             }
 

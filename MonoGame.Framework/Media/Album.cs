@@ -205,6 +205,7 @@ namespace Microsoft.Xna.Framework.Media
         }
 
 #elif IOS
+        [CLSCompliant(false)]
         public UIImage GetAlbumArt()
         {
             return this.thumbnail.ImageWithSize(new SizeF(this.thumbnail.Bounds.Width, this.thumbnail.Bounds.Height));
@@ -227,13 +228,14 @@ namespace Microsoft.Xna.Framework.Media
 #endif
         }
 #elif IOS
+        [CLSCompliant(false)]
         public UIImage GetThumbnail()
         {
             return this.thumbnail.ImageWithSize(new SizeF(100, 100)); // TODO: Check size
         }
 #endif
 
-        /// <summary>
+		/// <summary>
         /// Returns a String representation of this Album.
         /// </summary>
         public override string ToString()

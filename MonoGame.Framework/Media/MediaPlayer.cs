@@ -23,7 +23,11 @@ namespace Microsoft.Xna.Framework.Media
 		private static readonly MediaQueue _queue = new MediaQueue();
 
         // Playing music using XNA, we shouldn't fire extra state changed events
-        private static bool playingInternal = false;
+#if WINDOWS_PHONE
+        private static bool playingInternal;
+#else
+        private const bool playingInternal = false;
+#endif
 
 		public static event EventHandler<EventArgs> ActiveSongChanged;
         public static event EventHandler<EventArgs> MediaStateChanged;

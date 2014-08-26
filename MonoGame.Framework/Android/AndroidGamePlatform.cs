@@ -23,31 +23,23 @@ namespace Microsoft.Xna.Framework
             Window = _gameWindow;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                AndroidGameActivity.Paused -= Activity_Paused;
+                AndroidGameActivity.Resumed -= Activity_Resumed;
+            }
+            base.Dispose(disposing);
+        }
+
         private bool _initialized;
         public static bool IsPlayingVdeo { get; set; }
-        private bool _exiting = false;
         private AndroidGameWindow _gameWindow;
 
         public override void Exit()
         {
-            //TODO: Fix this
-            try
-            {
-				if (!_exiting)
-				{
-					_exiting = true;
-					AndroidGameActivity.Paused -= Activity_Paused;
-					AndroidGameActivity.Resumed -= Activity_Resumed;
-					Game.DoExiting();
-                    //(SJ) Why is this called here when it's not in any other project
-                    //Net.NetworkSession.Exit();
-               	    Game.Activity.Finish();
-				    _gameWindow.GameView.Close();
-				}
-            }
-            catch
-            {
-            }
+            Game.Activity.MoveTaskToBack(true);
         }
 
         public override void RunLoop()
@@ -132,7 +124,6 @@ namespace Microsoft.Xna.Framework
             {
                 IsActive = true;
 				_gameWindow.GameView.Resume();
-				SoundEffectInstance.SoundPool.AutoResume();
 				if(_MediaPlayer_PrevState == MediaState.Playing && Game.Activity.AutoPauseAndResumeMediaPlayer)
                 	MediaPlayer.Resume();
 				if (!_gameWindow.GameView.IsFocused)
@@ -150,7 +141,6 @@ namespace Microsoft.Xna.Framework
 				_MediaPlayer_PrevState = MediaPlayer.State;
 				_gameWindow.GameView.Pause();
 				_gameWindow.GameView.ClearFocus();
-				SoundEffectInstance.SoundPool.AutoPause();
 				if(Game.Activity.AutoPauseAndResumeMediaPlayer)
                 	MediaPlayer.Pause();
             }
@@ -170,8 +160,6 @@ namespace Microsoft.Xna.Framework
 		
         public override void Present()
         {
-			if (_exiting)
-                return;
             try
             {
                 var device = Game.GraphicsDevice;

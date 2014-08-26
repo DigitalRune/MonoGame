@@ -3,9 +3,6 @@
 // file 'LICENSE.txt', which is part of this source code package.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -81,7 +78,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
 #if !PORTABLE
             var elementSizeInByte = Marshal.SizeOf(typeof(T));
-            this.GetData<T>(0, data, 0, data.Count(), elementSizeInByte);
+            this.GetData<T>(0, data, 0, data.Length, elementSizeInByte);
 #endif
         }
 

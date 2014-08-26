@@ -37,19 +37,40 @@ namespace Microsoft.Xna.Framework.Audio
 
         private void PlatformLoadAudioStream(Stream s)
         {
-#if WINDOWS || LINUX || ANGLE
+#if OPENAL && !(MONOMAC || IOS)
             
             ALFormat format;
             int size;
             int freq;
 
-            _data = AudioLoader.Load(s, out format, out size, out freq);
-
+            var stream = s;
+#if ANDROID
+            var needsDispose = false;
+            try
+            {
+                // If seek is not supported (usually an indicator of a stream opened into the AssetManager), then copy
+                // into a temporary MemoryStream.
+                if (!s.CanSeek)
+                {
+                    needsDispose = true;
+                    stream = new MemoryStream();
+                    s.CopyTo(stream);
+                    stream.Position = 0;
+                }
+#endif
+                _data = AudioLoader.Load(stream, out format, out size, out freq);
+#if ANDROID
+            }
+            finally
+            {
+                if (needsDispose)
+                    stream.Dispose();
+            }
+#endif
             Format = format;
             Size = size;
             Rate = freq;
 
-            return;
 #endif
 
 #if MONOMAC || IOS
@@ -105,7 +126,7 @@ namespace Microsoft.Xna.Framework.Audio
 			Rate = (float)sampleRate;
             Size = (int)buffer.Length;
 
-#if WINDOWS || LINUX || ANGLE
+#if OPENAL && !(MONOMAC || IOS)
 
             _data = buffer;
             Format = (channels == AudioChannels.Stereo) ? ALFormat.Stereo16 : ALFormat.Mono16;
@@ -148,20 +169,11 @@ namespace Microsoft.Xna.Framework.Audio
 
         #endregion
 
-        #region Static Members
-
-        private static void PlatformSetMasterVolume()
-        {
-            SoundEffectInstancePool.UpdateVolumes();
-        }
-
-        #endregion
-
         #region IDisposable Members
 
         private void PlatformDispose(bool disposing)
         {
-            // A No-op for WINDOWS and LINUX. Note that isDisposed remains false!
+            // A no-op for OpenAL
         }
 
         #endregion
