@@ -29,7 +29,8 @@ using GetPName = OpenTK.Graphics.ES20.All;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
-    static class GraphicsExtensions
+    // [DIGITALRUNE] Needs to be public. Used in MonoGame.Framework.Content.Pipeline.
+    public static class GraphicsExtensions
     {
 #if OPENGL
         public static All OpenGL11(CullMode cull)

@@ -6,7 +6,8 @@ using System.IO;
 
 namespace MonoGame.Utilities
 {
-    internal static class Hash
+    // [DIGITALRUNE] Needs to be public. Used in MonoGame.Framework.Content.Pipeline.
+    public static class Hash
     {
         /// <summary>
         /// Compute a hash from a byte array.
@@ -41,7 +42,7 @@ namespace MonoGame.Utilities
         /// Modified FNV Hash in C#
         /// http://stackoverflow.com/a/468084
         /// </remarks>
-        internal static int ComputeHash(Stream stream)
+        public static int ComputeHash(Stream stream)    // [DIGITALRUNE] Needs to be public. Used in MonoGame.Framework.Content.Pipeline.
         {
             System.Diagnostics.Debug.Assert(stream.CanSeek);
 

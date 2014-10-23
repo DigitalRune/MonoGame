@@ -8,7 +8,8 @@ using System.Reflection.Emit;
 
 namespace Microsoft.Xna.Framework.Content
 {
-    internal static class ContentExtensions
+    // [DIGITALRUNE] Needs to be public. Used in MonoGame.Framework.Content.Pipeline.
+    public static class ContentExtensions
     {
         public static ConstructorInfo GetDefaultConstructor(this Type type)
         {

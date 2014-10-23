@@ -5,7 +5,8 @@ using System.Reflection;
 
 namespace Microsoft.Xna.Framework.Utilities
 {
-	internal static class ReflectionHelpers
+    // [DIGITALRUNE] Needs to be public. Used in MonoGame.Framework.Content.Pipeline.
+	public static class ReflectionHelpers
 	{
 		public static bool IsValueType(Type targetType)
 		{
