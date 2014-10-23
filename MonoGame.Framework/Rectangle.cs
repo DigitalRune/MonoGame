@@ -179,7 +179,7 @@ namespace Microsoft.Xna.Framework
         /// Increments this <see cref="Rectangle"/>'s <see cref="Location"/> by the
         /// x and y components of the provided <see cref="Point"/>.
         /// </summary>
-        /// <param name="offset">The x and y components to add to this <see cref="Rectangle"/>'s <see cref="Position"/>.</param>
+        /// <param name="offset">The x and y components to add to this <see cref="Rectangle"/>'s <see cref="Location"/>.</param>
         public void Offset(Point offset)
         {
             X += offset.X;
@@ -253,7 +253,7 @@ namespace Microsoft.Xna.Framework
         /// Checks whether or not this <see cref="Rectangle"/> is equivalent
         /// to a provided <see cref="Rectangle"/>.
         /// </summary>
-        /// <param name="obj">The <see cref="Rectangle"/> to test for equality.</param>
+        /// <param name="other">The <see cref="Rectangle"/> to test for equality.</param>
         /// <returns>
         /// True if this <see cref="Rectangle"/>'s x coordinate, y coordinate, width, and height
         /// match the values for the provided <see cref="Rectangle"/>. False otherwise.
