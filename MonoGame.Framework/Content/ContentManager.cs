@@ -43,7 +43,9 @@ using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+#if !PORTABLE
 using Lz4;
+#endif
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #if !PORTABLE
@@ -447,6 +449,7 @@ namespace Microsoft.Xna.Framework.Content
             return null;
         }
 
+#if !PORTABLE
         private ContentReader GetContentReaderFromXnb(string originalAssetName, ref Stream stream, BinaryReader xnbReader, Action<IDisposable> recordDisposableObject)
         {
             // The first 4 bytes should be the "XNB" header. i use that to detect an invalid file
@@ -563,6 +566,7 @@ namespace Microsoft.Xna.Framework.Content
             }
             return reader;
         }
+#endif
 
         internal void RecordDisposable(IDisposable disposable)
         {

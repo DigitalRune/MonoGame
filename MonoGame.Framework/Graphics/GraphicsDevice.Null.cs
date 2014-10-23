@@ -35,6 +35,11 @@ namespace Microsoft.Xna.Framework.Graphics
         {
         }
 
+
+        private void PlatformResolveRenderTargets()
+        {
+        }
+
         private IRenderTarget PlatformApplyRenderTargets()
         {
             return null;

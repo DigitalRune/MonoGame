@@ -16,9 +16,11 @@ namespace Microsoft.Xna.Framework.Audio
 #if !PORTABLE
         private SoundEffect[] _sounds;
         private string _bankName;
+#endif
 
         public bool IsDisposed { get; private set; }
 
+#if !PORTABLE
         struct Segment
         {
             public int Offset;

@@ -340,6 +340,9 @@ namespace Microsoft.Xna.Framework
         
         public void RunOneFrame()
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             if (Platform == null)
                 return;
 
@@ -358,7 +361,7 @@ namespace Microsoft.Xna.Framework
             Tick ();
 
             EndRun ();
-
+#endif
         }
 
         public void Run()
