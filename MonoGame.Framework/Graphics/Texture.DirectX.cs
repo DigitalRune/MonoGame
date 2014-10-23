@@ -13,6 +13,15 @@ namespace Microsoft.Xna.Framework.Graphics
         private SharpDX.Direct3D11.ShaderResourceView _resourceView;
 
         /// <summary>
+        /// Returns a handle to internal resource object. Valid only on DirectX platforms.
+        /// For usage, convert this to SharpDX.Direct3D11.Resource.
+        /// </summary>
+        public object Handle
+        {
+            get { return _texture; }
+        }
+
+        /// <summary>
         /// Gets the handle to a shared resource.
         /// </summary>
         /// <returns>
