@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{87A71215-7CAC-4B80-9D43-1700DECFB828}</ProjectGuid>
+    <ProjectGuid>{1B738549-0449-4504-B978-7BFC347E3F3C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Xna.Framework</RootNamespace>
     <AssemblyName>MonoGame.Framework.Net</AssemblyName>
@@ -20,29 +20,28 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
-    <BaseIntermediateOutputPath>obj\Windows\AnyCPU\Debug\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Linux\AnyCPU\Debug\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\Windows\AnyCPU\Debug</OutputPath>
-    <DocumentationFile>bin\Windows\AnyCPU\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
-    <DefineConstants>DEBUG;TRACE;WINDOWS;DIRECTX;WINDOWS_MEDIA_SESSION;NET</DefineConstants>
+    <OutputPath>bin\Linux\AnyCPU\Debug</OutputPath>
+    <DocumentationFile>bin\Linux\AnyCPU\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
+    <DefineConstants>DEBUG;TRACE;LINUX;OPENGL;OPENAL;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <DebugType>full</DebugType>
-    <BaseIntermediateOutputPath>obj\Windows\AnyCPU\Release\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\Linux\AnyCPU\Release\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\Windows\AnyCPU\Release</OutputPath>
-    <DocumentationFile>bin\Windows\AnyCPU\Release\MonoGame.Framework.Net.xml</DocumentationFile>
-    <DefineConstants>TRACE;WINDOWS;DIRECTX;WINDOWS_MEDIA_SESSION;NET</DefineConstants>
+    <OutputPath>bin\Linux\AnyCPU\Release</OutputPath>
+    <DocumentationFile>bin\Linux\AnyCPU\Release\MonoGame.Framework.Net.xml</DocumentationFile>
+    <DefineConstants>TRACE;LINUX;OPENGL;OPENAL;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -94,12 +93,6 @@
     <Compile Include="GamerServices\PropertyDictionary.cs" />
     <Compile Include="GamerServices\SignedInGamerCollection.cs">
       <ExcludePlatforms>WindowsPhone</ExcludePlatforms>
-    </Compile>
-    <Compile Include="GamerServices\GuideAlreadyVisibleException.cs">
-      <Platforms>MacOS,Windows,WindowsGL</Platforms>
-    </Compile>
-    <Compile Include="GamerServices\GamerServicesDispatcher.cs">
-      <Platforms>MacOS,Windows,WindowsGL</Platforms>
     </Compile>
     <Compile Include="GamerServices\GamerServicesComponent.cs">
       <Platforms>Android,iOS,Linux,MacOS,Ouya,PSMobile,Windows,WindowsGL</Platforms>
@@ -194,14 +187,14 @@
     <Compile Include="Net\SendDataOptions.cs">
       <ExcludePlatforms>WindowsPhone,Windows8</ExcludePlatforms>
     </Compile>
-    <Compile Include="Windows\GamerServices\Guide.cs">
-      <Platforms>Windows8,Windows,WindowsGL,WindowsPhone</Platforms>
+    <Compile Include="Linux\GamerServices\Guide.cs">
+      <Platforms>Linux</Platforms>
     </Compile>
-    <Compile Include="Windows\GamerServices\MonoGameGamerServicesHelper.cs">
-      <Platforms>Windows,WindowsGL</Platforms>
+    <Compile Include="Linux\GamerServices\MonoGameGamerServicesHelper.cs">
+      <Platforms>Linux</Platforms>
     </Compile>
-    <Compile Include="Windows\GamerServices\SignedInGamer.cs">
-      <Platforms>Windows,WindowsGL</Platforms>
+    <Compile Include="Linux\GamerServices\SignedInGamer.cs">
+      <Platforms>Linux</Platforms>
     </Compile>
   </ItemGroup>
   <ItemGroup />
@@ -222,13 +215,13 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\ThirdParty\Lidgren.Network\Lidgren.Network.Windows.csproj">
-      <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
-      <Name>Lidgren.Network.Windows</Name>
+    <ProjectReference Include="..\ThirdParty\Lidgren.Network\Lidgren.Network.Linux.csproj">
+      <Project>{758CB33D-6EBD-41EA-BB0C-55B1C97A325F}</Project>
+      <Name>Lidgren.Network.Linux</Name>
     </ProjectReference>
-    <ProjectReference Include="MonoGame.Framework.Windows.csproj">
-      <Project>{7DE47032-A904-4C29-BD22-2D235E8D91BA}</Project>
-      <Name>MonoGame.Framework.Windows</Name>
+    <ProjectReference Include="MonoGame.Framework.Linux.csproj">
+      <Project>{35253CE1-C864-4CD3-8249-4D1319748E8F}</Project>
+      <Name>MonoGame.Framework.Linux</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

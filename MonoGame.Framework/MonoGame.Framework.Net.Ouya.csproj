@@ -5,44 +5,55 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{87A71215-7CAC-4B80-9D43-1700DECFB828}</ProjectGuid>
+    <ProjectGuid>{F200645B-20E1-4D6F-8C70-38656F633CFA}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Xna.Framework</RootNamespace>
     <AssemblyName>MonoGame.Framework.Net</AssemblyName>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\DigitalRuneMonoGame.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>1591,0436</NoWarn>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <FileAlignment>512</FileAlignment>
+    <AndroidSupportedAbis>armeabi,armeabi-v7a,x86</AndroidSupportedAbis>
+    <AndroidStoreUncompressedFileExtensions />
+    <MandroidI18n />
+    <DeployExternal>False</DeployExternal>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
-    <BaseIntermediateOutputPath>obj\Windows\AnyCPU\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\Windows\AnyCPU\Debug</OutputPath>
-    <DocumentationFile>bin\Windows\AnyCPU\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
-    <DefineConstants>DEBUG;TRACE;WINDOWS;DIRECTX;WINDOWS_MEDIA_SESSION;NET</DefineConstants>
+    <OutputPath>bin\Ouya\AnyCPU\Debug</OutputPath>
+    <IntermediateOutputPath>obj\Ouya\AnyCPU\Debug</IntermediateOutputPath>
+    <DocumentationFile>bin\Ouya\AnyCPU\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
+    <DefineConstants>DEBUG;TRACE;ANDROID;GLES;OPENGL;OUYA;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <MonoDroidLinkMode>None</MonoDroidLinkMode>
+    <AndroidLinkMode>None</AndroidLinkMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <DebugType>full</DebugType>
-    <BaseIntermediateOutputPath>obj\Windows\AnyCPU\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\Windows\AnyCPU\Release</OutputPath>
-    <DocumentationFile>bin\Windows\AnyCPU\Release\MonoGame.Framework.Net.xml</DocumentationFile>
-    <DefineConstants>TRACE;WINDOWS;DIRECTX;WINDOWS_MEDIA_SESSION;NET</DefineConstants>
+    <OutputPath>bin\Ouya\AnyCPU\Release</OutputPath>
+    <IntermediateOutputPath>obj\Ouya\AnyCPU\Release</IntermediateOutputPath>
+    <DocumentationFile>bin\Ouya\AnyCPU\Release\MonoGame.Framework.Net.xml</DocumentationFile>
+    <DefineConstants>TRACE;ANDROID;GLES;OPENGL;OUYA;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="mscorlib" />
+    <Reference Include="Ouya.Console.Api">
+      <HintPath>..\ThirdParty\Dependencies\OUYA\Ouya.Console.Api.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -94,12 +105,6 @@
     <Compile Include="GamerServices\PropertyDictionary.cs" />
     <Compile Include="GamerServices\SignedInGamerCollection.cs">
       <ExcludePlatforms>WindowsPhone</ExcludePlatforms>
-    </Compile>
-    <Compile Include="GamerServices\GuideAlreadyVisibleException.cs">
-      <Platforms>MacOS,Windows,WindowsGL</Platforms>
-    </Compile>
-    <Compile Include="GamerServices\GamerServicesDispatcher.cs">
-      <Platforms>MacOS,Windows,WindowsGL</Platforms>
     </Compile>
     <Compile Include="GamerServices\GamerServicesComponent.cs">
       <Platforms>Android,iOS,Linux,MacOS,Ouya,PSMobile,Windows,WindowsGL</Platforms>
@@ -194,14 +199,14 @@
     <Compile Include="Net\SendDataOptions.cs">
       <ExcludePlatforms>WindowsPhone,Windows8</ExcludePlatforms>
     </Compile>
-    <Compile Include="Windows\GamerServices\Guide.cs">
-      <Platforms>Windows8,Windows,WindowsGL,WindowsPhone</Platforms>
+    <Compile Include="Android\GamerServices\Guide.cs">
+      <Platforms>Android,Ouya</Platforms>
     </Compile>
-    <Compile Include="Windows\GamerServices\MonoGameGamerServicesHelper.cs">
-      <Platforms>Windows,WindowsGL</Platforms>
+    <Compile Include="Android\GamerServices\MonoGameGamerServicesHelper.cs">
+      <Platforms>Android,Ouya</Platforms>
     </Compile>
-    <Compile Include="Windows\GamerServices\SignedInGamer.cs">
-      <Platforms>Windows,WindowsGL</Platforms>
+    <Compile Include="Android\GamerServices\SignedInGamer.cs">
+      <Platforms>Android,Ouya</Platforms>
     </Compile>
   </ItemGroup>
   <ItemGroup />
@@ -220,15 +225,15 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\ThirdParty\Lidgren.Network\Lidgren.Network.Windows.csproj">
-      <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
-      <Name>Lidgren.Network.Windows</Name>
+    <ProjectReference Include="..\ThirdParty\Lidgren.Network\Lidgren.Network.Android.csproj">
+      <Project>{565129E0-4EE5-4F6F-B403-C3484C9740BE}</Project>
+      <Name>Lidgren.Network.Android</Name>
     </ProjectReference>
-    <ProjectReference Include="MonoGame.Framework.Windows.csproj">
-      <Project>{7DE47032-A904-4C29-BD22-2D235E8D91BA}</Project>
-      <Name>MonoGame.Framework.Windows</Name>
+    <ProjectReference Include="MonoGame.Framework.Ouya.csproj">
+      <Project>{8BEA875D-66D2-4A5F-B137-83D262A3851D}</Project>
+      <Name>MonoGame.Framework.Ouya</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

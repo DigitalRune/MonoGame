@@ -5,7 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{87A71215-7CAC-4B80-9D43-1700DECFB828}</ProjectGuid>
+    <ProjectGuid>{39DBE7E5-BB4E-4E99-A832-C576F13A593B}</ProjectGuid>
+    <ProjectTypeGuids>{69878862-DA7D-4DC6-B0A1-50D8FAB4242F};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Xna.Framework</RootNamespace>
     <AssemblyName>MonoGame.Framework.Net</AssemblyName>
@@ -13,29 +14,25 @@
     <AssemblyOriginatorKeyFile>..\DigitalRuneMonoGame.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>1591,0436</NoWarn>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
-    <BaseIntermediateOutputPath>obj\Windows\AnyCPU\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\Windows\AnyCPU\Debug</OutputPath>
-    <DocumentationFile>bin\Windows\AnyCPU\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
-    <DefineConstants>DEBUG;TRACE;WINDOWS;DIRECTX;WINDOWS_MEDIA_SESSION;NET</DefineConstants>
+    <OutputPath>bin\PSMobile\AnyCPU\Debug</OutputPath>
+    <IntermediateOutputPath>obj\PSMobile\AnyCPU\Debug</IntermediateOutputPath>
+    <DocumentationFile>bin\PSMobile\AnyCPU\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
+    <DefineConstants>DEBUG;PSM;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <DebugType>full</DebugType>
-    <BaseIntermediateOutputPath>obj\Windows\AnyCPU\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\Windows\AnyCPU\Release</OutputPath>
-    <DocumentationFile>bin\Windows\AnyCPU\Release\MonoGame.Framework.Net.xml</DocumentationFile>
-    <DefineConstants>TRACE;WINDOWS;DIRECTX;WINDOWS_MEDIA_SESSION;NET</DefineConstants>
+    <OutputPath>bin\PSMobile\AnyCPU\Release</OutputPath>
+    <IntermediateOutputPath>obj\PSMobile\AnyCPU\Release</IntermediateOutputPath>
+    <DocumentationFile>bin\PSMobile\AnyCPU\Release\MonoGame.Framework.Net.xml</DocumentationFile>
+    <DefineConstants>PSM;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -43,6 +40,8 @@
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Sce.PlayStation.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -94,12 +93,6 @@
     <Compile Include="GamerServices\PropertyDictionary.cs" />
     <Compile Include="GamerServices\SignedInGamerCollection.cs">
       <ExcludePlatforms>WindowsPhone</ExcludePlatforms>
-    </Compile>
-    <Compile Include="GamerServices\GuideAlreadyVisibleException.cs">
-      <Platforms>MacOS,Windows,WindowsGL</Platforms>
-    </Compile>
-    <Compile Include="GamerServices\GamerServicesDispatcher.cs">
-      <Platforms>MacOS,Windows,WindowsGL</Platforms>
     </Compile>
     <Compile Include="GamerServices\GamerServicesComponent.cs">
       <Platforms>Android,iOS,Linux,MacOS,Ouya,PSMobile,Windows,WindowsGL</Platforms>
@@ -194,14 +187,14 @@
     <Compile Include="Net\SendDataOptions.cs">
       <ExcludePlatforms>WindowsPhone,Windows8</ExcludePlatforms>
     </Compile>
-    <Compile Include="Windows\GamerServices\Guide.cs">
-      <Platforms>Windows8,Windows,WindowsGL,WindowsPhone</Platforms>
+    <Compile Include="PSSuite\GamerServices\Guide.cs">
+      <Platforms>PSMobile</Platforms>
     </Compile>
-    <Compile Include="Windows\GamerServices\MonoGameGamerServicesHelper.cs">
-      <Platforms>Windows,WindowsGL</Platforms>
+    <Compile Include="PSSuite\GamerServices\MonoGameGamerServicesHelper.cs">
+      <Platforms>PSMobile</Platforms>
     </Compile>
-    <Compile Include="Windows\GamerServices\SignedInGamer.cs">
-      <Platforms>Windows,WindowsGL</Platforms>
+    <Compile Include="PSSuite\GamerServices\SignedInGamer.cs">
+      <Platforms>PSMobile</Platforms>
     </Compile>
   </ItemGroup>
   <ItemGroup />
@@ -220,15 +213,15 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Sce\Sce.Psm.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\ThirdParty\Lidgren.Network\Lidgren.Network.Windows.csproj">
-      <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
-      <Name>Lidgren.Network.Windows</Name>
+    <ProjectReference Include="..\ThirdParty\Lidgren.Network\Lidgren.Network.PSMobile.csproj">
+      <Project>{167676EE-E2D5-440A-BB2B-EFBD02BC8493}</Project>
+      <Name>Lidgren.Network.PSMobile</Name>
     </ProjectReference>
-    <ProjectReference Include="MonoGame.Framework.Windows.csproj">
-      <Project>{7DE47032-A904-4C29-BD22-2D235E8D91BA}</Project>
-      <Name>MonoGame.Framework.Windows</Name>
+    <ProjectReference Include="MonoGame.Framework.PSMobile.csproj">
+      <Project>{EA26E76F-FDFE-4A8C-B5A3-C3B5761E28F9}</Project>
+      <Name>MonoGame.Framework.PSMobile</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

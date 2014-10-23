@@ -122,6 +122,7 @@
     <Compile Include="LaunchParameters.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="Matrix.cs" />
+    <Compile Include="NamespaceDocs.cs" />
     <Compile Include="PerformanceCounter.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="PlaneIntersectionType.cs" />
@@ -401,6 +402,9 @@
       <Platforms>Windows,Windows8,WindowsPhone</Platforms>
     </Compile>
     <Compile Include="Graphics\TextureCollection.cs" />
+    <Compile Include="Graphics\TextureCollection.DirectX.cs">
+      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    </Compile>
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Texture.DirectX.cs">
       <Platforms>Windows,Windows8,WindowsPhone</Platforms>
@@ -507,6 +511,7 @@
     <Compile Include="Utilities\ObjectFactoryWithReset.cs" />
     <Compile Include="Utilities\FileHelpers.cs" />
     <Compile Include="Utilities\ReflectionHelpers.cs" />
+    <Compile Include="Utilities\Lz4Stream\Lz4DecoderStream.cs" />
     <Compile Include="Windows8\MetroHelper.cs">
       <Platforms>Windows8,WindowsPhone</Platforms>
     </Compile>
@@ -554,6 +559,8 @@
       <Platforms>Windows,Windows8,WindowsPhone</Platforms>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup />
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />

@@ -3,9 +3,8 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7DE47032-A904-4C29-BD22-2D235E8D91BA}</ProjectGuid>
+    <ProjectGuid>{36C538E6-C32A-4A8D-A39C-566173D7118E}</ProjectGuid>
+    <ProjectTypeGuids>{948B3504-5B70-4649-8FE4-BDE1FB46EC69};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Xna.Framework</RootNamespace>
     <AssemblyName>MonoGame.Framework</AssemblyName>
@@ -15,62 +14,51 @@
     <NoWarn>1591,0436</NoWarn>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <SuppressXamMacUpsell>True</SuppressXamMacUpsell>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
-    <BaseIntermediateOutputPath>obj\Windows\AnyCPU\Debug\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\MacOS\AnyCPU\Debug\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\Windows\AnyCPU\Debug</OutputPath>
-    <DocumentationFile>bin\Windows\AnyCPU\Debug\MonoGame.Framework.xml</DocumentationFile>
-    <DefineConstants>DEBUG;TRACE;WINDOWS;DIRECTX;WINDOWS_MEDIA_SESSION</DefineConstants>
+    <OutputPath>bin\MacOS\AnyCPU\Debug</OutputPath>
+    <DocumentationFile>bin\MacOS\AnyCPU\Debug\MonoGame.Framework.xml</DocumentationFile>
+    <DefineConstants>DEBUG;MONOMAC;OPENGL;OPENAL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>False</EnableCodeSigning>
+    <CreatePackage>False</CreatePackage>
+    <EnablePackageSigning>False</EnablePackageSigning>
+    <IncludeMonoRuntime>False</IncludeMonoRuntime>
+    <UseSGen>False</UseSGen>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <DebugType>full</DebugType>
-    <BaseIntermediateOutputPath>obj\Windows\AnyCPU\Release\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\MacOS\AnyCPU\Release\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\Windows\AnyCPU\Release</OutputPath>
-    <DocumentationFile>bin\Windows\AnyCPU\Release\MonoGame.Framework.xml</DocumentationFile>
-    <DefineConstants>TRACE;WINDOWS;DIRECTX;WINDOWS_MEDIA_SESSION</DefineConstants>
+    <OutputPath>bin\MacOS\AnyCPU\Release</OutputPath>
+    <DocumentationFile>bin\MacOS\AnyCPU\Release\MonoGame.Framework.xml</DocumentationFile>
+    <DefineConstants>MONOMAC;OPENGL;OPENAL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>False</EnableCodeSigning>
+    <CreatePackage>False</CreatePackage>
+    <EnablePackageSigning>False</EnablePackageSigning>
+    <IncludeMonoRuntime>False</IncludeMonoRuntime>
+    <UseSGen>False</UseSGen>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="SharpDX">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows\SharpDX.dll</HintPath>
+    <Reference Include="Tao.Sdl">
+      <HintPath>..\ThirdParty\GamepadConfig\Tao.Sdl.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows\SharpDX.Direct2D1.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows\SharpDX.Direct3D11.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DXGI">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows\SharpDX.DXGI.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.MediaFoundation">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows\SharpDX.MediaFoundation.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.RawInput">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows\SharpDX.RawInput.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.XAudio2">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows\SharpDX.XAudio2.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.XInput">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows\SharpDX.XInput.dll</HintPath>
+    <Reference Include="MonoMac">
+      <HintPath>..\ThirdParty\Dependencies\MonoMac\MonoMac.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -99,9 +87,6 @@
     <Compile Include="GameServiceContainer.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="GameUpdateRequiredException.cs" />
-    <Compile Include="GameWindow.cs">
-      <ExcludePlatforms>MacOS</ExcludePlatforms>
-    </Compile>
     <Compile Include="IDrawable.cs" />
     <Compile Include="IGameComponent.cs" />
     <Compile Include="IGraphicsDeviceManager.cs" />
@@ -116,12 +101,18 @@
     <Compile Include="PlayerIndex.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="PreparingDeviceSettingsEventArgs.cs" />
+    <Compile Include="PrimaryThreadLoader.cs">
+      <Platforms>Android,MacOS,Ouya</Platforms>
+    </Compile>
     <Compile Include="Quaternion.cs" />
     <Compile Include="Ray.cs" />
     <Compile Include="Rectangle.cs" />
     <Compile Include="ReusableItemList.cs" />
     <Compile Include="TextInputEventArgs.cs">
       <Platforms>Angle,Linux,MacOS,Windows,WindowsGL</Platforms>
+    </Compile>
+    <Compile Include="Threading.cs">
+      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,PSMobile,WindowsGL,WindowsPhone</Platforms>
     </Compile>
     <Compile Include="TitleContainer.cs" />
     <Compile Include="Vector2.cs" />
@@ -131,14 +122,26 @@
     <Compile Include="Audio\AudioEmitter.cs" />
     <Compile Include="Audio\AudioListener.cs" />
     <Compile Include="Audio\InstancePlayLimitException.cs" />
+    <Compile Include="Audio\MSADPCMToPCM.cs">
+      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,PSMobile,WindowsGL,Web</Platforms>
+    </Compile>
     <Compile Include="Audio\NoAudioHardwareException.cs" />
+    <Compile Include="Audio\OALSoundBuffer.cs">
+      <Platforms>Angle,iOS,Linux,MacOS,WindowsGL,Android,Ouya</Platforms>
+    </Compile>
+    <Compile Include="Audio\OpenALSoundController.cs">
+      <Platforms>Angle,iOS,Linux,MacOS,WindowsGL,Android,Ouya</Platforms>
+    </Compile>
+    <Compile Include="Audio\OpenALSupport.cs">
+      <Platforms>iOS,MacOS</Platforms>
+    </Compile>
     <Compile Include="Audio\SoundEffect.cs" />
-    <Compile Include="Audio\SoundEffect.XAudio.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Audio\SoundEffect.OpenAL.cs">
+      <Platforms>Angle,iOS,Linux,WindowsGL,MacOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Audio\SoundEffectInstance.cs" />
-    <Compile Include="Audio\SoundEffectInstance.XAudio.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Audio\SoundEffectInstance.OpenAL.cs">
+      <Platforms>Angle,iOS,Linux,WindowsGL,MacOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Audio\SoundEffectInstancePool.cs" />
     <Compile Include="Audio\SoundState.cs" />
@@ -235,9 +238,6 @@
     <Compile Include="Content\ContentTypeReader.cs" />
     <Compile Include="Content\ContentTypeReaderManager.cs" />
     <Compile Include="Content\LzxDecoder.cs" />
-    <Compile Include="Content\ResourceContentManager.cs">
-      <Platforms>Angle,Android,iOS,Linux,Ouya,Windows,WindowsGL</Platforms>
-    </Compile>
     <Compile Include="Graphics\ClearOptions.cs" />
     <Compile Include="Graphics\ColorWriteChannels.cs" />
     <Compile Include="Graphics\CubeMapFace.cs" />
@@ -280,17 +280,17 @@
     <Compile Include="Graphics\GraphicsAdapter.cs" />
     <Compile Include="Graphics\GraphicsCapabilities.cs" />
     <Compile Include="Graphics\GraphicsDevice.cs" />
-    <Compile Include="Graphics\GraphicsDevice.DirectX.cs">
-      <Platforms>Windows8,Windows,WindowsPhone</Platforms>
+    <Compile Include="Graphics\GraphicsDevice.OpenGL.cs">
+      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,WindowsGL</Platforms>
+    </Compile>
+    <Compile Include="Graphics\GraphicsDevice.OpenGL.FramebufferHelper.cs">
+      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,WindowsGL</Platforms>
     </Compile>
     <Compile Include="Graphics\GraphicsDeviceStatus.cs" />
     <Compile Include="Graphics\GraphicsExtensions.cs" />
     <Compile Include="Graphics\GraphicsProfile.cs" />
     <Compile Include="Graphics\GraphicsResource.cs" />
     <Compile Include="Graphics\IGraphicsDeviceService.cs" />
-    <Compile Include="Graphics\ImageEx.cs">
-      <Platforms>Angle,Linux,Windows8,Windows,WindowsGL,WindowsPhone</Platforms>
-    </Compile>
     <Compile Include="Graphics\IRenderTarget.cs" />
     <Compile Include="Graphics\ModelBoneCollection.cs" />
     <Compile Include="Graphics\ModelBone.cs" />
@@ -322,14 +322,8 @@
     <Compile Include="Graphics\PresentationParameters.cs" />
     <Compile Include="Graphics\PresentInterval.cs" />
     <Compile Include="Graphics\RenderTarget2D.cs" />
-    <Compile Include="Graphics\RenderTarget2D.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
-    </Compile>
-    <Compile Include="Graphics\RenderTarget3D.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
-    </Compile>
-    <Compile Include="Graphics\RenderTarget3D.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\RenderTarget2D.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\RenderTargetBinding.cs" />
     <Compile Include="Graphics\RenderTargetCube.cs" />
@@ -337,18 +331,21 @@
     <Compile Include="Graphics\ResourceCreatedEventArgs.cs" />
     <Compile Include="Graphics\ResourceDestroyedEventArgs.cs" />
     <Compile Include="Graphics\SamplerStateCollection.cs" />
-    <Compile Include="Graphics\SamplerStateCollection.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\SamplerStateCollection.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\SetDataOptions.cs" />
     <Compile Include="Graphics\Shader\ConstantBufferCollection.cs" />
     <Compile Include="Graphics\Shader\ConstantBuffer.cs" />
-    <Compile Include="Graphics\Shader\ConstantBuffer.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\Shader\ConstantBuffer.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\Shader\Shader.cs" />
-    <Compile Include="Graphics\Shader\Shader.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\Shader\Shader.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
+    </Compile>
+    <Compile Include="Graphics\Shader\ShaderProgramCache.cs">
+      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,WindowsGL</Platforms>
     </Compile>
     <Compile Include="Graphics\Shader\ShaderStage.cs" />
     <Compile Include="Graphics\SpriteBatch.cs" />
@@ -362,73 +359,70 @@
     <Compile Include="Graphics\States\Blend.cs" />
     <Compile Include="Graphics\States\BlendFunction.cs" />
     <Compile Include="Graphics\States\BlendState.cs" />
-    <Compile Include="Graphics\States\BlendState.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\States\BlendState.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\States\CompareFunction.cs" />
     <Compile Include="Graphics\States\CullMode.cs" />
     <Compile Include="Graphics\States\DepthFormat.cs" />
     <Compile Include="Graphics\States\DepthStencilState.cs" />
-    <Compile Include="Graphics\States\DepthStencilState.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\States\DepthStencilState.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\States\FillMode.cs" />
     <Compile Include="Graphics\States\RasterizerState.cs" />
-    <Compile Include="Graphics\States\RasterizerState.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\States\RasterizerState.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\States\SamplerState.cs" />
-    <Compile Include="Graphics\States\SamplerState.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\States\SamplerState.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\States\StencilOperation.cs" />
     <Compile Include="Graphics\States\TargetBlendState.cs" />
     <Compile Include="Graphics\States\TextureAddressMode.cs" />
     <Compile Include="Graphics\States\TextureFilter.cs" />
     <Compile Include="Graphics\SurfaceFormat.cs" />
-    <Compile Include="Graphics\SwapChainRenderTarget.cs">
-      <Platforms>Windows</Platforms>
-    </Compile>
     <Compile Include="Graphics\Texture2D.cs" />
-    <Compile Include="Graphics\Texture2D.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\Texture2D.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\Texture3D.cs" />
-    <Compile Include="Graphics\Texture3D.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\Texture3D.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\TextureCollection.cs" />
-    <Compile Include="Graphics\TextureCollection.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\TextureCollection.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\Texture.cs" />
-    <Compile Include="Graphics\Texture.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\Texture.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\TextureCube.cs" />
-    <Compile Include="Graphics\TextureCube.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\TextureCube.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\TextureUsage.cs" />
     <Compile Include="Graphics\Vertices\BufferUsage.cs" />
     <Compile Include="Graphics\Vertices\DynamicIndexBuffer.cs" />
     <Compile Include="Graphics\Vertices\DynamicVertexBuffer.cs" />
     <Compile Include="Graphics\Vertices\IndexBuffer.cs" />
-    <Compile Include="Graphics\Vertices\IndexBuffer.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\Vertices\IndexBuffer.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\Vertices\IndexElementSize.cs" />
     <Compile Include="Graphics\Vertices\IVertexType.cs" />
     <Compile Include="Graphics\Vertices\PrimitiveType.cs" />
     <Compile Include="Graphics\Vertices\VertexBuffer.cs" />
-    <Compile Include="Graphics\Vertices\VertexBuffer.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\Vertices\VertexBuffer.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\Vertices\VertexColorTexture.cs" />
     <Compile Include="Graphics\Vertices\VertexDeclarationCache.cs" />
     <Compile Include="Graphics\Vertices\VertexDeclaration.cs" />
-    <Compile Include="Graphics\Vertices\VertexDeclaration.DirectX.cs">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <Compile Include="Graphics\Vertices\VertexDeclaration.OpenGL.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya</Platforms>
     </Compile>
     <Compile Include="Graphics\Vertices\VertexElement.cs" />
     <Compile Include="Graphics\Vertices\VertexElementFormat.cs" />
@@ -442,8 +436,8 @@
     <Compile Include="Input\Buttons.cs" />
     <Compile Include="Input\ButtonState.cs" />
     <Compile Include="Input\GamePad.cs" />
-    <Compile Include="Input\GamePad.XInput.cs">
-      <Platforms>Windows8,Windows</Platforms>
+    <Compile Include="Input\GamePad.SDL.cs">
+      <Platforms>Angle,Linux,MacOS,WindowsGL</Platforms>
     </Compile>
     <Compile Include="Input\GamePadButtons.cs" />
     <Compile Include="Input\GamePadCapabilities.cs" />
@@ -478,12 +472,9 @@
     <Compile Include="Media\MediaLibrary.Default.cs">
       <ExcludePlatforms>iOS,Windows8,WindowsPhone</ExcludePlatforms>
     </Compile>
-    <Compile Include="Media\MediaManagerState.cs">
-      <Platforms>Windows</Platforms>
-    </Compile>
     <Compile Include="Media\MediaPlayer.cs" />
-    <Compile Include="Media\MediaPlayer.WMS.cs">
-      <Platforms>Windows</Platforms>
+    <Compile Include="Media\MediaPlayer.Default.cs">
+      <Platforms>Angle,WindowsGL,Linux,MacOS,iOS,Android,Ouya,PSMobile,Web</Platforms>
     </Compile>
     <Compile Include="Media\MediaQueue.cs" />
     <Compile Include="Media\MediaSource.cs" />
@@ -497,27 +488,24 @@
     </Compile>
     <Compile Include="Media\SongCollection.cs" />
     <Compile Include="Media\Song.cs" />
-    <Compile Include="Media\Song.WMS.cs">
-      <Platforms>Windows</Platforms>
+    <Compile Include="Media\Song.Default.cs">
+      <Platforms>Angle,WindowsGL,MacOS,Web</Platforms>
     </Compile>
     <Compile Include="Media\VideoSoundtrackType.cs" />
     <Compile Include="Media\Video.cs">
       <ExcludePlatforms>Angle,Linux,PSMobile,WindowsGL,WindowsPhone,Web</ExcludePlatforms>
     </Compile>
-    <Compile Include="Media\Video.WMS.cs">
-      <Platforms>Windows</Platforms>
+    <Compile Include="Media\Video.MacOS.cs">
+      <Platforms>MacOS</Platforms>
     </Compile>
     <Compile Include="Media\VideoPlayer.cs">
       <ExcludePlatforms>Angle,Linux,PSMobile,WindowsGL,WindowsPhone,Web</ExcludePlatforms>
     </Compile>
-    <Compile Include="Media\VideoPlayer.WMS.cs">
-      <Platforms>Windows</Platforms>
+    <Compile Include="Media\VideoPlayer.MacOS.cs">
+      <Platforms>MacOS</Platforms>
     </Compile>
     <Compile Include="Storage\StorageContainer.cs" />
     <Compile Include="Storage\StorageDevice.cs" />
-    <Compile Include="Storage\StorageDeviceHelper.cs">
-      <Platforms>Android,Angle,iOS,Ouya,PSMobile,Windows8,Windows,WindowsGL,WindowsPhone,Web</Platforms>
-    </Compile>
     <Compile Include="Utilities\AssemblyHelper.cs">
       <Platforms>Angle,Linux,MacOS,Windows,WindowsGL</Platforms>
     </Compile>
@@ -526,20 +514,47 @@
     <Compile Include="Utilities\FileHelpers.cs" />
     <Compile Include="Utilities\ReflectionHelpers.cs" />
     <Compile Include="Utilities\Lz4Stream\Lz4DecoderStream.cs" />
-    <Compile Include="Windows8\SharpDXHelper.cs">
-      <Platforms>Windows8,Windows,WindowsPhone</Platforms>
+    <Compile Include="Desktop\Input\Axis.cs">
+      <Platforms>Angle,Linux,MacOS,WindowsGL</Platforms>
     </Compile>
-    <Compile Include="Windows\WinFormsGameForm.cs">
-      <Platforms>Windows</Platforms>
+    <Compile Include="Desktop\Input\Capabilities.cs">
+      <Platforms>Angle,Linux,MacOS,WindowsGL</Platforms>
     </Compile>
-    <Compile Include="Windows\WinFormsGamePlatform.cs">
-      <Platforms>Windows</Platforms>
+    <Compile Include="Desktop\Input\DPad.cs">
+      <Platforms>Angle,Linux,MacOS,WindowsGL</Platforms>
     </Compile>
-    <Compile Include="Windows\WinFormsGameWindow.cs">
-      <Platforms>Windows</Platforms>
+    <Compile Include="Desktop\Input\Input.cs">
+      <Platforms>Angle,Linux,MacOS,WindowsGL</Platforms>
     </Compile>
-    <Compile Include="Media\VideoSampleGrabber.cs">
-      <Platforms>Windows</Platforms>
+    <Compile Include="Desktop\Input\Joystick.cs">
+      <Platforms>Angle,Linux,MacOS,WindowsGL</Platforms>
+    </Compile>
+    <Compile Include="Desktop\Input\PadConfig.cs">
+      <Platforms>Angle,Linux,MacOS,WindowsGL</Platforms>
+    </Compile>
+    <Compile Include="Desktop\Input\Settings.cs">
+      <Platforms>Angle,Linux,MacOS,WindowsGL</Platforms>
+    </Compile>
+    <Compile Include="Desktop\Input\Stick.cs">
+      <Platforms>Angle,Linux,MacOS,WindowsGL</Platforms>
+    </Compile>
+    <Compile Include="MacOS\GameWindow.cs">
+      <Platforms>MacOS</Platforms>
+    </Compile>
+    <Compile Include="MacOS\KeyUtil.cs">
+      <Platforms>MacOS</Platforms>
+    </Compile>
+    <Compile Include="MacOS\MacGameNSWindow.cs">
+      <Platforms>MacOS</Platforms>
+    </Compile>
+    <Compile Include="MacOS\MacGamePlatform.cs">
+      <Platforms>MacOS</Platforms>
+    </Compile>
+    <Compile Include="MacOS\MacGamePlatform+Synchronous.cs">
+      <Platforms>MacOS</Platforms>
+    </Compile>
+    <Compile Include="MacOS\Storage\StorageDeviceHelper.cs">
+      <Platforms>MacOS</Platforms>
     </Compile>
     <Compile Include="Design\VectorConversion.cs">
       <Platforms>Windows,Linux,MacOS</Platforms>
@@ -554,26 +569,37 @@
       <Platforms>Windows,Linux,MacOS</Platforms>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="..\ThirdParty\GamepadConfig\Tao.Sdl.dll.config">
+      <Platforms>Linux,MacOS</Platforms>
+      <Link>Tao.Sdl.dll.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThirdParty\Dependencies\OpenTK.dll.config">
+      <Platforms>Linux,MacOS</Platforms>
+      <Link>OpenTK.dll.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Graphics\Effect\Resources\AlphaTestEffect.dx11.mgfxo">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <EmbeddedResource Include="Graphics\Effect\Resources\AlphaTestEffect.ogl.mgfxo">
+      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,WindowsGL</Platforms>
     </EmbeddedResource>
-    <EmbeddedResource Include="Graphics\Effect\Resources\BasicEffect.dx11.mgfxo">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <EmbeddedResource Include="Graphics\Effect\Resources\BasicEffect.ogl.mgfxo">
+      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,WindowsGL</Platforms>
     </EmbeddedResource>
-    <EmbeddedResource Include="Graphics\Effect\Resources\DualTextureEffect.dx11.mgfxo">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <EmbeddedResource Include="Graphics\Effect\Resources\DualTextureEffect.ogl.mgfxo">
+      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,WindowsGL</Platforms>
     </EmbeddedResource>
-    <EmbeddedResource Include="Graphics\Effect\Resources\EnvironmentMapEffect.dx11.mgfxo">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <EmbeddedResource Include="Graphics\Effect\Resources\EnvironmentMapEffect.ogl.mgfxo">
+      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,WindowsGL</Platforms>
     </EmbeddedResource>
-    <EmbeddedResource Include="Graphics\Effect\Resources\SkinnedEffect.dx11.mgfxo">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <EmbeddedResource Include="Graphics\Effect\Resources\SkinnedEffect.ogl.mgfxo">
+      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,WindowsGL</Platforms>
     </EmbeddedResource>
-    <EmbeddedResource Include="Graphics\Effect\Resources\SpriteEffect.dx11.mgfxo">
-      <Platforms>Windows,Windows8,WindowsPhone</Platforms>
+    <EmbeddedResource Include="Graphics\Effect\Resources\SpriteEffect.ogl.mgfxo">
+      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,WindowsGL</Platforms>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
