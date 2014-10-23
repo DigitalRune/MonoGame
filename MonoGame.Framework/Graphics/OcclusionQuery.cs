@@ -2,13 +2,17 @@ using System;
 using System.Runtime.InteropServices;
 
 
-#if OPENGL
+#if OPENGL && !IOS
 #if MONOMAC
 using MonoMac.OpenGL;
 #elif WINDOWS || LINUX
 using OpenTK.Graphics.OpenGL;
-#elif ANGLE // Review for iOS and Android, and change to GLES
+#elif ANGLE || ANDROID // Review for iOS and Android, and change to GLES
 using OpenTK.Graphics.ES30;
+#endif
+#if GLES && !IOS
+using QueryTarget = OpenTK.Graphics.ES30.All;
+using GetQueryObjectParam = OpenTK.Graphics.ES30.All;
 #endif
 #endif
 
@@ -16,14 +20,14 @@ namespace Microsoft.Xna.Framework.Graphics
 {
 	public class OcclusionQuery : GraphicsResource
 	{
-#if OPENGL
+#if OPENGL && !IOS
 		private int glQueryId;
 #endif
 
 		public OcclusionQuery (GraphicsDevice graphicsDevice)
 		{
 			this.GraphicsDevice = graphicsDevice;
-#if OPENGL
+#if OPENGL && !IOS
 			GL.GenQueries (1, out glQueryId);
             GraphicsExtensions.CheckGLError();
 #elif DIRECTX
@@ -32,7 +36,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		public void Begin ()
 		{
-#if OPENGL
+#if OPENGL && !IOS
 #if GLES 
 			GL.BeginQuery (QueryTarget.AnySamplesPassed, glQueryId);
 #else
@@ -46,7 +50,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		public void End ()
 		{
-#if OPENGL
+#if OPENGL && !IOS
 #if GLES 
 			GL.EndQuery (QueryTarget.AnySamplesPassed);
 #else
@@ -62,7 +66,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		{
             if (!IsDisposed)
             {
-#if OPENGL
+#if OPENGL && !IOS
                 GraphicsDevice.AddDisposeAction(() =>
                     {
                         GL.DeleteQueries(1, ref glQueryId);
@@ -81,7 +85,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				GetQueryObjectiv(glQueryId,
 				                 (int)GetQueryObjectParam.QueryResultAvailable,
 				                 out resultReady);
-#elif OPENGL
+#elif OPENGL && !IOS
                 GL.GetQueryObject(glQueryId, GetQueryObjectParam.QueryResultAvailable, out resultReady);
                 GraphicsExtensions.CheckGLError();
 #elif DIRECTX               
@@ -96,7 +100,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				GetQueryObjectiv(glQueryId,
 				                 (int)GetQueryObjectParam.QueryResult,
 				                 out result);
-#elif OPENGL
+#elif OPENGL && !IOS
                 GL.GetQueryObject(glQueryId, GetQueryObjectParam.QueryResultAvailable, out result);
                 GraphicsExtensions.CheckGLError();
 #elif DIRECTX               
