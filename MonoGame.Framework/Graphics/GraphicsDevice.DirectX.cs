@@ -209,11 +209,10 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         protected void CreateDeviceIndependentResources()
         {
-#if DEBUG
-            var debugLevel = SharpDX.Direct2D1.DebugLevel.Information;
-#else 
-            var debugLevel = SharpDX.Direct2D1.DebugLevel.None; 
-#endif
+            var debugLevel = GraphicsAdapter.UseDebugDevice ? 
+                             SharpDX.Direct2D1.DebugLevel.Information : 
+                             SharpDX.Direct2D1.DebugLevel.None;
+
             // Dispose previous references.
             if (_d2dFactory != null)
                 _d2dFactory.Dispose();
@@ -245,9 +244,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             // Windows requires BGRA support out of DX.
             var creationFlags = SharpDX.Direct3D11.DeviceCreationFlags.BgraSupport;
-#if DEBUG
-            creationFlags |= SharpDX.Direct3D11.DeviceCreationFlags.Debug;
-#endif
+            if (GraphicsAdapter.UseDebugDevice)
+                creationFlags |= SharpDX.Direct3D11.DeviceCreationFlags.Debug;
 
             // Pass the preferred feature levels based on the
             // target profile that may have been set by the user.
@@ -265,10 +263,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             var driverType = GraphicsAdapter.UseReferenceDevice ? DriverType.Reference : DriverType.Hardware;
 
-#if DEBUG
             try 
             {
-#endif
                 // Create the Direct3D device.
                 using (var defaultDevice = new SharpDX.Direct3D11.Device(driverType, creationFlags, featureLevels.ToArray()))
                     _d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
@@ -276,17 +272,26 @@ namespace Microsoft.Xna.Framework.Graphics
                 // Necessary to enable video playback
                 var multithread = _d3dDevice.QueryInterface<SharpDX.Direct3D.DeviceMultithread>();
                 multithread.SetMultithreadProtected(true);
-#if DEBUG
             }
             catch(SharpDXException)
             {
-                // Try again without the debug flag.  This allows debug builds to run
-                // on machines that don't have the debug runtime installed.
-                creationFlags &= ~SharpDX.Direct3D11.DeviceCreationFlags.Debug;
-                using (var defaultDevice = new SharpDX.Direct3D11.Device(driverType, creationFlags, featureLevels.ToArray()))
-                    _d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
+                if ((creationFlags & SharpDX.Direct3D11.DeviceCreationFlags.Debug) != 0)
+                {
+                    // Try again without the debug flag.  This allows debug builds to run
+                    // on machines that don't have the debug runtime installed.
+                    creationFlags &= ~SharpDX.Direct3D11.DeviceCreationFlags.Debug;
+                    using (var defaultDevice = new SharpDX.Direct3D11.Device(driverType, creationFlags, featureLevels.ToArray()))
+                        _d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device1>();
+
+                    // Necessary to enable video playback
+                    var multithread = _d3dDevice.QueryInterface<SharpDX.Direct3D.DeviceMultithread>();
+                    multithread.SetMultithreadProtected(true);
+                }
+                else
+                {
+                    throw;
+                }
             }
-#endif
 
             // Get Direct3D 11.1 context
             _d3dContext = _d3dDevice.ImmediateContext.QueryInterface<SharpDX.Direct3D11.DeviceContext1>();
@@ -514,9 +519,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             // Windows requires BGRA support out of DX.
             var creationFlags = SharpDX.Direct3D11.DeviceCreationFlags.BgraSupport;
-#if DEBUG
-            creationFlags |= SharpDX.Direct3D11.DeviceCreationFlags.Debug;
-#endif
+            if (GraphicsAdapter.UseDebugDevice)
+                creationFlags |= SharpDX.Direct3D11.DeviceCreationFlags.Debug;
 
             // Pass the preferred feature levels based on the
             // target profile that may have been set by the user.
@@ -533,24 +537,27 @@ namespace Microsoft.Xna.Framework.Graphics
 
             var driverType = GraphicsAdapter.UseReferenceDevice ? DriverType.Reference : DriverType.Hardware;
             
-#if DEBUG
             try 
             {
-#endif
                 // Create the Direct3D device.
                 using (var defaultDevice = new SharpDX.Direct3D11.Device(driverType, creationFlags, featureLevels.ToArray()))
                     _d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device>();
-#if DEBUG
             }
-            catch(SharpDXException)
+            catch (SharpDXException)
             {
-                // Try again without the debug flag.  This allows debug builds to run
-                // on machines that don't have the debug runtime installed.
-                creationFlags &= ~SharpDX.Direct3D11.DeviceCreationFlags.Debug;
-                using (var defaultDevice = new SharpDX.Direct3D11.Device(driverType, creationFlags, featureLevels.ToArray()))
-                    _d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device>();
+                if ((creationFlags & SharpDX.Direct3D11.DeviceCreationFlags.Debug) != 0)
+                {
+                    // Try again without the debug flag.  This allows debug builds to run
+                    // on machines that don't have the debug runtime installed.
+                    creationFlags &= ~SharpDX.Direct3D11.DeviceCreationFlags.Debug;
+                    using (var defaultDevice = new SharpDX.Direct3D11.Device(driverType, creationFlags, featureLevels.ToArray()))
+                        _d3dDevice = defaultDevice.QueryInterface<SharpDX.Direct3D11.Device>();
+                }
+                else
+                {
+                    throw;
+                }
             }
-#endif
 
             // Get Direct3D 11.1 context
             _d3dContext = _d3dDevice.ImmediateContext.QueryInterface<SharpDX.Direct3D11.DeviceContext>();
