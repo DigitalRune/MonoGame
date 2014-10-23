@@ -126,20 +126,26 @@ namespace Microsoft.Xna.Framework {
 				var position = GetOffsetPosition (new Vector2 (location.X, location.Y), true);
 				var id = touch.Handle.ToInt32 ();
 
+				Mouse.PrimaryWindow.MouseState.X = (int)(position.X + 0.5f);
+				Mouse.PrimaryWindow.MouseState.Y = (int)(position.Y + 0.5f);
+
 				switch (touch.Phase) 
                 {
 				//case UITouchPhase.Stationary:
 				case UITouchPhase.Moved:
-					TouchPanel.AddEvent(id, TouchLocationState.Moved, position);					
+					TouchPanel.AddEvent(id, TouchLocationState.Moved, position);
 					break;
 				case UITouchPhase.Began:
-                    TouchPanel.AddEvent(id, TouchLocationState.Pressed, position);
+					TouchPanel.AddEvent (id, TouchLocationState.Pressed, position);
+					Mouse.PrimaryWindow.MouseState.LeftButton = ButtonState.Pressed;
 					break;
 				case UITouchPhase.Ended	:
                     TouchPanel.AddEvent(id, TouchLocationState.Released, position);
+					Mouse.PrimaryWindow.MouseState.LeftButton = ButtonState.Released;
 					break;
 				case UITouchPhase.Cancelled:
                     TouchPanel.AddEvent(id, TouchLocationState.Released, position);
+					Mouse.PrimaryWindow.MouseState.LeftButton = ButtonState.Released;
 					break;
 				default:
 					break;

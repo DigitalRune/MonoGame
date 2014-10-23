@@ -71,7 +71,11 @@ namespace Microsoft.Xna.Framework.Input
     {
         internal static GameWindow PrimaryWindow = null;
 
+#if ANDROID
+        internal static MouseState CurrentState = new MouseState();
+#else
         private static readonly MouseState _defaultState = new MouseState();
+#endif
 
         // Fields for relative mouse movement info:
         // For a first person shooter, the mouse position info needs to be relative and not be 
@@ -88,7 +92,7 @@ namespace Microsoft.Xna.Framework.Input
         private static int _deltaY;
 #endif
 
-/// <summary>
+        /// <summary>
         /// Gets or sets a value indicating whether the game requires relative mouse movement data
         /// instead of absolute mouse movement data.
         /// </summary>
@@ -248,7 +252,9 @@ namespace Microsoft.Xna.Framework.Input
             // This will need to change when MonoGame supports desktop Android.
             // Related discussion: https://github.com/mono/MonoGame/pull/1749
 
-            return _defaultState;
+            //return _defaultState;
+
+            return CurrentState;
 #else
             if (PrimaryWindow != null)
                 return GetState(PrimaryWindow);
@@ -288,6 +294,10 @@ namespace Microsoft.Xna.Framework.Input
 #elif MONOMAC
             var mousePt = NSEvent.CurrentMouseLocation;
             NSScreen currentScreen = null;
+
+            if (NSScreen.Screens.Length >= 1)
+                currentScreen = NSScreen.Screens[0];
+
             foreach (var screen in NSScreen.Screens) {
                 if (screen.Frame.Contains(mousePt)) {
                     currentScreen = screen;

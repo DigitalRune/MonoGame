@@ -38,11 +38,13 @@ namespace Microsoft.Xna.Framework.Input.Touch
                 case MotionEventActions.Down:
                 case MotionEventActions.PointerDown:
                     TouchPanel.AddEvent(id, TouchLocationState.Pressed, position);
+                    Mouse.CurrentState.LeftButton = ButtonState.Pressed;
                     break;
                 // UP                
                 case MotionEventActions.Up:
                 case MotionEventActions.PointerUp:
                     TouchPanel.AddEvent(id, TouchLocationState.Released, position);
+                    Mouse.CurrentState.LeftButton = ButtonState.Released;
                     break;
                 // MOVE                
                 case MotionEventActions.Move:
@@ -75,6 +77,9 @@ namespace Microsoft.Xna.Framework.Input.Touch
             //Fix for ClientBounds
             position.X -= clientBounds.X;
             position.Y -= clientBounds.Y;
+
+            Mouse.CurrentState.X = (int)(position.X + 0.5f);
+            Mouse.CurrentState.Y = (int)(position.Y + 0.5f);
         }
     }
 }
