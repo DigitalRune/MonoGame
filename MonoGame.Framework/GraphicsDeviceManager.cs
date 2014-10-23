@@ -575,6 +575,9 @@ namespace Microsoft.Xna.Framework
             // Set the veiwport so the (potentially) resized client bounds are drawn in the middle of the screen
             _graphicsDevice.Viewport = new Viewport(newClientBounds.X, -newClientBounds.Y, newClientBounds.Width, newClientBounds.Height);
 
+            // Reset default scissor rectangle.
+            _graphicsDevice.ScissorRectangle = _graphicsDevice.Viewport.Bounds;
+
             ((AndroidGameWindow)_game.Window).ChangeClientBounds(newClientBounds);
 
             // Touch panel needs latest buffer size for scaling

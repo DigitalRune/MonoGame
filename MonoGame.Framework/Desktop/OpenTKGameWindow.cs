@@ -210,6 +210,7 @@ namespace Microsoft.Xna.Framework
             Game.GraphicsDevice.PresentationParameters.BackBufferHeight = winHeight;
 
             Game.GraphicsDevice.Viewport = new Viewport(0, 0, winWidth, winHeight);
+            Game.GraphicsDevice.ScissorRectangle = new Rectangle(0, 0, winWidth, winHeight);
 
             clientBounds = winRect;
 
@@ -320,6 +321,10 @@ namespace Microsoft.Xna.Framework
 #endif
 
             window.KeyPress += OnKeyPress;
+
+            // Set a default window position near the top-left corner of the screen.
+            window.X = (int)(DisplayDevice.Default.Bounds.Left + DisplayDevice.Default.Width * 0.05f);
+            window.Y = (int)(DisplayDevice.Default.Bounds.Top + DisplayDevice.Default.Height * 0.05f);
 
             // Set the window icon.
             var assembly = Assembly.GetEntryAssembly();

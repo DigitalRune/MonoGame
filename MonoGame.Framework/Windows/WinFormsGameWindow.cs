@@ -177,7 +177,7 @@ namespace MonoGame.Framework
 
             _form.MaximizeBox = false;
             _form.FormBorderStyle = FormBorderStyle.FixedSingle;
-            _form.StartPosition = FormStartPosition.CenterScreen;           
+            _form.StartPosition = FormStartPosition.WindowsDefaultBounds;           
 
             // Capture mouse events.
             _form.MouseDown += OnMouseDown;
