@@ -54,7 +54,7 @@ namespace Microsoft.Xna.Framework
         private TimeSpan _targetElapsedTime = TimeSpan.FromTicks(166667); // 60fps
         private TimeSpan _inactiveSleepTime = TimeSpan.FromSeconds(0.02);
 
-        private readonly TimeSpan _maxElapsedTime = TimeSpan.FromMilliseconds(500);
+        private TimeSpan _maxElapsedTime = TimeSpan.FromMilliseconds(500);
 
 
         private bool _suppressDraw;
@@ -73,7 +73,7 @@ namespace Microsoft.Xna.Framework
             Platform.Deactivated += OnDeactivated;
             _services.AddService(typeof(GamePlatform), Platform);
 
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP && !WINDOWS_PHONE81
             Platform.ViewStateChanged += Platform_ApplicationViewChanged;
 #endif
         }
@@ -137,7 +137,7 @@ namespace Microsoft.Xna.Framework
                         Platform.Activated -= OnActivated;
                         Platform.Deactivated -= OnDeactivated;
                         _services.RemoveService(typeof(GamePlatform));
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP && !WINDOWS_PHONE81
                         Platform.ViewStateChanged -= Platform_ApplicationViewChanged;
 #endif
                         Platform.Dispose();
@@ -193,10 +193,25 @@ namespace Microsoft.Xna.Framework
                 if (value < TimeSpan.Zero)
                     throw new ArgumentOutOfRangeException("The time must be positive.", default(Exception));
 
-                if (_inactiveSleepTime != value)
-                {
-                    _inactiveSleepTime = value;
-                }
+                _inactiveSleepTime = value;
+            }
+        }
+
+        /// <summary>
+        /// The maximum amount of time we will frameskip over and only perform Update calls with no Draw calls.
+        /// MonoGame extension.
+        /// </summary>
+        public TimeSpan MaxElapsedTime
+        {
+            get { return _maxElapsedTime; }
+            set
+            {
+                if (value < TimeSpan.Zero)
+                    throw new ArgumentOutOfRangeException("The time must be positive.", default(Exception));
+                if (value < _targetElapsedTime)
+                    throw new ArgumentOutOfRangeException("The time must be at least TargetElapsedTime", default(Exception));
+
+                _maxElapsedTime = value;
             }
         }
 
@@ -298,7 +313,7 @@ namespace Microsoft.Xna.Framework
         public event EventHandler<EventArgs> Disposed;
         public event EventHandler<EventArgs> Exiting;
 
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP && !WINDOWS_PHONE81
         [CLSCompliant(false)]
         public event EventHandler<ViewStateChangedEventArgs> ApplicationViewChanged;
 #endif
@@ -616,7 +631,7 @@ namespace Microsoft.Xna.Framework
 			DoExiting();
         }
 
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP && !WINDOWS_PHONE81
         private void Platform_ApplicationViewChanged(object sender, ViewStateChangedEventArgs e)
         {
             AssertNotDisposed();
