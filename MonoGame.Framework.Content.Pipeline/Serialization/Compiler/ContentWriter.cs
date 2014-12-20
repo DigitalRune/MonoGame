@@ -189,8 +189,11 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler
         /// </summary>
         void WriteSharedResources()
         {
-            foreach (var resource in sharedResources)
-                WriteObject<object>(resource);
+            // Important: When the shared resource is written, it may add new 
+            // shared resources to the list. The list can grow as it is being
+            // iterated. --> Use for-loop, do not use foreach-loop!
+            for (int i = 0; i < sharedResources.Count; i++)
+                WriteObject<object>(sharedResources[i]);
         }
 
         /// <summary>
@@ -325,21 +328,20 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler
             if (typeWriter == null)
                 throw new ArgumentNullException("typeWriter");
 
-            if (value == null)
+            if (typeWriter.TargetType.IsValueType)
             {
-                // Zero means a null object
-                Write7BitEncodedInt(0);
+                // When T is a value type use the specified typeWriter.
+                // (The typeWriter is of the correct type in this case.)
+                typeWriter.Write(this, value);
             }
             else
             {
-		    Type objectType = typeof (T);
-            if (!objectType.IsValueType && !typeWriter.TargetType.IsValueType)
-            {
-			    var index = typeWriterMap[typeWriter.GetType ()];
-			    // Because zero means null object, we add one to the index before writing it to the file
-			    Write7BitEncodedInt (index + 1);
-		    }
-		    typeWriter.Write (this, value);
+                // When T is a reference type, call WriteObject<T>(T) to figure out the
+                // correct content type writer.
+                // (typeWriter may not be of the correct type here. For example, when a
+                // List<object> is written, the typeWriter is ReflectiveWriter<object>,
+                // which does not write anything!)
+                WriteObject(value);
             }
         }
 

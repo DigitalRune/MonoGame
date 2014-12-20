@@ -18,6 +18,10 @@ namespace Microsoft.Xna.Framework.Media
             return null;
         }
 
+        private void PlatformGetState(ref MediaState result)
+        {
+        }
+
         private void PlatformPause()
         {
         }

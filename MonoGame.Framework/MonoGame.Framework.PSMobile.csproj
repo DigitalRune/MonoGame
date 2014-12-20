@@ -107,11 +107,11 @@
     <Compile Include="Audio\NoAudioHardwareException.cs" />
     <Compile Include="Audio\SoundEffect.cs" />
     <Compile Include="Audio\SoundEffect.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMAudio</Services>
     </Compile>
     <Compile Include="Audio\SoundEffectInstance.cs" />
     <Compile Include="Audio\SoundEffectInstance.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMAudio</Services>
     </Compile>
     <Compile Include="Audio\SoundEffectInstancePool.cs" />
     <Compile Include="Audio\SoundState.cs" />
@@ -121,6 +121,7 @@
     <Compile Include="Audio\Xact\ClipEvent.cs" />
     <Compile Include="Audio\Xact\Cue.cs" />
     <Compile Include="Audio\Xact\PlayWaveEvent.cs" />
+    <Compile Include="Audio\Xact\VolumeEvent.cs" />
     <Compile Include="Audio\Xact\SoundBank.cs" />
     <Compile Include="Audio\Xact\WaveBank.cs" />
     <Compile Include="Audio\Xact\XactClip.cs" />
@@ -171,7 +172,7 @@
     <Compile Include="Content\ContentReaders\StringReader.cs" />
     <Compile Include="Content\ContentReaders\Texture2DReader.cs" />
     <Compile Include="Content\ContentReaders\Texture3DReader.cs">
-      <Platforms>Angle,Linux,MacOS,PSMobile,Windows8,Windows,WindowsGL,WindowsPhone</Platforms>
+      <Platforms>Angle,Linux,MacOS,PSMobile,Windows8,Windows,WindowsGL,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Content\ContentReaders\TimeSpanReader.cs" />
     <Compile Include="Content\ContentReaders\UInt16Reader.cs" />
@@ -224,7 +225,7 @@
     <Compile Include="Graphics\GraphicsCapabilities.cs" />
     <Compile Include="Graphics\GraphicsDevice.cs" />
     <Compile Include="Graphics\GraphicsDevice.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\GraphicsDeviceStatus.cs" />
     <Compile Include="Graphics\GraphicsExtensions.cs" />
@@ -263,7 +264,7 @@
     <Compile Include="Graphics\PresentInterval.cs" />
     <Compile Include="Graphics\RenderTarget2D.cs" />
     <Compile Include="Graphics\RenderTarget2D.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\RenderTargetBinding.cs" />
     <Compile Include="Graphics\RenderTargetCube.cs" />
@@ -272,17 +273,17 @@
     <Compile Include="Graphics\ResourceDestroyedEventArgs.cs" />
     <Compile Include="Graphics\SamplerStateCollection.cs" />
     <Compile Include="Graphics\SamplerStateCollection.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\SetDataOptions.cs" />
     <Compile Include="Graphics\Shader\ConstantBufferCollection.cs" />
     <Compile Include="Graphics\Shader\ConstantBuffer.cs" />
     <Compile Include="Graphics\Shader\ConstantBuffer.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\Shader\Shader.cs" />
     <Compile Include="Graphics\Shader\Shader.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\Shader\ShaderStage.cs" />
     <Compile Include="Graphics\SpriteBatch.cs" />
@@ -294,19 +295,19 @@
     <Compile Include="Graphics\States\BlendFunction.cs" />
     <Compile Include="Graphics\States\BlendState.cs" />
     <Compile Include="Graphics\States\BlendState.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\States\CompareFunction.cs" />
     <Compile Include="Graphics\States\CullMode.cs" />
     <Compile Include="Graphics\States\DepthFormat.cs" />
     <Compile Include="Graphics\States\DepthStencilState.cs" />
     <Compile Include="Graphics\States\DepthStencilState.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\States\FillMode.cs" />
     <Compile Include="Graphics\States\RasterizerState.cs" />
     <Compile Include="Graphics\States\RasterizerState.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\States\SamplerState.cs" />
     <Compile Include="Graphics\States\StencilOperation.cs" />
@@ -316,23 +317,23 @@
     <Compile Include="Graphics\SurfaceFormat.cs" />
     <Compile Include="Graphics\Texture2D.cs" />
     <Compile Include="Graphics\Texture2D.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\Texture3D.cs" />
     <Compile Include="Graphics\Texture3D.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\TextureCollection.cs" />
     <Compile Include="Graphics\TextureCollection.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Texture.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\TextureCube.cs" />
     <Compile Include="Graphics\TextureCube.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\TextureUsage.cs" />
     <Compile Include="Graphics\Vertices\BufferUsage.cs" />
@@ -340,20 +341,20 @@
     <Compile Include="Graphics\Vertices\DynamicVertexBuffer.cs" />
     <Compile Include="Graphics\Vertices\IndexBuffer.cs" />
     <Compile Include="Graphics\Vertices\IndexBuffer.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\Vertices\IndexElementSize.cs" />
     <Compile Include="Graphics\Vertices\IVertexType.cs" />
     <Compile Include="Graphics\Vertices\PrimitiveType.cs" />
     <Compile Include="Graphics\Vertices\VertexBuffer.cs" />
     <Compile Include="Graphics\Vertices\VertexBuffer.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\Vertices\VertexColorTexture.cs" />
     <Compile Include="Graphics\Vertices\VertexDeclarationCache.cs" />
     <Compile Include="Graphics\Vertices\VertexDeclaration.cs" />
     <Compile Include="Graphics\Vertices\VertexDeclaration.PSM.cs">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </Compile>
     <Compile Include="Graphics\Vertices\VertexElement.cs" />
     <Compile Include="Graphics\Vertices\VertexElementFormat.cs" />
@@ -398,7 +399,7 @@
     <Compile Include="Media\Genre.cs" />
     <Compile Include="Media\MediaLibrary.cs" />
     <Compile Include="Media\MediaLibrary.Default.cs">
-      <ExcludePlatforms>iOS,Windows8,WindowsPhone</ExcludePlatforms>
+      <ExcludePlatforms>iOS,Windows8,WindowsPhone,Android,Ouya,WindowsPhone81</ExcludePlatforms>
     </Compile>
     <Compile Include="Media\MediaPlayer.cs" />
     <Compile Include="Media\MediaPlayer.Default.cs">
@@ -417,7 +418,7 @@
     <Compile Include="Storage\StorageContainer.cs" />
     <Compile Include="Storage\StorageDevice.cs" />
     <Compile Include="Storage\StorageDeviceHelper.cs">
-      <Platforms>Android,Angle,iOS,Ouya,PSMobile,Windows8,Windows,WindowsGL,WindowsPhone,Web</Platforms>
+      <Platforms>Android,Angle,iOS,Ouya,PSMobile,Windows8,Windows,WindowsGL,WindowsPhone,Web,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Utilities\Hash.cs" />
     <Compile Include="Utilities\ObjectFactoryWithReset.cs" />
@@ -461,24 +462,24 @@
   <ItemGroup />
   <ItemGroup>
     <EmbeddedShaderProgram Include="PSSuite\Graphics\Resources\BasicEffect.fcg">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </EmbeddedShaderProgram>
     <EmbeddedShaderProgram Include="PSSuite\Graphics\Resources\BasicEffect.vcg">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </EmbeddedShaderProgram>
     <EmbeddedShaderProgram Include="PSSuite\Graphics\Resources\SpriteEffect.fcg">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </EmbeddedShaderProgram>
     <EmbeddedShaderProgram Include="PSSuite\Graphics\Resources\SpriteEffect.vcg">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </EmbeddedShaderProgram>
   </ItemGroup>
   <ItemGroup>
     <ShaderProgram Include="PSSuite\Graphics\Resources\AlphaTestEffect.fcg">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </ShaderProgram>
     <ShaderProgram Include="PSSuite\Graphics\Resources\AlphaTestEffect.vcg">
-      <Platforms>PSMobile</Platforms>
+      <Services>PSMGraphics</Services>
     </ShaderProgram>
   </ItemGroup>
   <ItemGroup />

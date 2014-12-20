@@ -26,8 +26,12 @@ namespace MonoGame.Tools.Pipeline
         {
             "",
 #if DEBUG
+            "../../../../../MGCB/bin/Windows/x64/Debug",
+            "../../../../../MGCB/bin/Windows/x86/Debug",
             "../../../../../MGCB/bin/Windows/AnyCPU/Debug",
 #else
+            "../../../../../MGCB/bin/Windows/x64/Release",
+            "../../../../../MGCB/bin/Windows/x86/Release",
             "../../../../../MGCB/bin/Windows/AnyCPU/Release",
 #endif
             "../MGCB",

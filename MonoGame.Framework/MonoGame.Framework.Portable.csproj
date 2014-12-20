@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Audio\SoundEffect.Null.cs" />
     <Compile Include="Audio\SoundEffectInstance.Null.cs" />
+    <Compile Include="Audio\Xact\VolumeEvent.cs" />
     <Compile Include="Graphics\GraphicsDevice.Null.cs" />
     <Compile Include="Graphics\RenderTarget2D.Null.cs" />
     <Compile Include="Graphics\SamplerStateCollection.Null.cs" />

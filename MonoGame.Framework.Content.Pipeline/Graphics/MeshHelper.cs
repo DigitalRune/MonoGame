@@ -42,11 +42,10 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
         public static void CalculateNormals(GeometryContent geom, bool overwriteExistingNormals)
         {
             // Look for an existing normals channel.
-            var channel = geom.Vertices.Channels.Get<Vector3>(VertexChannelNames.Normal());
-            if (channel == null)
+            if (!geom.Vertices.Channels.Contains(VertexChannelNames.Normal()))
             {
                 // We don't have existing normals, so add a new channel.
-                channel = geom.Vertices.Channels.Add<Vector3>(VertexChannelNames.Normal(), null);
+                geom.Vertices.Channels.Add<Vector3>(VertexChannelNames.Normal(), null);
             }
             else
             {
@@ -56,6 +55,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
                     return;
             }
 
+            var channel = geom.Vertices.Channels.Get<Vector3>(VertexChannelNames.Normal());
             var positionIndices = geom.Vertices.PositionIndices;
             Debug.Assert(positionIndices.Count == channel.Count, "The position and channel sizes were different!");
 
@@ -258,8 +258,8 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             for (var i = 0; i < numVerts; i++)
             {
                 var n = normals[i];
-                Debug.Assert(n.IsFinite(), "Bad normal!");
-                Debug.Assert(n.Length() >= 0.9999f, "Bad normal!");
+                //Debug.Assert(n.IsFinite(), "Bad normal! Normal vector must be finite.");
+                //Debug.Assert(n.Length() >= 0.9999f, "Bad normal! Normal vector must be normalized. (Actual length = " + n.Length() + ")");
 
                 var t = tan1[i];
                 if (t.LengthSquared() < float.Epsilon)
@@ -375,12 +375,12 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
 
         public static void MergeDuplicatePositions(MeshContent mesh, float tolerance)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public static void MergeDuplicateVertices(GeometryContent geometry)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public static void MergeDuplicateVertices(MeshContent mesh)
@@ -436,6 +436,8 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             if (transform == Matrix.Identity)
                 return;
 
+            Matrix inverseTransform = Matrix.Invert(transform);
+
             var work = new Stack<NodeContent>();
             work.Push(scene);
 
@@ -443,13 +445,43 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             {
                 var node = work.Pop();
                 foreach (var child in node.Children)
-                    work.Push(child);                    
+                    work.Push(child);
 
                 // Transform the mesh content.
                 var mesh = node as MeshContent;
                 if (mesh != null)
                     mesh.TransformContents(ref transform);
+
+                // Transform local coordinate system using "similarity transform".
+                node.Transform = inverseTransform * node.Transform * transform;
+
+                // Transform animations.
+                foreach (var animationContent in node.Animations.Values)
+                    foreach (var animationChannel in animationContent.Channels.Values)
+                        for (int i = 0; i < animationChannel.Count; i++)
+                            animationChannel[i].Transform = inverseTransform * animationChannel[i].Transform * transform;
             }
+        }
+
+        /// <summary>
+        /// Determines whether the specified transform is left-handed.
+        /// </summary>
+        /// <param name="xform">The transform.</param>
+        /// <returns>
+        /// <see langword="true"/> if <paramref name="xform"/> is left-handed; otherwise,
+        /// <see langword="false"/> if <paramref name="xform"/> is right-handed.
+        /// </returns>
+        internal static bool IsLeftHanded(ref Matrix xform)
+        {
+            // Check sign of determinant of upper-left 3x3 matrix:
+            //   positive determinant ... right-handed
+            //   negative determinant ... left-handed
+
+            // Since XNA does not have a 3x3 matrix, use the "scalar triple product"
+            // (see http://en.wikipedia.org/wiki/Triple_product) to calculate the
+            // determinant.
+            float d = Vector3.Dot(xform.Right, Vector3.Cross(xform.Forward, xform.Up));
+            return d < 0.0f;
         }
     }
 }

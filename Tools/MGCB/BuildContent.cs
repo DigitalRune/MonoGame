@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Framework.Content.Pipeline.Builder;
@@ -239,11 +240,15 @@ namespace MGCB
 
             // Feed all the assembly references to the pipeline manager
             // so it can resolve importers, processors, writers, and types.
+            var executableDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             foreach (var r in References)
             {
                 var assembly = r;
                 if (!Path.IsPathRooted(assembly))
-                    assembly = Path.GetFullPath(Path.Combine(projectDirectory, assembly));
+                    assembly = Path.GetFullPath(Path.Combine(projectDirectory, r));
+                if (!File.Exists(assembly))
+                    assembly = Path.GetFullPath(Path.Combine(executableDirectory, r));
+
                 _manager.AddAssembly(assembly);
             }
 
