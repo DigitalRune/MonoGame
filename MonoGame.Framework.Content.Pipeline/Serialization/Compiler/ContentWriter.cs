@@ -189,11 +189,11 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler
         /// </summary>
         void WriteSharedResources()
         {
-            // Important: When the shared resource is written, it may add new 
-            // shared resources to the list. The list can grow as it is being
-            // iterated. --> Use for-loop, do not use foreach-loop!
             for (int i = 0; i < sharedResources.Count; i++)
-                WriteObject<object>(sharedResources[i]);
+            {
+                var resource = sharedResources[i];
+                WriteObject<object>(resource);
+            }
         }
 
         /// <summary>

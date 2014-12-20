@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using MGCB;
 
@@ -35,6 +36,7 @@ namespace MonoGame.Tools.Pipeline
             "../../../../../MGCB/bin/Windows/AnyCPU/Release",
 #endif
             "../MGCB",
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
         };
 
         public IEnumerable<ContentItemTemplate> Templates
@@ -79,7 +81,7 @@ namespace MonoGame.Tools.Pipeline
             ProjectOpen = false;
 
             _templateItems = new List<ContentItemTemplate>();
-            LoadTemplates(Environment.CurrentDirectory + "\\Templates");
+            LoadTemplates(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Templates"));
         }
 
         public void OnProjectModified()

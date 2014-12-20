@@ -25,6 +25,13 @@ namespace MonoGame.Framework.WindowsPhone
     {
         class SurfaceTouchHandler : IDrawingSurfaceManipulationHandler
         {
+            private readonly TouchQueue _touchQueue;
+
+            public SurfaceTouchHandler(TouchQueue touchQueue)
+            {
+                _touchQueue = touchQueue;
+            }
+
             public void SetManipulationHost(DrawingSurfaceManipulationHost manipulationHost)
             {
                 manipulationHost.PointerPressed += OnPointerPressed;
@@ -39,7 +46,7 @@ namespace MonoGame.Framework.WindowsPhone
                 // To convert from DIPs (device independent pixels) to screen resolution pixels.
                 var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
                 var pos = new Vector2((float)pointerPoint.Position.X, (float)pointerPoint.Position.Y) * dipFactor;
-                TouchPanel.AddEvent((int)pointerPoint.PointerId, TouchLocationState.Pressed, pos);
+                _touchQueue.Enqueue((int)pointerPoint.PointerId, TouchLocationState.Pressed, pos);
 
                 UpdateMouse(pos, ButtonState.Pressed);
             }
@@ -51,7 +58,7 @@ namespace MonoGame.Framework.WindowsPhone
                 // To convert from DIPs (device independent pixels) to screen resolution pixels.
                 var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
                 var pos = new Vector2((float)pointerPoint.Position.X, (float)pointerPoint.Position.Y) * dipFactor;
-                TouchPanel.AddEvent((int)pointerPoint.PointerId, TouchLocationState.Moved, pos);
+                _touchQueue.Enqueue((int)pointerPoint.PointerId, TouchLocationState.Moved, pos);
 
                 UpdateMouse(pos, ButtonState.Pressed);
             }
@@ -63,7 +70,7 @@ namespace MonoGame.Framework.WindowsPhone
                 // To convert from DIPs (device independent pixels) to screen resolution pixels.
                 var dipFactor = DisplayProperties.LogicalDpi / 96.0f;
                 var pos = new Vector2((float)pointerPoint.Position.X, (float)pointerPoint.Position.Y) * dipFactor;
-                TouchPanel.AddEvent((int)pointerPoint.PointerId, TouchLocationState.Released, pos);
+                _touchQueue.Enqueue((int)pointerPoint.PointerId, TouchLocationState.Released, pos);
 
                 UpdateMouse(pos, ButtonState.Released);
             }
@@ -76,7 +83,7 @@ namespace MonoGame.Framework.WindowsPhone
             }
         }
 
-        class DrawingSurfaceBackgroundContentProvider : DrawingSurfaceBackgroundContentProviderNativeBase                                                        
+        class DrawingSurfaceBackgroundContentProvider : DrawingSurfaceBackgroundContentProviderNativeBase
         {
             private readonly SurfaceUpdateHandler _surfaceUpdateHandler;
 
@@ -156,7 +163,7 @@ namespace MonoGame.Framework.WindowsPhone
             if (game.graphicsDeviceManager == null)
                 throw new NullReferenceException("You must create the GraphicsDeviceManager in the Game constructor!");
 
-            SurfaceTouchHandler surfaceTouchHandler = new SurfaceTouchHandler();
+            SurfaceTouchHandler surfaceTouchHandler = new SurfaceTouchHandler(WindowsPhoneGamePlatform.TouchQueue);
 
             if (drawingSurface is DrawingSurfaceBackgroundGrid)
             {
