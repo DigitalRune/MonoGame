@@ -20,17 +20,17 @@
     <MandroidI18n />
     <DeployExternal>False</DeployExternal>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
-    <AndroidApplication>false</AndroidApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
     <BaseIntermediateOutputPath>obj\Android\AnyCPU\Debug\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\Android\AnyCPU\Debug</OutputPath>
     <DocumentationFile>bin\Android\AnyCPU\Debug\MonoGame.Framework.xml</DocumentationFile>
-    <DefineConstants>DEBUG;TRACE;ANDROID;GLES;OPENGL;OPENAL</DefineConstants>
+    <DefineConstants>DEBUG;OPENGL;OPENAL;TRACE;ANDROID;GLES</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MonoDroidLinkMode>None</MonoDroidLinkMode>
@@ -38,12 +38,12 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <BaseIntermediateOutputPath>obj\Android\AnyCPU\Release\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\Android\AnyCPU\Release</OutputPath>
     <DocumentationFile>bin\Android\AnyCPU\Release\MonoGame.Framework.xml</DocumentationFile>
-    <DefineConstants>TRACE;ANDROID;GLES;OPENGL;OPENAL</DefineConstants>
+    <DefineConstants>OPENGL;OPENAL;TRACE;ANDROID;GLES</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
@@ -54,7 +54,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
-    <Reference Include="OpenTK" />
+    <Reference Include="OpenTK-1.0" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>

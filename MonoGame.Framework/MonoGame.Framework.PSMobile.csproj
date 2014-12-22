@@ -19,6 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
     <OutputPath>bin\PSMobile\AnyCPU\Debug</OutputPath>
     <IntermediateOutputPath>obj\PSMobile\AnyCPU\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\PSMobile\AnyCPU\Debug\MonoGame.Framework.xml</DocumentationFile>
@@ -28,7 +29,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <OutputPath>bin\PSMobile\AnyCPU\Release</OutputPath>
     <IntermediateOutputPath>obj\PSMobile\AnyCPU\Release</IntermediateOutputPath>
     <DocumentationFile>bin\PSMobile\AnyCPU\Release\MonoGame.Framework.xml</DocumentationFile>

@@ -22,6 +22,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
     <BaseIntermediateOutputPath>obj\WindowsPhone\x86\Debug\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsPhone\x86\Debug</OutputPath>
@@ -32,7 +33,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <BaseIntermediateOutputPath>obj\WindowsPhone\x86\Release\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsPhone\x86\Release</OutputPath>
@@ -45,6 +46,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
     <BaseIntermediateOutputPath>obj\WindowsPhone\ARM\Debug\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsPhone\ARM\Debug</OutputPath>
@@ -55,7 +57,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ARM' ">
     <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <BaseIntermediateOutputPath>obj\WindowsPhone\ARM\Release\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsPhone\ARM\Release</OutputPath>
@@ -84,7 +86,7 @@
     <Compile Include="GamerServices\MessageBoxIcon.cs" />
     <Compile Include="GamerServices\PropertyDictionary.cs" />
     <Compile Include="Windows\GamerServices\Guide.cs">
-      <Platforms>Windows8,Windows,WindowsGL,WindowsPhone</Platforms>
+      <Platforms>Windows8,Windows,WindowsGL,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>
   </ItemGroup>
   <ItemGroup />

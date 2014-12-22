@@ -21,6 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
     <BaseIntermediateOutputPath>obj\Windows8\AnyCPU\Debug\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\Windows8\AnyCPU\Debug</OutputPath>
@@ -31,7 +32,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <BaseIntermediateOutputPath>obj\Windows8\AnyCPU\Release\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\Windows8\AnyCPU\Release</OutputPath>
@@ -97,16 +98,16 @@
       <ExcludePlatforms>WindowsPhone</ExcludePlatforms>
     </Compile>
     <Compile Include="Windows8\GamerServices\SignedInGamer.cs">
-      <Platforms>Windows8</Platforms>
+      <Platforms>Windows8,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Windows8\GamerServices\EventAsync.cs">
-      <Platforms>Windows8</Platforms>
+      <Platforms>Windows8,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Windows8\GamerServices\InputDialog.cs">
-      <Platforms>Windows8</Platforms>
+      <Platforms>Windows8,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Windows\GamerServices\Guide.cs">
-      <Platforms>Windows8,Windows,WindowsGL,WindowsPhone</Platforms>
+      <Platforms>Windows8,Windows,WindowsGL,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>
   </ItemGroup>
   <ItemGroup />
@@ -118,7 +119,7 @@
   <ItemGroup />
   <ItemGroup>
     <Page Include="Themes\generic.xaml">
-      <Platforms>Windows8</Platforms>
+      <Platforms>Windows8,WindowsPhone81</Platforms>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

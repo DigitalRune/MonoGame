@@ -24,6 +24,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
     <OutputPath>bin\Ouya\AnyCPU\Debug</OutputPath>
     <IntermediateOutputPath>obj\Ouya\AnyCPU\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\Ouya\AnyCPU\Debug\MonoGame.Framework.xml</DocumentationFile>
@@ -35,7 +36,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <OutputPath>bin\Ouya\AnyCPU\Release</OutputPath>
     <IntermediateOutputPath>obj\Ouya\AnyCPU\Release</IntermediateOutputPath>
     <DocumentationFile>bin\Ouya\AnyCPU\Release\MonoGame.Framework.xml</DocumentationFile>
@@ -50,7 +51,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
-    <Reference Include="OpenTK" />
+    <Reference Include="OpenTK-1.0" />
     <Reference Include="System.Core" />
     <Reference Include="Ouya.Console.Api">
       <HintPath>..\ThirdParty\Dependencies\OUYA\Ouya.Console.Api.dll</HintPath>

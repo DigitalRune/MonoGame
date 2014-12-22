@@ -19,6 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
     <OutputPath>bin\iOS\iPhone\Debug</OutputPath>
     <IntermediateOutputPath>obj\iOS\iPhone\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\iOS\iPhone\Debug\MonoGame.Framework.xml</DocumentationFile>
@@ -26,13 +27,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchDebug>True</MtouchDebug>
     <MtouchUseArmv7>false</MtouchUseArmv7>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <OutputPath>bin\iOS\iPhone\Release</OutputPath>
     <IntermediateOutputPath>obj\iOS\iPhone\Release</IntermediateOutputPath>
     <DocumentationFile>bin\iOS\iPhone\Release\MonoGame.Framework.xml</DocumentationFile>
@@ -45,6 +45,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
     <OutputPath>bin\iOS\iPhoneSimulator\Debug</OutputPath>
     <IntermediateOutputPath>obj\iOS\iPhoneSimulator\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\iOS\iPhoneSimulator\Debug\MonoGame.Framework.xml</DocumentationFile>
@@ -52,13 +53,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchDebug>True</MtouchDebug>
     <MtouchUseArmv7>false</MtouchUseArmv7>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <OutputPath>bin\iOS\iPhoneSimulator\Release</OutputPath>
     <IntermediateOutputPath>obj\iOS\iPhoneSimulator\Release</IntermediateOutputPath>
     <DocumentationFile>bin\iOS\iPhoneSimulator\Release\MonoGame.Framework.xml</DocumentationFile>
@@ -69,7 +69,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <OutputPath>bin\iOS\iPhone\Ad-Hoc</OutputPath>
     <IntermediateOutputPath>obj\iOS\iPhone\Ad-Hoc</IntermediateOutputPath>
     <DocumentationFile>bin\iOS\iPhone\Ad-Hoc\MonoGame.Framework.xml</DocumentationFile>
@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <OutputPath>bin\iOS\iPhone\AppStore</OutputPath>
     <IntermediateOutputPath>obj\iOS\iPhone\AppStore</IntermediateOutputPath>
     <DocumentationFile>bin\iOS\iPhone\AppStore\MonoGame.Framework.xml</DocumentationFile>

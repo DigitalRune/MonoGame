@@ -20,6 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
     <OutputPath>bin\MacOS\AnyCPU\Debug</OutputPath>
     <IntermediateOutputPath>obj\MacOS\AnyCPU\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\MacOS\AnyCPU\Debug\MonoGame.Framework.Content.Pipeline.xml</DocumentationFile>
@@ -34,7 +35,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <OutputPath>bin\MacOS\AnyCPU\Release</OutputPath>
     <IntermediateOutputPath>obj\MacOS\AnyCPU\Release</IntermediateOutputPath>
     <DocumentationFile>bin\MacOS\AnyCPU\Release\MonoGame.Framework.Content.Pipeline.xml</DocumentationFile>
@@ -72,6 +73,9 @@
     </Reference>
     <Reference Include="ManagedPVRTC">
       <HintPath>..\ThirdParty\Dependencies\ManagedPVRTC\ManagedPVRTC.dll</HintPath>
+    </Reference>
+    <Reference Include="FreeImageNET">
+      <HintPath>..\ThirdParty\Dependencies\FreeImage.NET\FreeImageNET.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -141,7 +145,9 @@
     <Compile Include="Graphics\Font\SharpFontImporter.cs" />
     <Compile Include="Graphics\SkinnedMaterialContent.cs" />
     <Compile Include="Graphics\Texture2DContent.cs" />
+    <Compile Include="Graphics\Texture3DContent.cs" />
     <Compile Include="Graphics\TextureContent.cs" />
+    <Compile Include="Graphics\TextureCubeContent.cs" />
     <Compile Include="Graphics\TextureReferenceDictionary.cs" />
     <Compile Include="Graphics\Font\TrueTypeImporter.cs" />
     <Compile Include="Graphics\VertexChannel.cs" />
@@ -254,6 +260,7 @@
     <Compile Include="Serialization\Intermediate\ListSerializer.cs" />
     <Compile Include="Serialization\Intermediate\LongSerializer.cs" />
     <Compile Include="Serialization\Intermediate\MatrixSerializer.cs" />
+    <Compile Include="Serialization\Intermediate\NullableSerializer.cs" />
     <Compile Include="Serialization\Intermediate\PlaneSerializer.cs" />
     <Compile Include="Serialization\Intermediate\PointSerializer.cs" />
     <Compile Include="Serialization\Intermediate\QuaternionSerializer.cs" />
@@ -268,6 +275,7 @@
     <Compile Include="Serialization\Intermediate\Vector2Serializer.cs" />
     <Compile Include="Serialization\Intermediate\Vector3Serializer.cs" />
     <Compile Include="Serialization\Intermediate\Vector4Serializer.cs" />
+    <Compile Include="Serialization\Intermediate\TimeSpanSerializer.cs" />
     <Compile Include="ChildCollection.cs" />
     <Compile Include="ContentBuildLogger.cs" />
     <Compile Include="ContentIdentity.cs" />
@@ -379,6 +387,21 @@
     <None Include="..\ThirdParty\Dependencies\ffmpeg\MacOS\ffprobe">
       <Platforms>MacOS</Platforms>
       <Link>ffprobe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThirdParty\Dependencies\FreeImage.NET\FreeImageNET.dll.config">
+      <Platforms>MacOS</Platforms>
+      <Link>FreeImage.dll.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThirdParty\Dependencies\FreeImage.NET\MacOS\libfreeimage.dylib">
+      <Platforms>MacOS</Platforms>
+      <Link>libfreeimage.dylib</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThirdParty\Dependencies\FreeImage.NET\MacOS\libfreeimageplus.dylib">
+      <Platforms>MacOS</Platforms>
+      <Link>libfreeimageplus.dylib</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
