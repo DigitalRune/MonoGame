@@ -302,15 +302,19 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler
         /// <remarks>This method can be called recursively with a null value.</remarks>
         public void WriteObject<T>(T value)
         {
-		if (value == null)
-			Write7BitEncodedInt (0);
-		else {
-			var elementWriter =  GetTypeWriter (value.GetType ());
-			var index = typeWriterMap[elementWriter.GetType ()];
-			// Because zero means null object, we add one to the index before writing it to the file
-			Write7BitEncodedInt (index + 1);
-			elementWriter.Write (this, value);
-		}
+            if (value == null)
+                Write7BitEncodedInt(0);
+            else
+            {
+                var typeWriter = GetTypeWriter(value.GetType());
+
+                // Because zero means null object, we add one to 
+                // the index before writing it to the file.
+                var index = typeWriterMap[typeWriter.GetType()];
+                Write7BitEncodedInt(index + 1);
+
+                typeWriter.Write(this, value);                
+            }
         }
 
         /// <summary>
@@ -329,20 +333,9 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler
                 throw new ArgumentNullException("typeWriter");
 
             if (typeWriter.TargetType.IsValueType)
-            {
-                // When T is a value type use the specified typeWriter.
-                // (The typeWriter is of the correct type in this case.)
                 typeWriter.Write(this, value);
-            }
             else
-            {
-                // When T is a reference type, call WriteObject<T>(T) to figure out the
-                // correct content type writer.
-                // (typeWriter may not be of the correct type here. For example, when a
-                // List<object> is written, the typeWriter is ReflectiveWriter<object>,
-                // which does not write anything!)
                 WriteObject(value);
-            }
         }
 
         /// <summary>
@@ -505,6 +498,17 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler
             Write(value.Y);
             Write(value.Width);
             Write(value.Height);
+        }
+
+        /// <summary>
+        /// Helper for checking if a type can be deserialized into an existing object.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>True if the type can be deserialized into an existing object.</returns>
+        internal bool CanDeserializeIntoExistingObject(Type type)
+        {
+            var typeWriter = compiler.GetTypeWriter(type);
+            return typeWriter != null && typeWriter.CanDeserializeIntoExistingObject;
         }
     }
 }

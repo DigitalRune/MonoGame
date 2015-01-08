@@ -327,7 +327,7 @@ namespace Microsoft.Xna.Framework
 
         #region Public Methods
 
-#if IOS || WINDOWS_STOREAPP
+#if IOS || WINDOWS_STOREAPP && !WINDOWS_PHONE81
         [Obsolete("This platform's policy does not allow programmatically closing.", true)]
 #endif
         public void Exit()

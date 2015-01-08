@@ -67,7 +67,7 @@ namespace MonoGame.Framework.Content.Pipeline.Builder
             var sourceFilepath = PathHelper.Normalize(sourceAsset.Filename);
 
             // The processorName can be null or empty. In this case the asset should
-            // be imported but not processed! This is, for example, necessary to merge
+            // be imported but not processed. This is, for example, necessary to merge
             // animation files as described here:
             // http://blogs.msdn.com/b/shawnhar/archive/2010/06/18/merging-animation-files.aspx.
             bool processAsset = !string.IsNullOrEmpty(processorName);

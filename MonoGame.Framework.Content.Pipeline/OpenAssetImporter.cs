@@ -5,8 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Assimp;
+using Assimp.Unmanaged;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 
 
@@ -141,6 +144,18 @@ namespace Microsoft.Xna.Framework.Content.Pipeline
 
         public override NodeContent Import(string filename, ContentImporterContext context)
         {
+#if LINUX
+			var targetDir = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName;
+
+			try
+			{
+				AssimpLibrary.Instance.LoadLibrary(
+					Path.Combine(targetDir, "libassimp.so"), 
+					Path.Combine(targetDir, "libassimp.so"));
+			}
+			catch { }
+#endif
+
             _identity = new ContentIdentity(filename, string.IsNullOrEmpty(ImporterName) ? GetType().Name : ImporterName);
 
             using (var importer = new AssimpContext())

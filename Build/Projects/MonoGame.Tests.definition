@@ -93,7 +93,9 @@
     <Compile Include="Framework\TouchLocationTest.cs" />
     <Compile Include="Framework\Bounding.cs" />
     <Compile Include="Framework\MathHelperTest.cs" />
+    <Compile Include="Framework\PlaneTest.cs" />
     <Compile Include="Framework\RayTest.cs" />
+	<Compile Include="Framework\RectangleTest.cs" />
     <Compile Include="Framework\GameTest+Methods.cs" />
     <Compile Include="Framework\GameTest+Properties.cs" />
     <Compile Include="Framework\GameTest.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="Framework\Visual\Texture2DTest.cs" />
     <Compile Include="Framework\Visual\Texture3DTest.cs" />
     <Compile Include="Framework\Visual\IndexBufferTest.cs" />
+    <Compile Include="Framework\Visual\VertexBufferTest.cs" />
     <Compile Include="Framework\Visual\MiscellaneousTests.cs" />
     <Compile Include="Framework\Visual\ShaderTest.cs" />
     <Compile Include="Framework\Visual\SpriteBatchTest.cs" />
@@ -131,6 +134,9 @@
     </Compile>
     <Compile Include="ContentPipeline\EffectProcessorTests.cs">
         <Platforms>Windows</Platforms>
+    </Compile>
+    <Compile Include="ContentPipeline\FontDescriptionTests.cs">
+        <Platforms>Windows,MacOS,Linux</Platforms>
     </Compile>
     <Compile Include="ContentPipeline\IntermediateDeserializerTest.cs">
         <Platforms>Windows,MacOS,Linux</Platforms>

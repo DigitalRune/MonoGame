@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
 {
@@ -154,7 +155,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
         /// <returns>The converted channel data.</returns>
         public override IEnumerable<TargetType> ReadConvertedContent<TargetType>()
         {
-            if (typeof(T) == typeof(TargetType))
+            if (typeof(TargetType).IsAssignableFrom(typeof(T)))
                 return items.Cast<TargetType>();
 
             return Convert<TargetType>(items);
