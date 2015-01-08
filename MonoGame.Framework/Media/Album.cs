@@ -235,7 +235,6 @@ namespace Microsoft.Xna.Framework.Media
 #elif WINDOWS_STOREAPP
             if (this.HasArt)
                 return this.thumbnail.AsStream();
-
             return null;
 #else
             throw new NotImplementedException();

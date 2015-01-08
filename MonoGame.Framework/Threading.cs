@@ -169,7 +169,6 @@ namespace Microsoft.Xna.Framework
                     action();
                 }
                 catch (UnauthorizedAccessException)
-
                 {
                     // Need to be on a different thread
                     BlockOnContainerThread(Deployment.Current.Dispatcher, action);

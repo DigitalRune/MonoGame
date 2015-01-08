@@ -105,10 +105,7 @@ namespace Microsoft.Xna.Framework.Content
 
             if (!String.IsNullOrEmpty(externalReference))
             {
-                return contentManager.Load<T>(
-                    FileHelpers.ResolveRelativePath(
-                        assetName, 
-                        FileHelpers.NormalizeFilePathSeparators(externalReference)));
+                return contentManager.Load<T>(FileHelpers.ResolveRelativePath(assetName, externalReference));
             }
 
             return default(T);

@@ -208,7 +208,9 @@
     <Compile Include="Serialization\Compiler\SoundEffectContentWriter.cs" />
     <Compile Include="Serialization\Compiler\SpriteFontContentWriter.cs" />
     <Compile Include="Serialization\Compiler\StringWriter.cs" />
+    <Compile Include="Serialization\Compiler\TextureWriter.cs" />
     <Compile Include="Serialization\Compiler\Texture2DContentWriter.cs" />
+    <Compile Include="Serialization\Compiler\TextureCubeWriter.cs" />
     <Compile Include="Serialization\Compiler\TimeSpanWriter.cs" />
     <Compile Include="Serialization\Compiler\UInt16Writer.cs" />
     <Compile Include="Serialization\Compiler\UInt32Writer.cs" />
@@ -299,6 +301,11 @@
     <Compile Include="Utilities\LZ4\LZ4Codec.Unsafe64HC.Dirty.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\ThirdParty\Dependencies\assimp\libassimp.so">
+      <Platforms>Linux</Platforms>
+      <Link>libassimp.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="..\ThirdParty\Dependencies\NVTT\Linux\libnvcore.so">
       <Platforms>Linux</Platforms>
       <Link>libnvcore.so</Link>
