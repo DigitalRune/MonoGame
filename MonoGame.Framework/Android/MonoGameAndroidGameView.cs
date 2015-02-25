@@ -27,6 +27,9 @@ namespace Microsoft.Xna.Framework
 
         public bool IsResuming { get; private set; }
         private bool _lostContext;
+#if !OUYA
+        private bool backPressed;
+#endif
 
         public MonoGameAndroidGameView(Context context, AndroidGameWindow androidGameWindow, Game game)
             : base(context)
@@ -90,6 +93,18 @@ namespace Microsoft.Xna.Framework
                     }
                 }
             }
+
+            var manager = _game.graphicsDeviceManager;
+            
+            manager.PreferredBackBufferWidth = width;
+            manager.PreferredBackBufferHeight = height;
+
+            if (manager.GraphicsDevice != null)
+                manager.GraphicsDevice.Viewport = new Viewport(0, 0, width, height);
+
+            _gameWindow.ChangeClientBounds(new Rectangle(0, 0, width, height));
+
+            manager.ApplyChanges();
 
             SurfaceChanged(holder, format, width, height);
             Android.Util.Log.Debug("MonoGame", "MonoGameAndroidGameView.SurfaceChanged: format = " + format + ", width = " + width + ", height = " + height);
@@ -259,7 +274,7 @@ namespace Microsoft.Xna.Framework
                     continue;
                 }
                 Android.Util.Log.Debug("MonoGame", "Created format {0}", GraphicsContext.GraphicsMode);
-                All status = GL.CheckFramebufferStatus(All.Framebuffer);
+                var status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
                 Android.Util.Log.Debug("MonoGame", "Framebuffer Status: " + status.ToString());
 
                 MakeCurrent();
@@ -282,8 +297,12 @@ namespace Microsoft.Xna.Framework
             Keyboard.KeyDown(keyCode);
             // we need to handle the Back key here because it doesnt work any other way
 #if !OUYA
-            if (keyCode == Keycode.Back)
+            if (keyCode == Keycode.Back && !this.backPressed)
+            {
+                this.backPressed = true;
                 GamePad.Back = true;
+                return true;
+            }
 #endif
 
             if (keyCode == Keycode.VolumeUp)
@@ -310,6 +329,12 @@ namespace Microsoft.Xna.Framework
                 return true;
 #endif
             Keyboard.KeyUp(keyCode);
+
+#if !OUYA
+            if (keyCode == Keycode.Back)
+                this.backPressed = false;
+#endif
+
             return true;
         }
 

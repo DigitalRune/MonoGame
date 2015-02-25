@@ -5,12 +5,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 
 namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Intermediate
 {
     abstract class ElementSerializer<T> : ContentTypeSerializer<T>
     {
-        private static readonly char [] _seperators = { ' ', '\t' };
+        private static readonly char [] _seperators = { ' ', '\t', '\n' };
 
         private const string _writeSeperator = " ";
 
@@ -33,7 +34,17 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Serialization.Intermediate
 
         private static string[] ReadElements(IntermediateReader input)
         {
-            var str = input.Xml.ReadString();
+            if (input.Xml.IsEmptyElement)
+                return new string[0];
+
+            string str = string.Empty;
+            while (input.Xml.NodeType != XmlNodeType.EndElement)
+            {
+                if (input.Xml.NodeType == XmlNodeType.Comment)
+                    input.Xml.Read();
+                else
+                    str += input.Xml.ReadString();
+            }
 
             var elements = str.Split(_seperators, StringSplitOptions.RemoveEmptyEntries);
             if (elements.Length == 0)

@@ -3,6 +3,8 @@
 // file 'LICENSE.txt', which is part of this source code package.
 
 using System;
+using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -36,7 +38,7 @@ namespace MonoGame.Tests.Visual
                 vertexBuffer.GetData(readData, 0, 4);
                 Assert.AreEqual(savedData, readData);
             };
-            Game.RunOneFrame();
+            Game.Run();
         }
 
         //[TestCase(true)]
@@ -57,7 +59,7 @@ namespace MonoGame.Tests.Visual
                 Assert.AreEqual(vertexZero, readData[2]);
                 Assert.AreEqual(vertexZero, readData[3]);
             };
-            Game.RunOneFrame();
+            Game.Run();
         }
 
         //[TestCase(true)]
@@ -78,7 +80,7 @@ namespace MonoGame.Tests.Visual
                 Assert.AreEqual(savedData[0], readData[2]);
                 Assert.AreEqual(savedData[1], readData[3]);
             };
-            Game.RunOneFrame();
+            Game.Run();
         }
         
         //[TestCase(true)]
@@ -99,7 +101,140 @@ namespace MonoGame.Tests.Visual
                 Assert.AreEqual(savedData[2], readData[0]);
                 Assert.AreEqual(savedData[3], readData[1]);
             };
-            Game.RunOneFrame();
+            Game.Run();
+        }
+
+        //[TestCase(true)]
+        [TestCase(false)]
+        public void ShouldSetAndGetDataBytes(bool dynamic)
+        {
+            Game.DrawWith += (sender, e) =>
+            {
+                var vertexBuffer = (dynamic)
+                    ? new DynamicVertexBuffer(Game.GraphicsDevice, typeof(VertexPositionTexture), savedData.Length, BufferUsage.None)
+                    : new VertexBuffer(Game.GraphicsDevice, typeof(VertexPositionTexture), savedData.Length, BufferUsage.None);
+                var savedDataBytes = ArrayUtil.ConvertFrom(savedData);
+                vertexBuffer.SetData(savedDataBytes);
+
+                var readData = new VertexPositionTexture[4];
+                vertexBuffer.GetData(readData, 0, 4);
+                Assert.AreEqual(savedData, readData);
+            };
+            Game.Run();
+        }
+
+        //[TestCase(true)]
+        [TestCase(false, -1, 0, false, typeof(ArgumentOutOfRangeException))]
+        [TestCase(false, 0, 0, false, typeof(ArgumentOutOfRangeException))]
+        [TestCase(false, 0, 1, true, null)]
+        [TestCase(false, 0, -1, false, typeof(ArgumentOutOfRangeException))]
+        [TestCase(false, 0, 80, true, null)]
+        [TestCase(false, 0, 81, false, typeof(ArgumentOutOfRangeException))]
+        [TestCase(false, 1, 0, false, typeof(ArgumentOutOfRangeException))]
+        [TestCase(false, 1, 1, true, null)]
+        [TestCase(false, 1, 79, true, null)]
+        [TestCase(false, 1, 80, false, typeof(ArgumentOutOfRangeException))]
+        [TestCase(false, 79, 1, true, null)]
+        [TestCase(false, 79, 2, false, typeof(ArgumentOutOfRangeException))]
+        [TestCase(false, 80, 0, false, typeof(ArgumentOutOfRangeException))]
+        [TestCase(false, 80, 1, false, typeof(ArgumentOutOfRangeException))]
+        public void SetDataWithElementCount(bool dynamic, int startIndex, int elementCount, bool shouldSucceed, Type expectedExceptionType)
+        {
+            Game.DrawWith += (sender, e) =>
+            {
+                var vertexBuffer = (dynamic)
+                    ? new DynamicVertexBuffer(Game.GraphicsDevice, typeof(VertexPositionTexture), savedData.Length,
+                        BufferUsage.None)
+                    : new VertexBuffer(Game.GraphicsDevice, typeof(VertexPositionTexture), savedData.Length,
+                        BufferUsage.None);
+                var savedDataBytes = ArrayUtil.ConvertFrom(savedData);
+
+                if (!shouldSucceed)
+                    Assert.Throws(expectedExceptionType, () => vertexBuffer.SetData(savedDataBytes, startIndex, elementCount));
+                else
+                {
+                    vertexBuffer.SetData(savedDataBytes, startIndex, elementCount);
+
+                    var readDataBytes = new byte[savedDataBytes.Length];
+                    vertexBuffer.GetData(readDataBytes, startIndex, elementCount);
+                    Assert.AreEqual(
+                        savedDataBytes.Skip(startIndex).Take(elementCount).ToArray(),
+                        readDataBytes.Skip(startIndex).Take(elementCount).ToArray());
+                }
+            };
+            Game.Run();
+        }
+
+        //[TestCase(true)]
+        [TestCase(false, 1, -1, false, typeof(ArgumentOutOfRangeException))]
+        [TestCase(false, 0, 0, false, typeof(ArgumentOutOfRangeException))]
+        [TestCase(false, 80, 0, true, null)]
+        [TestCase(false, 80, 1, true, null)]
+        [TestCase(false, 1, 2, true, null)]
+        [TestCase(false, 1, 40, true, null)]
+        [TestCase(false, 2, 40, true, null)]
+        [TestCase(false, 2, 80, false, typeof(InvalidOperationException))]
+        [TestCase(false, 1, 80, true, null)]
+        [TestCase(false, 1, 81, true, null)]
+        [TestCase(false, 2, 81, false, typeof(InvalidOperationException))]
+        public void SetDataWithElementCountAndVertexStride(bool dynamic, int elementCount, int vertexStride, bool shouldSucceed, Type expectedExceptionType)
+        {
+            Game.DrawWith += (sender, e) =>
+            {
+                var vertexBuffer = (dynamic)
+                    ? new DynamicVertexBuffer(Game.GraphicsDevice, typeof(VertexPositionTexture), savedData.Length,
+                        BufferUsage.None)
+                    : new VertexBuffer(Game.GraphicsDevice, typeof(VertexPositionTexture), savedData.Length,
+                        BufferUsage.None);
+                var savedDataBytes = ArrayUtil.ConvertFrom(savedData);
+
+                if (!shouldSucceed)
+                    Assert.Throws(expectedExceptionType, () => vertexBuffer.SetData(0, savedDataBytes, 0, elementCount, vertexStride));
+                else
+                {
+                    vertexBuffer.SetData(0, savedDataBytes, 0, elementCount, vertexStride);
+
+                    var readDataBytes = new byte[savedDataBytes.Length];
+                    vertexBuffer.GetData(0, readDataBytes, 0, elementCount, vertexStride);
+                    Assert.AreEqual(
+                        savedDataBytes.Take(elementCount).ToArray(), 
+                        readDataBytes.Take(elementCount).ToArray());
+                }
+            };
+            Game.Run();
+        }
+
+        //[TestCase(true)]
+        [TestCase(false, 1, 20, true, null)]
+        [TestCase(false, 3, 20, true, null)]
+        [TestCase(false, 4, 0, true, null)]
+        [TestCase(false, 4, 16, false, typeof(ArgumentOutOfRangeException))]
+        [TestCase(false, 4, 20, true, null)]
+        [TestCase(false, 5, 20, false, typeof(ArgumentOutOfRangeException))]
+        public void SetDataStructWithElementCountAndVertexStride(bool dynamic, int elementCount, int vertexStride, bool shouldSucceed, Type expectedExceptionType)
+        {
+            Game.DrawWith += (sender, e) =>
+            {
+                var vertexBuffer = (dynamic)
+                    ? new DynamicVertexBuffer(Game.GraphicsDevice, typeof(VertexPositionTexture), savedData.Length,
+                        BufferUsage.None)
+                    : new VertexBuffer(Game.GraphicsDevice, typeof(VertexPositionTexture), savedData.Length,
+                        BufferUsage.None);
+
+                if (!shouldSucceed)
+                    Assert.Throws(expectedExceptionType, () => vertexBuffer.SetData(0, savedData, 0, elementCount, vertexStride));
+                else
+                {
+                    vertexBuffer.SetData(0, savedData, 0, elementCount, vertexStride);
+
+                    var readData = new VertexPositionTexture[savedData.Length];
+                    vertexBuffer.GetData(0, readData, 0, elementCount, vertexStride);
+                    Assert.AreEqual(
+                        savedData.Take(elementCount).ToArray(),
+                        readData.Take(elementCount).ToArray());
+                }
+            };
+            Game.Run();
         }
 
         //[TestCase(true)]
@@ -121,7 +256,7 @@ namespace MonoGame.Tests.Visual
                 Assert.AreEqual(savedData[2].Position, readData[2]);
                 Assert.AreEqual(savedData[3].Position, readData[3]);
             };
-            Game.RunOneFrame();
+            Game.Run();
         }
 
         //[TestCase(true)]
@@ -150,7 +285,7 @@ namespace MonoGame.Tests.Visual
                 Assert.AreEqual(savedData[2].Position, readData[2]);
                 Assert.AreEqual(savedData[3].Position, readData[3]);
             };
-            Game.RunOneFrame();
+            Game.Run();
         }
 
         //[TestCase(true)]
@@ -173,7 +308,7 @@ namespace MonoGame.Tests.Visual
                 Assert.AreEqual(savedData[2].TextureCoordinate, readData[2]);
                 Assert.AreEqual(savedData[3].TextureCoordinate, readData[3]);
             };
-            Game.RunOneFrame();
+            Game.Run();
         }
 
         //[TestCase(true)]
@@ -203,7 +338,67 @@ namespace MonoGame.Tests.Visual
                 Assert.AreEqual(savedData[2].TextureCoordinate, readData[2]);
                 Assert.AreEqual(savedData[3].TextureCoordinate, readData[3]);
             };
-            Game.RunOneFrame();
+            Game.Run();
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct VertexTextureCoordinateTest : IVertexType
+        {
+            public Vector3 Normal;
+            public Vector2 TextureCoordinate;
+
+            public static readonly VertexDeclaration VertexDeclaration = new VertexDeclaration(
+                new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0),
+                new VertexElement(12, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0));
+
+            VertexDeclaration IVertexType.VertexDeclaration
+            {
+                get { return VertexDeclaration; }
+            }
+        }
+
+        [Test]
+        public void ShouldSucceedWhenVertexFormatDoesMatchShader()
+        {
+            Game.DrawWith += (sender, e) =>
+            {
+                var vertexBuffer = new VertexBuffer(
+                    Game.GraphicsDevice, VertexPositionTexture.VertexDeclaration, 3,
+                    BufferUsage.None);
+                Game.GraphicsDevice.SetVertexBuffer(vertexBuffer);
+
+                var effect = new BasicEffect(Game.GraphicsDevice);
+                effect.CurrentTechnique.Passes[0].Apply();
+
+                Assert.DoesNotThrow(() => Game.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 1));
+            };
+            Game.Run();
+        }
+
+        [Test]
+        public void ShouldThrowHelpfulExceptionWhenVertexFormatDoesNotMatchShader()
+        {
+            Game.DrawWith += (sender, e) =>
+            {
+                var vertexBuffer = new VertexBuffer(
+                    Game.GraphicsDevice, VertexTextureCoordinateTest.VertexDeclaration, 3,
+                    BufferUsage.None);
+                Game.GraphicsDevice.SetVertexBuffer(vertexBuffer);
+
+                var effect = new BasicEffect(Game.GraphicsDevice);
+                effect.CurrentTechnique.Passes[0].Apply();
+
+                var ex = Assert.Throws<InvalidOperationException>(() => Game.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 1));
+#if XNA
+                Assert.That(ex.Message, Is.EqualTo("The current vertex declaration does not include all the elements required by the current vertex shader. Position0 is missing."));
+#else
+                Assert.That(ex.Message, Is.EqualTo("An error occurred while preparing to draw. "
+                    + "This is probably because the current vertex declaration does not include all the elements "
+                    + "required by the current vertex shader. The current vertex declaration includes these elements: " 
+                    + "NORMAL0, TEXCOORD0."));
+#endif
+            };
+            Game.Run();
         }
     }
 }
