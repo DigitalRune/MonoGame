@@ -282,6 +282,7 @@ namespace Microsoft.Xna.Framework
 
         internal void SetCursor(bool visible)
         {
+#if !WINDOWS_PHONE81
             if ( _coreWindow == null )
                 return;
 
@@ -289,6 +290,7 @@ namespace Microsoft.Xna.Framework
                 _coreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
             else
                 _coreWindow.PointerCursor = null;
+#endif
         }
 
         internal void RunLoop()
