@@ -146,6 +146,10 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             var channels = geom.Vertices.Channels;
 
             var normals = channels.Get<Vector3>(VertexChannelNames.Normal(0));
+
+            if (!channels.Contains(textureCoordinateChannelName))
+                channels.Add(textureCoordinateChannelName, new Vector2[normals.Count]);
+
             var uvs = channels.Get<Vector2>(textureCoordinateChannelName);
 
             Vector3[] tangents, bitangents;
