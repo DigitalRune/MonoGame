@@ -22,7 +22,7 @@ namespace Microsoft.Xna.Framework.Input
         /// var color = await MessageBox.Show("Color", "What's your favorite color?", new[] { "Red", "Green", "Blue" });
         /// </code>
         /// </example>
-        public static async Task<int?> Show(string title, string description, IEnumerable<string> buttons)
+        public static Task<int?> Show(string title, string description, IEnumerable<string> buttons)
         {
             if (IsVisible)
                 throw new Exception("The function cannot be completed at this time: the MessageBox UI is already active. Wait until MessageBox.IsVisible is false before issuing this call.");
@@ -33,11 +33,12 @@ namespace Microsoft.Xna.Framework.Input
             if (buttonsList.Count > 3 || buttonsList.Count == 0)
                 throw new ArgumentException("Invalid number of buttons: one to three required", "buttons");
 
-            var result = await PlatformShow(title, description, buttonsList);
-
-            IsVisible = false;
-
-            return result;
+            return PlatformShow(title, description, buttonsList)
+                   .ContinueWith(t =>
+                   {
+                      IsVisible = false;
+                      return t.Result;
+                   });
         }
 
         /// <summary>
