@@ -1,3 +1,20 @@
+# DigitalRune Notes
+
+This MonoGame version is used by the [DigitalRune Engine](http://www.digitalrune.com/). 
+
+This fork contains minor changes compared to the [official MonoGame repository](https://github.com/mono/MonoGame).
+It is planned to keep this fork close to the original MonoGame repository. Changes and bugfixes are submitted back to the MonoGame team to be included in the        original MonoGame version. 
+
+Important differences: 
+
+* At the moment we do not use Protobuild to create the project files automatically. The modified project files are in the repository. Do not call Protobuild to override these changes. 
+* The MonoGame assemblies are signed with a strong name. The strong name key file is included in the repository: DigitalRuneMonoGame.snk. <br/>
+We know that it is not recommended to share a strong name key file publicly. However, the MonoGame repositories must have a strong name because many DigitalRune users need strong-named assemblies. At the same time users should be able to modify MonoGame when needed. 
+
+
+----------
+
+
 # [MonoGame](http://monogame.net/) [![Build Status](http://teamcity.monogame.net/app/rest/builds/buildType:MonoGame_DevelopWin/statusIcon)](http://teamcity.monogame.net/project.html?projectId=MonoGame&guest=1)
 
 [MonoGame](http://monogame.net) is an open source implementation of the Microsoft XNA 4.x Framework.
