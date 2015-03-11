@@ -76,7 +76,10 @@
                     <Setter
                         Property="MinHeight"
                         Value="52" />
-                </Style>
+                    <Setter
+                        Property="MaxHeight"
+                        Value="200" />
+        </Style>
             </Setter.Value>
         </Setter>
         <Setter
