@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A65B8326-1DDD-4E5D-8130-E74F70919E81}</ProjectGuid>
-    <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{423E2B58-4FBB-4A5D-8A86-1188F2889523}</ProjectGuid>
+    <ProjectTypeGuids>{76F1466A-8B6D-4E39-A767-685A06062A39};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Xna.Framework</RootNamespace>
     <AssemblyName>MonoGame.Framework.Net</AssemblyName>
@@ -15,36 +15,36 @@
     <AssemblyOriginatorKeyFile>..\DigitalRuneMonoGame.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>1591,0436</NoWarn>
-    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <BaseIntermediateOutputPath>obj\Windows8\AnyCPU\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\Windows8\AnyCPU\Debug</OutputPath>
-    <DocumentationFile>bin\Windows8\AnyCPU\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINRT;WINDOWS_STOREAPP;DIRECTX;DIRECTX11_1;WINDOWS_MEDIA_ENGINE;NET</DefineConstants>
+    <OutputPath>bin\WindowsPhone81\AnyCPU\Debug</OutputPath>
+    <IntermediateOutputPath>obj\WindowsPhone81\AnyCPU\Debug</IntermediateOutputPath>
+    <DocumentationFile>bin\WindowsPhone81\AnyCPU\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
+    <DefineConstants>DEBUG;TRACE;WINRT;WINDOWS_PHONE81;DIRECTX;WINDOWS_STOREAPP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
-    <BaseIntermediateOutputPath>obj\Windows8\AnyCPU\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\Windows8\AnyCPU\Release</OutputPath>
-    <DocumentationFile>bin\Windows8\AnyCPU\Release\MonoGame.Framework.Net.xml</DocumentationFile>
-    <DefineConstants>TRACE;NETFX_CORE;WINRT;WINDOWS_STOREAPP;DIRECTX;DIRECTX11_1;WINDOWS_MEDIA_ENGINE;NET</DefineConstants>
+    <OutputPath>bin\WindowsPhone81\AnyCPU\Release</OutputPath>
+    <IntermediateOutputPath>obj\WindowsPhone81\AnyCPU\Release</IntermediateOutputPath>
+    <DocumentationFile>bin\WindowsPhone81\AnyCPU\Release\MonoGame.Framework.Net.xml</DocumentationFile>
+    <DefineConstants>TRACE;WINRT;WINDOWS_PHONE81;DIRECTX;WINDOWS_STOREAPP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="MonoGame.Framework.Windows8" />
+    <Reference Include="MonoGame.Framework.WindowsPhone81" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -120,14 +120,17 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
-    <VisualStudioVersion>11.0</VisualStudioVersion>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetPlatformIdentifier)' == '' ">
+    <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="MonoGame.Framework.Windows8.csproj">
-      <Project>{0518563C-ACCA-4A14-8C5D-DDBE93E2605F}</Project>
-      <Name>MonoGame.Framework.Windows8</Name>
+    <ProjectReference Include="MonoGame.Framework.WindowsPhone81.csproj">
+      <Project>{6522B7E9-25A5-4250-B164-42CC2C4ECCAD}</Project>
+      <Name>MonoGame.Framework.WindowsPhone81</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

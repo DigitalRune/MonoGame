@@ -59,9 +59,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="MonoMac, Version=0.0.0.0, Culture=neutral" />
-    <Reference Include="NAudio">
-      <HintPath>..\ThirdParty\Dependencies\NAudio\NAudio.dll</HintPath>
-    </Reference>
     <Reference Include="AssimpNet">
       <HintPath>..\ThirdParty\Dependencies\assimp\AssimpNet.dll</HintPath>
     </Reference>
@@ -86,9 +83,6 @@
     <Compile Include="Audio\AudioHelper.cs" />
     <Compile Include="Audio\ConversionFormat.cs" />
     <Compile Include="Audio\ConversionQuality.cs" />
-    <Compile Include="Audio\ConvertAudio.cs">
-      <Platforms>MacOS</Platforms>
-    </Compile>
     <Compile Include="Builder\FileHelper.cs" />
     <Compile Include="Builder\Convertors\StringToColorConverter.cs" />
     <Compile Include="Builder\PathHelper.cs" />
@@ -228,7 +222,9 @@
     <Compile Include="Serialization\Compiler\SoundEffectContentWriter.cs" />
     <Compile Include="Serialization\Compiler\SpriteFontContentWriter.cs" />
     <Compile Include="Serialization\Compiler\StringWriter.cs" />
+    <Compile Include="Serialization\Compiler\TextureWriter.cs" />
     <Compile Include="Serialization\Compiler\Texture2DContentWriter.cs" />
+    <Compile Include="Serialization\Compiler\TextureCubeWriter.cs" />
     <Compile Include="Serialization\Compiler\TimeSpanWriter.cs" />
     <Compile Include="Serialization\Compiler\UInt16Writer.cs" />
     <Compile Include="Serialization\Compiler\UInt32Writer.cs" />
@@ -260,6 +256,9 @@
     <Compile Include="Serialization\Intermediate\ListSerializer.cs" />
     <Compile Include="Serialization\Intermediate\LongSerializer.cs" />
     <Compile Include="Serialization\Intermediate\MatrixSerializer.cs" />
+    <Compile Include="Serialization\Intermediate\NamedValueDictionarySerializer.cs" />
+    <Compile Include="Serialization\Intermediate\NamespaceAliasHelper.cs" />
+    <Compile Include="Serialization\Intermediate\NonGenericIListSerializer.cs" />
     <Compile Include="Serialization\Intermediate\NullableSerializer.cs" />
     <Compile Include="Serialization\Intermediate\PlaneSerializer.cs" />
     <Compile Include="Serialization\Intermediate\PointSerializer.cs" />

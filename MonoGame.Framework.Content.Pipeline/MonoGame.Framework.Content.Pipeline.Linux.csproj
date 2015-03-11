@@ -45,9 +45,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="NAudio">
-      <HintPath>..\ThirdParty\Dependencies\NAudio\NAudio.dll</HintPath>
-    </Reference>
     <Reference Include="AssimpNet">
       <HintPath>..\ThirdParty\Dependencies\assimp\AssimpNet.dll</HintPath>
     </Reference>
@@ -55,7 +52,7 @@
       <HintPath>..\ThirdParty\Dependencies\NVTT\Windows\Nvidia.TextureTools.dll</HintPath>
     </Reference>
     <Reference Include="SharpFont">
-      <HintPath>..\ThirdParty\Dependencies\SharpFont\x64\SharpFont.dll</HintPath>
+      <HintPath>..\ThirdParty\Dependencies\SharpFont\x32\SharpFont.dll</HintPath>
     </Reference>
     <Reference Include="ManagedPVRTC">
       <HintPath>..\ThirdParty\Dependencies\ManagedPVRTC\ManagedPVRTC.dll</HintPath>
@@ -242,6 +239,9 @@
     <Compile Include="Serialization\Intermediate\ListSerializer.cs" />
     <Compile Include="Serialization\Intermediate\LongSerializer.cs" />
     <Compile Include="Serialization\Intermediate\MatrixSerializer.cs" />
+    <Compile Include="Serialization\Intermediate\NamedValueDictionarySerializer.cs" />
+    <Compile Include="Serialization\Intermediate\NamespaceAliasHelper.cs" />
+    <Compile Include="Serialization\Intermediate\NonGenericIListSerializer.cs" />
     <Compile Include="Serialization\Intermediate\NullableSerializer.cs" />
     <Compile Include="Serialization\Intermediate\PlaneSerializer.cs" />
     <Compile Include="Serialization\Intermediate\PointSerializer.cs" />

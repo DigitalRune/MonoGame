@@ -13,7 +13,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\DigitalRuneMonoGame.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile136</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile328</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
@@ -47,6 +47,9 @@
     <Compile Include="Graphics\SamplerStateCollection.Null.cs" />
     <Compile Include="Graphics\Shader\ConstantBuffer.Null.cs" />
     <Compile Include="Graphics\Shader\Shader.Null.cs" />
+    <Compile Include="Graphics\States\BlendState.Null.cs" />
+    <Compile Include="Graphics\States\DepthStencilState.Null.cs" />
+    <Compile Include="Graphics\States\RasterizerState.Null.cs" />
     <Compile Include="Graphics\Texture.Null.cs" />
     <Compile Include="Graphics\Texture2D.Null.cs" />
     <Compile Include="Graphics\Texture3D.Null.cs" />
@@ -55,6 +58,10 @@
     <Compile Include="Graphics\Vertices\IndexBuffer.Null.cs" />
     <Compile Include="Graphics\Vertices\VertexBuffer.Null.cs" />
     <Compile Include="Input\GamePad.Default.cs" />
+    <Compile Include="Input\KeyboardInput.cs" />
+    <Compile Include="Input\KeyboardInput.Null.cs" />
+    <Compile Include="Input\MessageBox.cs" />
+    <Compile Include="Input\MessageBox.Null.cs" />
     <Compile Include="Media\MediaPlayer.Null.cs" />
     <Compile Include="Media\Song.Null.cs" />
     <Compile Include="Media\Video.Null.cs" />
@@ -202,7 +209,6 @@
     <Compile Include="Graphics\ModelMesh.cs" />
     <Compile Include="Graphics\ModelMeshPartCollection.cs" />
     <Compile Include="Graphics\ModelMeshPart.cs" />
-    <Compile Include="Graphics\MultiSampleType.cs" />
     <Compile Include="Graphics\NoSuitableGraphicsDeviceException.cs" />
     <Compile Include="Graphics\OcclusionQuery.cs">
       <ExcludePlatforms>iOS,Android,Ouya</ExcludePlatforms>
@@ -266,7 +272,6 @@
     <Compile Include="Graphics\TextureCollection.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\TextureCube.cs" />
-    <Compile Include="Graphics\TextureUsage.cs" />
     <Compile Include="Graphics\Vertices\BufferUsage.cs" />
     <Compile Include="Graphics\Vertices\DynamicIndexBuffer.cs" />
     <Compile Include="Graphics\Vertices\DynamicVertexBuffer.cs" />
@@ -344,7 +349,6 @@
       <ExcludePlatforms>Angle,Linux,PSMobile,WindowsGL,WindowsPhone,Web</ExcludePlatforms>
     </Compile>
     <Compile Include="Utilities\Hash.cs" />
-    <Compile Include="Utilities\ObjectFactoryWithReset.cs" />
     <Compile Include="Utilities\FileHelpers.cs" />
     <Compile Include="Utilities\ReflectionHelpers.cs" />
   </ItemGroup>

@@ -51,9 +51,6 @@
     <Reference Include="SharpDX.D3DCompiler">
       <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows\SharpDX.D3DCompiler.dll</HintPath>
     </Reference>
-    <Reference Include="NAudio">
-      <HintPath>..\ThirdParty\Dependencies\NAudio\NAudio.dll</HintPath>
-    </Reference>
     <Reference Include="AssimpNet">
       <HintPath>..\ThirdParty\Dependencies\assimp\AssimpNet.dll</HintPath>
     </Reference>
@@ -333,9 +330,9 @@
     <Compile Include="Serialization\Compiler\SoundEffectContentWriter.cs" />
     <Compile Include="Serialization\Compiler\SpriteFontContentWriter.cs" />
     <Compile Include="Serialization\Compiler\StringWriter.cs" />
+    <Compile Include="Serialization\Compiler\TextureWriter.cs" />
     <Compile Include="Serialization\Compiler\Texture2DContentWriter.cs" />
     <Compile Include="Serialization\Compiler\TextureCubeWriter.cs" />
-    <Compile Include="Serialization\Compiler\TextureWriter.cs" />
     <Compile Include="Serialization\Compiler\TimeSpanWriter.cs" />
     <Compile Include="Serialization\Compiler\UInt16Writer.cs" />
     <Compile Include="Serialization\Compiler\UInt32Writer.cs" />
@@ -367,6 +364,9 @@
     <Compile Include="Serialization\Intermediate\ListSerializer.cs" />
     <Compile Include="Serialization\Intermediate\LongSerializer.cs" />
     <Compile Include="Serialization\Intermediate\MatrixSerializer.cs" />
+    <Compile Include="Serialization\Intermediate\NamedValueDictionarySerializer.cs" />
+    <Compile Include="Serialization\Intermediate\NamespaceAliasHelper.cs" />
+    <Compile Include="Serialization\Intermediate\NonGenericIListSerializer.cs" />
     <Compile Include="Serialization\Intermediate\NullableSerializer.cs" />
     <Compile Include="Serialization\Intermediate\PlaneSerializer.cs" />
     <Compile Include="Serialization\Intermediate\PointSerializer.cs" />

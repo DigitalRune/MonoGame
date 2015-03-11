@@ -75,6 +75,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Input\KeyboardInput.cs" />
+    <Compile Include="Input\KeyboardInput.Null.cs" />
+    <Compile Include="Input\MessageBox.cs" />
+    <Compile Include="Input\MessageBox.Null.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BoundingBox.cs" />
     <Compile Include="BoundingFrustum.cs" />
@@ -299,7 +303,6 @@
     <Compile Include="Graphics\ModelMesh.cs" />
     <Compile Include="Graphics\ModelMeshPartCollection.cs" />
     <Compile Include="Graphics\ModelMeshPart.cs" />
-    <Compile Include="Graphics\MultiSampleType.cs" />
     <Compile Include="Graphics\NoSuitableGraphicsDeviceException.cs" />
     <Compile Include="Graphics\OcclusionQuery.cs">
       <ExcludePlatforms>iOS,Android,Ouya</ExcludePlatforms>
@@ -408,7 +411,6 @@
     <Compile Include="Graphics\TextureCube.DirectX.cs">
       <Services>DirectXGraphics</Services>
     </Compile>
-    <Compile Include="Graphics\TextureUsage.cs" />
     <Compile Include="Graphics\Vertices\BufferUsage.cs" />
     <Compile Include="Graphics\Vertices\DynamicIndexBuffer.cs" />
     <Compile Include="Graphics\Vertices\DynamicVertexBuffer.cs" />
@@ -521,10 +523,13 @@
       <Platforms>Angle,Linux,MacOS,Windows,WindowsGL</Platforms>
     </Compile>
     <Compile Include="Utilities\Hash.cs" />
-    <Compile Include="Utilities\ObjectFactoryWithReset.cs" />
     <Compile Include="Utilities\FileHelpers.cs" />
     <Compile Include="Utilities\ReflectionHelpers.cs" />
     <Compile Include="Utilities\Lz4Stream\Lz4DecoderStream.cs" />
+    <Compile Include="Utilities\ZlibStream\ZlibStream.cs" />
+    <Compile Include="Utilities\Png\PngCommon.cs" />
+    <Compile Include="Utilities\Png\PngReader.cs" />
+    <Compile Include="Utilities\Png\PngWriter.cs" />
     <Compile Include="Windows8\SharpDXHelper.cs">
       <Platforms>Windows8,Windows,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>

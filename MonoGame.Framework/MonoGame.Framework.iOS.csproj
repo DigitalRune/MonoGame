@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhone</Platform>
     <ProjectGuid>{DB8508BB-9849-4CC2-BC0F-8EB5DACB3C47}</ProjectGuid>
-    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Xna.Framework</RootNamespace>
     <AssemblyName>MonoGame.Framework</AssemblyName>
@@ -90,11 +90,11 @@
     <MtouchUseArmv7>false</MtouchUseArmv7>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Xamarin.iOS" />
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Core" />
-    <Reference Include="monotouch" />
-    <Reference Include="OpenTK" />
+    <Reference Include="OpenTK-1.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -330,7 +330,6 @@
     <Compile Include="Graphics\ModelMesh.cs" />
     <Compile Include="Graphics\ModelMeshPartCollection.cs" />
     <Compile Include="Graphics\ModelMeshPart.cs" />
-    <Compile Include="Graphics\MultiSampleType.cs" />
     <Compile Include="Graphics\NoSuitableGraphicsDeviceException.cs" />
     <Compile Include="Graphics\PackedVector\Bgr565.cs" />
     <Compile Include="Graphics\PackedVector\Bgra4444.cs" />
@@ -430,7 +429,6 @@
     <Compile Include="Graphics\TextureCube.OpenGL.cs">
       <Services>OpenGLGraphics</Services>
     </Compile>
-    <Compile Include="Graphics\TextureUsage.cs" />
     <Compile Include="Graphics\Vertices\BufferUsage.cs" />
     <Compile Include="Graphics\Vertices\DynamicIndexBuffer.cs" />
     <Compile Include="Graphics\Vertices\DynamicVertexBuffer.cs" />
@@ -477,9 +475,21 @@
     <Compile Include="Input\Keyboard.cs">
       <ExcludePlatforms>PSMobile,Android,Ouya</ExcludePlatforms>
     </Compile>
+    <Compile Include="Input\KeyboardInput.cs">
+      <Platforms>Android,iOS,Windows8,WindowsPhone,WindowsPhone81</Platforms>
+    </Compile>
+    <Compile Include="Input\KeyboardInput.IOS.cs">
+      <Platforms>iOS</Platforms>
+    </Compile>
     <Compile Include="Input\KeyboardState.cs" />
     <Compile Include="Input\Keys.cs" />
     <Compile Include="Input\KeyState.cs" />
+    <Compile Include="Input\MessageBox.cs">
+      <Platforms>Android,iOS,Windows8,WindowsPhone,WindowsPhone81</Platforms>
+    </Compile>
+    <Compile Include="Input\MessageBox.IOS.cs">
+      <Platforms>iOS</Platforms>
+    </Compile>
     <Compile Include="Input\Mouse.cs" />
     <Compile Include="Input\MouseState.cs" />
     <Compile Include="Input\ThumbStickDefinition.cs" />
@@ -564,10 +574,13 @@
       <Platforms>Android,Angle,iOS,Ouya,PSMobile,Windows8,Windows,WindowsGL,WindowsPhone,Web,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Utilities\Hash.cs" />
-    <Compile Include="Utilities\ObjectFactoryWithReset.cs" />
     <Compile Include="Utilities\FileHelpers.cs" />
     <Compile Include="Utilities\ReflectionHelpers.cs" />
     <Compile Include="Utilities\Lz4Stream\Lz4DecoderStream.cs" />
+    <Compile Include="Utilities\ZlibStream\ZlibStream.cs" />
+    <Compile Include="Utilities\Png\PngCommon.cs" />
+    <Compile Include="Utilities\Png\PngReader.cs" />
+    <Compile Include="Utilities\Png\PngWriter.cs" />
     <Compile Include="iOS\Devices\Sensors\Accelerometer.cs">
       <Platforms>iOS</Platforms>
     </Compile>
@@ -632,6 +645,6 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup />
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
 </Project>

@@ -294,7 +294,6 @@
     <Compile Include="Graphics\ModelMesh.cs" />
     <Compile Include="Graphics\ModelMeshPartCollection.cs" />
     <Compile Include="Graphics\ModelMeshPart.cs" />
-    <Compile Include="Graphics\MultiSampleType.cs" />
     <Compile Include="Graphics\NoSuitableGraphicsDeviceException.cs" />
     <Compile Include="Graphics\PackedVector\Bgr565.cs" />
     <Compile Include="Graphics\PackedVector\Bgra4444.cs" />
@@ -394,7 +393,6 @@
     <Compile Include="Graphics\TextureCube.OpenGL.cs">
       <Services>OpenGLGraphics</Services>
     </Compile>
-    <Compile Include="Graphics\TextureUsage.cs" />
     <Compile Include="Graphics\Vertices\BufferUsage.cs" />
     <Compile Include="Graphics\Vertices\DynamicIndexBuffer.cs" />
     <Compile Include="Graphics\Vertices\DynamicVertexBuffer.cs" />
@@ -525,10 +523,13 @@
       <Platforms>Android,Angle,iOS,Ouya,PSMobile,Windows8,Windows,WindowsGL,WindowsPhone,Web,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Utilities\Hash.cs" />
-    <Compile Include="Utilities\ObjectFactoryWithReset.cs" />
     <Compile Include="Utilities\FileHelpers.cs" />
     <Compile Include="Utilities\ReflectionHelpers.cs" />
     <Compile Include="Utilities\Lz4Stream\Lz4DecoderStream.cs" />
+    <Compile Include="Utilities\ZlibStream\ZlibStream.cs" />
+    <Compile Include="Utilities\Png\PngCommon.cs" />
+    <Compile Include="Utilities\Png\PngReader.cs" />
+    <Compile Include="Utilities\Png\PngWriter.cs" />
     <Compile Include="Android\AndroidCompatibility.cs">
       <Platforms>Android,Ouya</Platforms>
     </Compile>

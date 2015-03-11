@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{BAA9A6E4-7690-4DE0-9531-DE0EAEEC9739}</ProjectGuid>
-    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectGuid>{6522B7E9-25A5-4250-B164-42CC2C4ECCAD}</ProjectGuid>
+    <ProjectTypeGuids>{76F1466A-8B6D-4E39-A767-685A06062A39};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Xna.Framework</RootNamespace>
     <AssemblyName>MonoGame.Framework</AssemblyName>
@@ -14,81 +15,55 @@
     <AssemblyOriginatorKeyFile>..\DigitalRuneMonoGame.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>1591,0436</NoWarn>
-    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
-    <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <BaseIntermediateOutputPath>obj\WindowsPhone\x86\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\WindowsPhone\x86\Debug</OutputPath>
-    <DocumentationFile>bin\WindowsPhone\x86\Debug\MonoGame.Framework.xml</DocumentationFile>
-    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE;WINRT;DIRECTX</DefineConstants>
+    <OutputPath>bin\WindowsPhone81\AnyCPU\Debug</OutputPath>
+    <IntermediateOutputPath>obj\WindowsPhone81\AnyCPU\Debug</IntermediateOutputPath>
+    <DocumentationFile>bin\WindowsPhone81\AnyCPU\Debug\MonoGame.Framework.xml</DocumentationFile>
+    <DefineConstants>DEBUG;TRACE;WINRT;WINDOWS_PHONE81;DIRECTX;WINDOWS_STOREAPP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
-    <BaseIntermediateOutputPath>obj\WindowsPhone\x86\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\WindowsPhone\x86\Release</OutputPath>
-    <DocumentationFile>bin\WindowsPhone\x86\Release\MonoGame.Framework.xml</DocumentationFile>
-    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;WINRT;DIRECTX</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|ARM' ">
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
-    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <BaseIntermediateOutputPath>obj\WindowsPhone\ARM\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\WindowsPhone\ARM\Debug</OutputPath>
-    <DocumentationFile>bin\WindowsPhone\ARM\Debug\MonoGame.Framework.xml</DocumentationFile>
-    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE;WINRT;DIRECTX</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ARM' ">
-    <Optimize>true</Optimize>
-    <DebugType>none</DebugType>
-    <BaseIntermediateOutputPath>obj\WindowsPhone\ARM\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
-    <OutputPath>bin\WindowsPhone\ARM\Release</OutputPath>
-    <DocumentationFile>bin\WindowsPhone\ARM\Release\MonoGame.Framework.xml</DocumentationFile>
-    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;WINRT;DIRECTX</DefineConstants>
+    <OutputPath>bin\WindowsPhone81\AnyCPU\Release</OutputPath>
+    <IntermediateOutputPath>obj\WindowsPhone81\AnyCPU\Release</IntermediateOutputPath>
+    <DocumentationFile>bin\WindowsPhone81\AnyCPU\Release\MonoGame.Framework.xml</DocumentationFile>
+    <DefineConstants>TRACE;WINRT;WINDOWS_PHONE81;DIRECTX;WINDOWS_STOREAPP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="Microsoft.Xna.Framework">
-      <Aliases>MicrosoftXnaFramework</Aliases>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.GamerServices">
-      <Aliases>MicrosoftXnaGamerServices</Aliases>
+    <Reference Include="SharpDX">
+      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20Phone%208.1\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20Phone\$(Platform)\SharpDX.dll</HintPath>
+      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20Phone%208.1\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX">
+      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20Phone%208.1\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20Phone\$(Platform)\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20Phone%208.1\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20Phone\$(Platform)\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20Phone%208.1\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.MediaFoundation">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20Phone\$(Platform)\SharpDX.MediaFoundation.dll</HintPath>
+      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20Phone%208.1\SharpDX.MediaFoundation.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.XAudio2">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20Phone\$(Platform)\SharpDX.XAudio2.dll</HintPath>
+      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20Phone%208.1\SharpDX.XAudio2.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +88,9 @@
     <Compile Include="GamePlatform.cs" />
     <Compile Include="GameServiceContainer.cs" />
     <Compile Include="GameTime.cs" />
+    <Compile Include="GameTimer.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
+    </Compile>
     <Compile Include="GameTimerEventArgs.cs">
       <Platforms>Windows8,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>
@@ -138,8 +116,8 @@
     <Compile Include="Ray.cs" />
     <Compile Include="Rectangle.cs" />
     <Compile Include="ReusableItemList.cs" />
-    <Compile Include="Threading.cs">
-      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,PSMobile,WindowsGL,WindowsPhone</Platforms>
+    <Compile Include="SharedGraphicsDeviceManager.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="TitleContainer.cs" />
     <Compile Include="Vector2.cs" />
@@ -243,6 +221,9 @@
     <Compile Include="Content\ContentReaders\Vector4Reader.cs" />
     <Compile Include="Content\ContentReaders\VertexBufferReader.cs" />
     <Compile Include="Content\ContentReaders\VertexDeclarationReader.cs" />
+    <Compile Include="Content\ContentReaders\VideoReader.cs">
+      <ExcludePlatforms>Angle,Linux,PSMobile,WindowsGL,WindowsPhone,Web</ExcludePlatforms>
+    </Compile>
     <Compile Include="Content\ContentSerializerAttribute.cs" />
     <Compile Include="Content\ContentSerializerCollectionItemNameAttribute.cs" />
     <Compile Include="Content\ContentSerializerIgnoreAttribute.cs" />
@@ -467,8 +448,8 @@
     <Compile Include="Input\KeyboardInput.cs">
       <Platforms>Android,iOS,Windows8,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>
-    <Compile Include="Input\KeyboardInput.WP.cs">
-      <Platforms>WindowsPhone</Platforms>
+    <Compile Include="Input\KeyboardInput.WinRT.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Input\KeyboardState.cs" />
     <Compile Include="Input\Keys.cs" />
@@ -476,8 +457,8 @@
     <Compile Include="Input\MessageBox.cs">
       <Platforms>Android,iOS,Windows8,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>
-    <Compile Include="Input\MessageBox.WP.cs">
-      <Platforms>WindowsPhone</Platforms>
+    <Compile Include="Input\MessageBox.WinRT.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Input\Mouse.cs" />
     <Compile Include="Input\MouseState.cs" />
@@ -498,17 +479,20 @@
     <Compile Include="Media\Artist.cs" />
     <Compile Include="Media\Genre.cs" />
     <Compile Include="Media\MediaLibrary.cs" />
-    <Compile Include="Media\MediaLibrary.WP.cs">
-      <Platforms>WindowsPhone</Platforms>
+    <Compile Include="Media\MediaLibrary.WinRT.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Media\MediaPlayer.cs" />
-    <Compile Include="Media\MediaPlayer.WP.cs">
-      <Platforms>WindowsPhone</Platforms>
+    <Compile Include="Media\MediaPlayer.WME.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Media\MediaQueue.cs" />
     <Compile Include="Media\MediaSource.cs" />
     <Compile Include="Media\MediaSourceType.cs" />
     <Compile Include="Media\MediaState.cs" />
+    <Compile Include="Media\MusicProperties.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
+    </Compile>
     <Compile Include="Media\PlaylistCollection.cs">
       <ExcludePlatforms>PSMobile</ExcludePlatforms>
     </Compile>
@@ -517,10 +501,19 @@
     </Compile>
     <Compile Include="Media\SongCollection.cs" />
     <Compile Include="Media\Song.cs" />
-    <Compile Include="Media\Song.WP.cs">
-      <Platforms>WindowsPhone</Platforms>
+    <Compile Include="Media\Song.WinRT.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Media\VideoSoundtrackType.cs" />
+    <Compile Include="Media\Video.cs">
+      <ExcludePlatforms>Angle,Linux,PSMobile,WindowsGL,WindowsPhone,Web</ExcludePlatforms>
+    </Compile>
+    <Compile Include="Media\VideoPlayer.cs">
+      <ExcludePlatforms>Angle,Linux,PSMobile,WindowsGL,WindowsPhone,Web</ExcludePlatforms>
+    </Compile>
+    <Compile Include="Media\VideoPlayer.WME.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
+    </Compile>
     <Compile Include="Storage\StorageContainer.cs" />
     <Compile Include="Storage\StorageDevice.cs" />
     <Compile Include="Storage\StorageDeviceHelper.cs">
@@ -534,29 +527,23 @@
     <Compile Include="Utilities\Png\PngCommon.cs" />
     <Compile Include="Utilities\Png\PngReader.cs" />
     <Compile Include="Utilities\Png\PngWriter.cs" />
+    <Compile Include="Windows8\InputEvents.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
+    </Compile>
+    <Compile Include="Windows8\MetroGamePlatform.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
+    </Compile>
+    <Compile Include="Windows8\MetroGameWindow.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
+    </Compile>
     <Compile Include="Windows8\MetroHelper.cs">
       <Platforms>Windows8,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Windows8\SharpDXHelper.cs">
       <Platforms>Windows8,Windows,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>
-    <Compile Include="WindowsPhone\DrawingSurfaceInterop.cs">
-      <Platforms>WindowsPhone</Platforms>
-    </Compile>
-    <Compile Include="WindowsPhone\DrawingSurfaceUpdateHandler.cs">
-      <Platforms>WindowsPhone</Platforms>
-    </Compile>
-    <Compile Include="WindowsPhone\SurfaceUpdateHandler.cs">
-      <Platforms>WindowsPhone</Platforms>
-    </Compile>
-    <Compile Include="WindowsPhone\WPGamePlatform.cs">
-      <Platforms>WindowsPhone</Platforms>
-    </Compile>
-    <Compile Include="WindowsPhone\WPGameWindow.cs">
-      <Platforms>WindowsPhone</Platforms>
-    </Compile>
-    <Compile Include="WindowsPhone\XamlGame.cs">
-      <Platforms>WindowsPhone</Platforms>
+    <Compile Include="Windows8\XamlGame.cs">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
     </Compile>
   </ItemGroup>
   <ItemGroup />
@@ -585,6 +572,13 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Page Include="Themes\generic.xaml">
+      <Platforms>Windows8,WindowsPhone81</Platforms>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
@@ -593,8 +587,12 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
-  <ItemGroup />
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetPlatformIdentifier)' == '' ">
+    <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <ItemGroup />
 </Project>
