@@ -54,7 +54,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public void GetData<T> (int offsetInBytes, T[] data, int startIndex, int elementCount, int vertexStride) where T : struct
         {
-            var elementSizeInBytes = Marshal.SizeOf(typeof(T));
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
+          var elementSizeInBytes = Marshal.SizeOf(typeof(T));
 
             if (vertexStride == 0)
                 vertexStride = elementSizeInBytes;
@@ -69,6 +72,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 throw new InvalidOperationException("The array is not the correct size for the amount of data requested.");
 
             PlatformGetData<T>(offsetInBytes, data, startIndex, elementCount, vertexStride);
+#endif
         }
 
         public void GetData<T>(T[] data, int startIndex, int elementCount) where T : struct
@@ -149,8 +153,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// must be within the <paramref name="data"/> array bounds.</param>
 		public void SetData<T>(T[] data, int startIndex, int elementCount) where T : struct
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             var elementSizeInBytes = Marshal.SizeOf(typeof(T));
             SetDataInternal<T>(0, data, startIndex, elementCount, elementSizeInBytes, SetDataOptions.None);
+#endif
 		}
 		
         /// <summary>
@@ -162,8 +170,12 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="data">Data array.</param>
         public void SetData<T>(T[] data) where T : struct
         {
+#if PORTABLE
+            throw MonoGame.Portable.NotImplementedException;
+#else
             var elementSizeInBytes = Marshal.SizeOf(typeof(T));
             SetDataInternal<T>(0, data, 0, data.Length, elementSizeInBytes, SetDataOptions.None);
+#endif
         }
 
         protected void SetDataInternal<T>(int offsetInBytes, T[] data, int startIndex, int elementCount, int vertexStride, SetDataOptions options) where T : struct
