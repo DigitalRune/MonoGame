@@ -57,7 +57,7 @@ using MonoMac.AppKit;
 using SharpDX.Multimedia;
 using SharpDX.RawInput;
 #endif
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP && !WINDOWS_PHONE81
 using Windows.Devices.Input;
 #endif
 
@@ -87,7 +87,7 @@ namespace Microsoft.Xna.Framework.Input
         private static int _defaultPositionX;
         private static int _defaultPositionY;
         private static bool _isRelative;
-#if (WINDOWS && DIRECTX) || WINDOWS_STOREAPP
+#if (WINDOWS && DIRECTX) || (WINDOWS_STOREAPP && !WINDOWS_PHONE81)
         private static int _deltaX;
         private static int _deltaY;
 #endif
@@ -114,7 +114,7 @@ namespace Microsoft.Xna.Framework.Input
             {
                 _isRelative = value;
 
-#if WINDOWS && DIRECTX || WINDOWS_STOREAPP
+#if WINDOWS && DIRECTX || (WINDOWS_STOREAPP && !WINDOWS_PHONE81)
                 if (_isRelative)
                 {
 #if WINDOWS && DIRECTX
@@ -223,11 +223,11 @@ namespace Microsoft.Xna.Framework.Input
             window.MouseState.ScrollWheelValue = (int)(state.Scroll.Y * 120);
 #endif
 
-#if WINDOWS && DIRECTX || WINDOWS_STOREAPP
+#if WINDOWS && DIRECTX || WINDOWS_STOREAPP && !WINDOWS_PHONE81
             window.MouseState.DeltaX = _deltaX;
             window.MouseState.DeltaY = _deltaY;
 #else
-            window.MouseState.DeltaX = window.MouseState.X - _defaultPositionX;
+          window.MouseState.DeltaX = window.MouseState.X - _defaultPositionX;
             window.MouseState.DeltaY = window.MouseState.Y - _defaultPositionY;
 #endif
 
@@ -272,7 +272,7 @@ namespace Microsoft.Xna.Framework.Input
         {
             _defaultPositionX = x;
             _defaultPositionY = y;
-#if WINDOWS && DIRECTX || WINDOWS_STOREAPP
+#if WINDOWS && DIRECTX || WINDOWS_STOREAPP && !WINDOWS_PHONE81
             _deltaX = 0;
             _deltaY = 0;
 #endif
@@ -328,8 +328,8 @@ namespace Microsoft.Xna.Framework.Input
             _deltaY += mouseEventArgs.Y;
         }
 #endif
-        
-#if WINDOWS_STOREAPP
+
+#if WINDOWS_STOREAPP && !WINDOWS_PHONE81
         private static void OnWinStoreMouseMoved(MouseDevice sender, MouseEventArgs mouseEventArgs)
         {
             _deltaX += mouseEventArgs.MouseDelta.X;
