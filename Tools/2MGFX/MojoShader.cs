@@ -10,7 +10,6 @@ namespace TwoMGFX
 #else
         const string mojoshader_dll = "libmojoshader_64.dll";
 #endif
-#endif
 
 		public partial class NativeConstants {
 		    
