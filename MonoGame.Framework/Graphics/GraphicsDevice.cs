@@ -58,6 +58,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
         internal GraphicsCapabilities GraphicsCapabilities { get; private set; }
 
+        public TextureCollection VertexTextures { get; private set; }
+
+        public SamplerStateCollection VertexSamplerStates { get; private set; }
+
         public TextureCollection Textures { get; private set; }
 
         public SamplerStateCollection SamplerStates { get; private set; }
@@ -126,6 +130,7 @@ namespace Microsoft.Xna.Framework.Graphics
         }
 
         internal int MaxTextureSlots;
+        internal int MaxVertexTextureSlots;
 
         public bool IsDisposed
         {
@@ -156,6 +161,14 @@ namespace Microsoft.Xna.Framework.Graphics
             get;
             private set;
         }
+
+        internal GraphicsMetrics _graphicsMetrics;
+
+        /// <summary>
+        /// The rendering information for debugging and profiling.
+        /// The metrics are reset every frame after draw within <see cref="GraphicsDevice.Present"/>. 
+        /// </summary>
+        public GraphicsMetrics Metrics { get { return _graphicsMetrics; } set { _graphicsMetrics = value; } }
 
         internal GraphicsDevice(GraphicsDeviceInformation gdi)
         {
@@ -207,8 +220,11 @@ namespace Microsoft.Xna.Framework.Graphics
 
             PlatformSetup();
 
-            Textures = new TextureCollection (MaxTextureSlots);
-			SamplerStates = new SamplerStateCollection(this, MaxTextureSlots);
+            VertexTextures = new TextureCollection(MaxVertexTextureSlots, true);
+            VertexSamplerStates = new SamplerStateCollection(this, MaxVertexTextureSlots, true);
+
+            Textures = new TextureCollection(MaxTextureSlots, false);
+            SamplerStates = new SamplerStateCollection(this, MaxTextureSlots, false);
 
             _blendStateAdditive = BlendState.Additive.Clone();
             _blendStateAlphaBlend = BlendState.AlphaBlend.Clone();
@@ -249,6 +265,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
             // Clear the texture and sampler collections forcing
             // the state to be reapplied.
+            VertexTextures.Clear();
+            VertexSamplerStates.Clear();
             Textures.Clear();
             SamplerStates.Clear();
 
@@ -285,6 +303,9 @@ namespace Microsoft.Xna.Framework.Graphics
                 // Don't set the same state twice!
                 if (_rasterizerState == value)
                     return;
+
+                if (!value.DepthClipEnable && !GraphicsCapabilities.SupportsDepthClamp)
+                    throw new InvalidOperationException("Cannot set RasterizerState.DepthClipEnable to false on this graphics device");
 
                 _rasterizerState = value;
 
@@ -473,6 +494,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public void Present()
         {
+            _graphicsMetrics = new GraphicsMetrics();
             PlatformPresent();
         }
 
@@ -821,6 +843,13 @@ namespace Microsoft.Xna.Framework.Graphics
             // They will only be used if the graphics API can use
             // this range hint to optimize rendering.
 
+           
+            unchecked
+            {
+                _graphicsMetrics._drawCount++;
+                _graphicsMetrics._primitiveCount += (ulong) primitiveCount;
+            }
+
             PlatformDrawIndexedPrimitives(primitiveType, baseVertex, startIndex, primitiveCount);
         }
 
@@ -850,6 +879,12 @@ namespace Microsoft.Xna.Framework.Graphics
 
             if (vertexDeclaration == null)
                 throw new ArgumentNullException("vertexDeclaration");
+            
+            unchecked
+            {
+                _graphicsMetrics._drawCount++;
+                _graphicsMetrics._primitiveCount += (ulong) primitiveCount;
+            }
 
             PlatformDrawUserPrimitives<T>(primitiveType, vertexData, vertexOffset, vertexDeclaration, vertexCount);
         }
@@ -866,6 +901,13 @@ namespace Microsoft.Xna.Framework.Graphics
                 throw new ArgumentOutOfRangeException("primitiveCount");
 
             var vertexCount = GetElementCountArray(primitiveType, primitiveCount);
+
+            
+            unchecked
+            {
+                _graphicsMetrics._drawCount++;
+                _graphicsMetrics._primitiveCount += (ulong) primitiveCount;
+            }
 
             PlatformDrawPrimitives(primitiveType, vertexStart, vertexCount);
         }
@@ -907,6 +949,13 @@ namespace Microsoft.Xna.Framework.Graphics
             if (vertexDeclaration == null)
                 throw new ArgumentNullException("vertexDeclaration");
 
+            
+            unchecked
+            {
+                _graphicsMetrics._drawCount++;
+                _graphicsMetrics._primitiveCount += (ulong) primitiveCount;
+            }
+
             PlatformDrawUserIndexedPrimitives<T>(primitiveType, vertexData, vertexOffset, numVertices, indexData, indexOffset, primitiveCount, vertexDeclaration);
         }
 
@@ -947,6 +996,13 @@ namespace Microsoft.Xna.Framework.Graphics
             if (vertexDeclaration == null)
                 throw new ArgumentNullException("vertexDeclaration");
 
+            
+            unchecked
+            {
+                _graphicsMetrics._drawCount++;
+                _graphicsMetrics._primitiveCount += (ulong) primitiveCount;
+            }
+
             PlatformDrawUserIndexedPrimitives<T>(primitiveType, vertexData, vertexOffset, numVertices, indexData, indexOffset, primitiveCount, vertexDeclaration);
         }
 
@@ -973,6 +1029,5 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             return PlatformGetHighestSupportedGraphicsProfile(graphicsDevice);
         }
-
     }
 }
