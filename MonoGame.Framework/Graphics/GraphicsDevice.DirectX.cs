@@ -117,8 +117,13 @@ namespace Microsoft.Xna.Framework.Graphics
 
         private void PlatformSetup()
         {
+
             MaxTextureSlots = 16;
+#if WINDOWS_PHONE81
+            MaxVertexTextureSlots = 0;
+#else
             MaxVertexTextureSlots = 16;
+#endif
         }
 
         private void PlatformInitialize()
