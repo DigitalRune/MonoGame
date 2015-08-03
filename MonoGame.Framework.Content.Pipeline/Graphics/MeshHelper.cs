@@ -146,10 +146,6 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             var channels = geom.Vertices.Channels;
 
             var normals = channels.Get<Vector3>(VertexChannelNames.Normal(0));
-
-            if (!channels.Contains(textureCoordinateChannelName))
-                channels.Add(textureCoordinateChannelName, new Vector2[normals.Count]);
-
             var uvs = channels.Get<Vector2>(textureCoordinateChannelName);
 
             Vector3[] tangents, bitangents;
@@ -262,8 +258,8 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             for (var i = 0; i < numVerts; i++)
             {
                 var n = normals[i];
-                //Debug.Assert(n.IsFinite(), "Bad normal! Normal vector must be finite.");
-                //Debug.Assert(n.Length() >= 0.9999f, "Bad normal! Normal vector must be normalized. (Actual length = " + n.Length() + ")");
+                Debug.Assert(n.IsFinite(), "Bad normal! Normal vector must be finite.");
+                Debug.Assert(n.Length() >= 0.9999f, "Bad normal! Normal vector must be normalized. (Actual length = " + n.Length() + ")");
 
                 var t = tan1[i];
                 if (t.LengthSquared() < float.Epsilon)
@@ -379,12 +375,12 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
 
         public static void MergeDuplicatePositions(MeshContent mesh, float tolerance)
         {
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public static void MergeDuplicateVertices(GeometryContent geometry)
         {
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public static void MergeDuplicateVertices(MeshContent mesh)
