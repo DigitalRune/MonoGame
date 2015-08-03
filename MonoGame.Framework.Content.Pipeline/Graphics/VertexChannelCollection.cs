@@ -294,7 +294,10 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
         public VertexChannel Insert(int index, string name, Type elementType, IEnumerable channelData)
         {
             // Call the generic version of this method
-            return (VertexChannel)GetType().GetMethod("Insert").MakeGenericMethod(elementType).Invoke(this, new object[] { index, name, channelData });
+            return (VertexChannel)GetType().GetMethods()
+                                           .First(m => m.Name == "Insert" && m.IsGenericMethod)
+                                           .MakeGenericMethod(elementType)
+                                           .Invoke(this, new object[] { index, name, channelData });
         }
 
         /// <summary>
