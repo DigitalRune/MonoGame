@@ -101,7 +101,7 @@
       <Platforms>Windows8,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Windows\GamerServices\Guide.cs">
-      <Platforms>Windows8,Windows,WindowsGL,WindowsPhone,WindowsPhone81</Platforms>
+      <Platforms>Windows8,Windows,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>
   </ItemGroup>
   <ItemGroup />

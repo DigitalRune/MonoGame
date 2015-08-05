@@ -21,22 +21,20 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <BaseIntermediateOutputPath>obj\WindowsGL\AnyCPU\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsGL\AnyCPU\Debug</OutputPath>
+    <IntermediateOutputPath>obj\WindowsGL\AnyCPU\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\WindowsGL\AnyCPU\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
-    <DefineConstants>DEBUG;TRACE;WINDOWS;OPENGL;OPENAL;NET</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;WINDOWS;OPENGL;OPENAL;NET;DESKTOPGL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
-    <BaseIntermediateOutputPath>obj\WindowsGL\AnyCPU\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsGL\AnyCPU\Release</OutputPath>
+    <IntermediateOutputPath>obj\WindowsGL\AnyCPU\Release</IntermediateOutputPath>
     <DocumentationFile>bin\WindowsGL\AnyCPU\Release\MonoGame.Framework.Net.xml</DocumentationFile>
-    <DefineConstants>TRACE;WINDOWS;OPENGL;OPENAL;NET</DefineConstants>
+    <DefineConstants>TRACE;WINDOWS;OPENGL;OPENAL;NET;DESKTOPGL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -97,13 +95,13 @@
       <ExcludePlatforms>WindowsPhone</ExcludePlatforms>
     </Compile>
     <Compile Include="GamerServices\GuideAlreadyVisibleException.cs">
-      <Platforms>Android,MacOS,Ouya,Windows,WindowsGL</Platforms>
+      <Platforms>Android,MacOS,Ouya,Windows,WindowsGL,Linux</Platforms>
     </Compile>
     <Compile Include="GamerServices\GamerServicesDispatcher.cs">
-      <Platforms>MacOS,Windows,WindowsGL</Platforms>
+      <Platforms>MacOS,Windows,WindowsGL,Linux</Platforms>
     </Compile>
     <Compile Include="GamerServices\GamerServicesComponent.cs">
-      <Platforms>Android,iOS,Linux,MacOS,Ouya,PSMobile,Windows,WindowsGL</Platforms>
+      <Platforms>Android,iOS,Linux,MacOS,Ouya,Windows,WindowsGL</Platforms>
     </Compile>
     <Compile Include="Net\AvailableNetworkSessionCollection.cs">
       <ExcludePlatforms>WindowsPhone,WindowsPhone81,Windows8</ExcludePlatforms>
@@ -195,14 +193,14 @@
     <Compile Include="Net\SendDataOptions.cs">
       <ExcludePlatforms>WindowsPhone,WindowsPhone81,Windows8</ExcludePlatforms>
     </Compile>
-    <Compile Include="Windows\GamerServices\Guide.cs">
-      <Platforms>Windows8,Windows,WindowsGL,WindowsPhone,WindowsPhone81</Platforms>
+    <Compile Include="DesktopGL\GamerServices\Guide.cs">
+      <Platforms>WindowsGL,Linux</Platforms>
     </Compile>
-    <Compile Include="Windows\GamerServices\MonoGameGamerServicesHelper.cs">
-      <Platforms>Windows,WindowsGL</Platforms>
+    <Compile Include="DesktopGL\GamerServices\MonoGameGamerServicesHelper.cs">
+      <Platforms>WindowsGL,Linux</Platforms>
     </Compile>
-    <Compile Include="Windows\GamerServices\SignedInGamer.cs">
-      <Platforms>Windows,WindowsGL</Platforms>
+    <Compile Include="DesktopGL\GamerServices\SignedInGamer.cs">
+      <Platforms>WindowsGL,Linux</Platforms>
     </Compile>
   </ItemGroup>
   <ItemGroup />

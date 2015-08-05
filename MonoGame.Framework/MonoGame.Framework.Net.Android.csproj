@@ -27,9 +27,8 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <BaseIntermediateOutputPath>obj\Android\AnyCPU\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\Android\AnyCPU\Debug</OutputPath>
+    <IntermediateOutputPath>obj\Android\AnyCPU\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\Android\AnyCPU\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
     <DefineConstants>DEBUG;TRACE;ANDROID;GLES;OPENGL;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -40,9 +39,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
-    <BaseIntermediateOutputPath>obj\Android\AnyCPU\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\Android\AnyCPU\Release</OutputPath>
+    <IntermediateOutputPath>obj\Android\AnyCPU\Release</IntermediateOutputPath>
     <DocumentationFile>bin\Android\AnyCPU\Release\MonoGame.Framework.Net.xml</DocumentationFile>
     <DefineConstants>TRACE;ANDROID;GLES;OPENGL;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -109,10 +107,10 @@
       <ExcludePlatforms>WindowsPhone</ExcludePlatforms>
     </Compile>
     <Compile Include="GamerServices\GuideAlreadyVisibleException.cs">
-      <Platforms>Android,MacOS,Ouya,Windows,WindowsGL</Platforms>
+      <Platforms>Android,MacOS,Ouya,Windows,WindowsGL,Linux</Platforms>
     </Compile>
     <Compile Include="GamerServices\GamerServicesComponent.cs">
-      <Platforms>Android,iOS,Linux,MacOS,Ouya,PSMobile,Windows,WindowsGL</Platforms>
+      <Platforms>Android,iOS,Linux,MacOS,Ouya,Windows,WindowsGL</Platforms>
     </Compile>
     <Compile Include="Net\AvailableNetworkSessionCollection.cs">
       <ExcludePlatforms>WindowsPhone,WindowsPhone81,Windows8</ExcludePlatforms>
@@ -246,12 +244,11 @@
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
-      <Properties>
-        <Policies>
-          <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
-          <CSharpFormattingPolicy IndentSwitchBody="True" IndentBlocksInsideExpressions="True" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" ElseNewLinePlacement="NewLine" CatchNewLinePlacement="NewLine" FinallyNewLinePlacement="NewLine" WhileNewLinePlacement="DoNotCare" ArrayInitializerWrapping="DoNotChange" ArrayInitializerBraceStyle="NextLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" NewLineBeforeConstructorInitializerColon="NewLine" NewLineAfterConstructorInitializerColon="SameLine" BeforeDelegateDeclarationParentheses="False" NewParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
-        </Policies>
-      </Properties>
+      <Properties><Policies>
+    <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
+    <CSharpFormattingPolicy IndentSwitchBody="True" IndentBlocksInsideExpressions="True" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine"  ElseNewLinePlacement="NewLine" CatchNewLinePlacement="NewLine" FinallyNewLinePlacement="NewLine" WhileNewLinePlacement="DoNotCare" ArrayInitializerWrapping="DoNotChange"  ArrayInitializerBraceStyle="NextLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" NewLineBeforeConstructorInitializerColon="NewLine" NewLineAfterConstructorInitializerColon="SameLine" BeforeDelegateDeclarationParentheses="False" NewParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+</Policies>
+</Properties>
     </MonoDevelop>
   </ProjectExtensions>
 </Project>

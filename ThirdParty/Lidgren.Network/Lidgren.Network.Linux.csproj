@@ -26,7 +26,7 @@
     <DocumentationFile>bin\Linux\AnyCPU\Debug\Lidgren.Network.xml</DocumentationFile>
     <DefineConstants>DEBUG;TRACE;UNITY_4_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -36,7 +36,7 @@
     <DocumentationFile>bin\Linux\AnyCPU\Release\Lidgren.Network.xml</DocumentationFile>
     <DefineConstants>TRACE;UNITY_4_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

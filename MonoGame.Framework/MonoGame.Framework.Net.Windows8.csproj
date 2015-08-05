@@ -15,6 +15,7 @@
     <AssemblyOriginatorKeyFile>..\DigitalRuneMonoGame.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>1591,0436</NoWarn>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -22,9 +23,8 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <BaseIntermediateOutputPath>obj\Windows8\AnyCPU\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\Windows8\AnyCPU\Debug</OutputPath>
+    <IntermediateOutputPath>obj\Windows8\AnyCPU\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\Windows8\AnyCPU\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINRT;WINDOWS_STOREAPP;DIRECTX;DIRECTX11_1;WINDOWS_MEDIA_ENGINE;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -33,9 +33,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
-    <BaseIntermediateOutputPath>obj\Windows8\AnyCPU\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\Windows8\AnyCPU\Release</OutputPath>
+    <IntermediateOutputPath>obj\Windows8\AnyCPU\Release</IntermediateOutputPath>
     <DocumentationFile>bin\Windows8\AnyCPU\Release\MonoGame.Framework.Net.xml</DocumentationFile>
     <DefineConstants>TRACE;NETFX_CORE;WINRT;WINDOWS_STOREAPP;DIRECTX;DIRECTX11_1;WINDOWS_MEDIA_ENGINE;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -101,7 +100,7 @@
       <Platforms>Windows8,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Windows\GamerServices\Guide.cs">
-      <Platforms>Windows8,Windows,WindowsGL,WindowsPhone,WindowsPhone81</Platforms>
+      <Platforms>Windows8,Windows,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>
   </ItemGroup>
   <ItemGroup />

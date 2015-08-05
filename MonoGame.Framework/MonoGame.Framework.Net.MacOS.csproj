@@ -21,9 +21,8 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <BaseIntermediateOutputPath>obj\MacOS\AnyCPU\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\MacOS\AnyCPU\Debug</OutputPath>
+    <IntermediateOutputPath>obj\MacOS\AnyCPU\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\MacOS\AnyCPU\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
     <DefineConstants>DEBUG;MONOMAC;OPENGL;OPENAL;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -33,14 +32,12 @@
     <EnablePackageSigning>False</EnablePackageSigning>
     <IncludeMonoRuntime>False</IncludeMonoRuntime>
     <UseSGen>False</UseSGen>
-    <UseRefCounting>false</UseRefCounting>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
-    <BaseIntermediateOutputPath>obj\MacOS\AnyCPU\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\MacOS\AnyCPU\Release</OutputPath>
+    <IntermediateOutputPath>obj\MacOS\AnyCPU\Release</IntermediateOutputPath>
     <DocumentationFile>bin\MacOS\AnyCPU\Release\MonoGame.Framework.Net.xml</DocumentationFile>
     <DefineConstants>MONOMAC;OPENGL;OPENAL;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -50,7 +47,6 @@
     <EnablePackageSigning>False</EnablePackageSigning>
     <IncludeMonoRuntime>False</IncludeMonoRuntime>
     <UseSGen>False</UseSGen>
-    <UseRefCounting>false</UseRefCounting>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoMac">
@@ -113,13 +109,13 @@
       <ExcludePlatforms>WindowsPhone</ExcludePlatforms>
     </Compile>
     <Compile Include="GamerServices\GuideAlreadyVisibleException.cs">
-      <Platforms>Android,MacOS,Ouya,Windows,WindowsGL</Platforms>
+      <Platforms>Android,MacOS,Ouya,Windows,WindowsGL,Linux</Platforms>
     </Compile>
     <Compile Include="GamerServices\GamerServicesDispatcher.cs">
-      <Platforms>MacOS,Windows,WindowsGL</Platforms>
+      <Platforms>MacOS,Windows,WindowsGL,Linux</Platforms>
     </Compile>
     <Compile Include="GamerServices\GamerServicesComponent.cs">
-      <Platforms>Android,iOS,Linux,MacOS,Ouya,PSMobile,Windows,WindowsGL</Platforms>
+      <Platforms>Android,iOS,Linux,MacOS,Ouya,Windows,WindowsGL</Platforms>
     </Compile>
     <Compile Include="Net\AvailableNetworkSessionCollection.cs">
       <ExcludePlatforms>WindowsPhone,WindowsPhone81,Windows8</ExcludePlatforms>
@@ -256,12 +252,11 @@
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
-      <Properties>
-        <Policies>
-          <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
-          <CSharpFormattingPolicy IndentSwitchBody="True" IndentBlocksInsideExpressions="True" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" ElseNewLinePlacement="NewLine" CatchNewLinePlacement="NewLine" FinallyNewLinePlacement="NewLine" WhileNewLinePlacement="DoNotCare" ArrayInitializerWrapping="DoNotChange" ArrayInitializerBraceStyle="NextLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" NewLineBeforeConstructorInitializerColon="NewLine" NewLineAfterConstructorInitializerColon="SameLine" BeforeDelegateDeclarationParentheses="False" NewParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
-        </Policies>
-      </Properties>
+      <Properties><Policies>
+    <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
+    <CSharpFormattingPolicy IndentSwitchBody="True" IndentBlocksInsideExpressions="True" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine"  ElseNewLinePlacement="NewLine" CatchNewLinePlacement="NewLine" FinallyNewLinePlacement="NewLine" WhileNewLinePlacement="DoNotCare" ArrayInitializerWrapping="DoNotChange"  ArrayInitializerBraceStyle="NextLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" NewLineBeforeConstructorInitializerColon="NewLine" NewLineAfterConstructorInitializerColon="SameLine" BeforeDelegateDeclarationParentheses="False" NewParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+</Policies>
+</Properties>
     </MonoDevelop>
   </ProjectExtensions>
 </Project>

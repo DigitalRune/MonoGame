@@ -18,7 +18,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 #endif
 
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP || WINDOWS_UAP
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 using System.Threading.Tasks;
@@ -245,7 +245,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
 #if WINDOWS
             SaveAsImage(stream, width, height, ImageFormat.Jpeg);
-#elif WINDOWS_STOREAPP
+#elif WINDOWS_STOREAPP || WINDOWS_UAP
             SaveAsImage(BitmapEncoder.JpegEncoderId, stream, width, height);
 #elif WINDOWS_PHONE
 
@@ -265,6 +265,9 @@ namespace Microsoft.Xna.Framework.Graphics
             });
 
             waitEvent.Wait();
+#endif
+#if !WINDOWS && !WINDOWS_STOREAPP && !WINDOWS_PHONE && !WINDOWS_UAP
+            throw new NotImplementedException();
 #endif
         }
 
@@ -351,7 +354,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 }
             }
         }
-#elif WINDOWS_STOREAPP
+#elif WINDOWS_STOREAPP || WINDOWS_UAP
 
         private void SaveAsImage(Guid encoderId, Stream stream, int width, int height)
         {

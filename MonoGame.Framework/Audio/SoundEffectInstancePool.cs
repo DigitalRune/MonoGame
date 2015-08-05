@@ -9,8 +9,7 @@ namespace Microsoft.Xna.Framework.Audio
     internal static class SoundEffectInstancePool
     {
 
-#if WINDOWS || (WINRT && !WINDOWS_PHONE) || LINUX || WEB || ANGLE || PORTABLE
-
+#if WINDOWS || (WINRT && !WINDOWS_PHONE) || DESKTOPGL || WEB || ANGLE || PORTABLE
         // These platforms are only limited by memory.
         private const int MAX_PLAYING_INSTANCES = int.MaxValue;
 
@@ -18,11 +17,6 @@ namespace Microsoft.Xna.Framework.Audio
 
         // Reference: http://stackoverflow.com/questions/3894044/maximum-number-of-openal-sound-buffers-on-iphone
         private const int MAX_PLAYING_INSTANCES = 256;
-
-#elif PSM
-
-        // Reference: http://community.eu.playstation.com/t5/Audio/Multiple-sound-effects/m-p/16681132/highlight/true#M49
-        private const int MAX_PLAYING_INSTANCES = 128;
 
 #elif WINDOWS_PHONE
 

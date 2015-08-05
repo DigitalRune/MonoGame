@@ -36,6 +36,9 @@ or conditions. You may have additional consumer rights under your local laws whi
 permitted under your local laws, the contributors exclude the implied warranties of merchantability, fitness for a particular
 purpose and non-infringement.
 */
+using MonoGame.Utilities;
+
+
 #endregion License
 
 #region Using Statements
@@ -58,14 +61,6 @@ namespace Microsoft.Xna.Framework
     {
         private bool _isResizable;
         private bool _isBorderless;
-        //private bool _isMouseInBounds;  // Commented out because this field is never read!?
-
-#if LINUX
-        private bool _init;
-        WindowState pstate;
-        int pwidth = 0;
-        int pheight = 0;
-#endif
 
 		//private DisplayOrientation _currentOrientation;
         private IntPtr _windowHandle;
@@ -80,6 +75,7 @@ namespace Microsoft.Xna.Framework
         private Rectangle clientBounds;
         private Rectangle targetBounds;
         private bool updateClientBounds;
+        private int updateborder = 0;
         bool disposed;
 
         #region Internal Properties
@@ -128,11 +124,23 @@ namespace Microsoft.Xna.Framework
         {
             get { return DisplayOrientation.LandscapeLeft; }
         }
-#if (WINDOWS && OPENGL) || LINUX
+#if DESKTOPGL
         public override Microsoft.Xna.Framework.Point Position
         {
             get { return new Microsoft.Xna.Framework.Point(window.Location.X,window.Location.Y); }
             set { window.Location = new System.Drawing.Point(value.X,value.Y); }
+        }
+
+        public override System.Drawing.Icon Icon
+        {
+            get
+            {
+                return window.Icon;
+            }
+            set
+            {
+                window.Icon = value;
+            }
         }
 #endif
         protected internal override void SetSupportedOrientations(DisplayOrientation orientations)
@@ -228,51 +236,41 @@ namespace Microsoft.Xna.Framework
             clientBounds = winRect;
 
             OnClientSizeChanged();
-
-#if LINUX
-            if(!_init)
-            {
-                if (!_isResizable && !_isBorderless && window.WindowState != WindowState.Fullscreen && window.WindowBorder != WindowBorder.Fixed)
-                    window.WindowBorder = WindowBorder.Fixed;
-
-                pwidth = window.Width;
-                pheight = window.Height;
-                pstate = window.WindowState;
-                _init = true;
-            }
-#endif
         }
 
         internal void ProcessEvents()
         {
+            UpdateBorder();
             Window.ProcessEvents();
             UpdateWindowState();
             HandleInput();
+        }
 
-#if LINUX
-            if (_init) {
-                if (pwidth != window.Width || pheight != window.Height || pstate != window.WindowState) {
-                    if (!_isResizable && !_isBorderless && window.WindowState != WindowState.Fullscreen && window.WindowBorder != WindowBorder.Fixed)
-                        window.WindowBorder = WindowBorder.Fixed;
-
-                    pwidth = window.Width;
-                    pheight = window.Height;
-                    pstate = window.WindowState;
-                }
+        private void UpdateBorder()
+        {
+            if (updateborder == 1)
+            {
+                WindowBorder desired;
+                if (_isBorderless)
+                    desired = WindowBorder.Hidden;
+                else
+                    desired = _isResizable ? WindowBorder.Resizable : WindowBorder.Fixed;
+            
+                if (desired != window.WindowBorder && window.WindowState != WindowState.Fullscreen)
+                    window.WindowBorder = desired;
             }
-#endif
+
+            if(updateborder > 0)
+                updateborder--;
         }
 
         private void UpdateWindowState()
         {
             // we should wait until window's not fullscreen to resize
+
             if (updateClientBounds)
             {
-#if LINUX
-                if(window.WindowBorder == WindowBorder.Fixed)
-                    window.WindowBorder = WindowBorder.Resizable;
-#endif
-
+                window.WindowBorder = WindowBorder.Resizable;
                 updateClientBounds = false;
                 window.ClientRectangle = new System.Drawing.Rectangle(targetBounds.X,
                                      targetBounds.Y, targetBounds.Width, targetBounds.Height);
@@ -286,25 +284,14 @@ namespace Microsoft.Xna.Framework
                     windowState = window.WindowState; // maximize->normal and normal->maximize are usually set from the outside
                 else
                     window.WindowState = windowState; // usually fullscreen-stuff is set from the code
-                
-                // fixes issue on linux (and windows?) that AllowUserResizing is not set any more when exiting fullscreen mode
-                WindowBorder desired;
-                if (_isBorderless)
-                    desired = WindowBorder.Hidden;
-                else
-#if LINUX
-                    desired = WindowBorder.Resizable;
-#else
-                    desired = _isResizable ? WindowBorder.Resizable : WindowBorder.Fixed;
-#endif
-                if (desired != window.WindowBorder && window.WindowState != WindowState.Fullscreen)
-                    window.WindowBorder = desired;
+
+                // we need to create a small delay between resizing the window
+                // and changing the border to avoid OpenTK Linux bug
+                updateborder = 2;
 
                 var context = GraphicsContext.CurrentContext;
                 if (context != null)
-                {
                     context.Update(window.WindowInfo);
-                }
             }
         }
 
@@ -316,23 +303,6 @@ namespace Microsoft.Xna.Framework
             Keyboard.SetKeys(keys);
         }
 
-#if WINDOWS
-        private void OnMouseEnter(object sender, EventArgs e)
-        {
-            //_isMouseInBounds = true;
-        }
-
-        private void OnMouseLeave(object sender, EventArgs e)
-        {
-            //There is a bug in OpenTK where the MouseLeave event is raised when the mouse button
-            //is down while the cursor is still in the window bounds.
-            if (Mouse.GetState().LeftButton == ButtonState.Released)
-            {
-                //_isMouseInBounds = false;
-            }
-        }
-#endif
-
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
             OnTextInput(sender, new TextInputEventArgs(e.KeyChar));
@@ -343,24 +313,15 @@ namespace Microsoft.Xna.Framework
         private void Initialize(Game game)
         {
             Game = game;
-#if LINUX
-            _init = false;
-#endif
 
             GraphicsContext.ShareContexts = true;
 
             window = new NativeWindow();
+            window.WindowBorder = WindowBorder.Resizable;
             window.Closing += new EventHandler<CancelEventArgs>(OpenTkGameWindow_Closing);
             window.Resize += OnResize;
             window.KeyDown += new EventHandler<OpenTK.Input.KeyboardKeyEventArgs>(Keyboard_KeyDown);
             window.KeyUp += new EventHandler<OpenTK.Input.KeyboardKeyEventArgs>(Keyboard_KeyUp);
-#if LINUX
-            window.WindowBorder = WindowBorder.Resizable;
-#endif
-#if WINDOWS
-            window.MouseEnter += OnMouseEnter;
-            window.MouseLeave += OnMouseLeave;
-#endif
 
             window.KeyPress += OnKeyPress;
 
@@ -368,11 +329,17 @@ namespace Microsoft.Xna.Framework
             window.X = (int)(DisplayDevice.Default.Bounds.Left + DisplayDevice.Default.Width * 0.05f);
             window.Y = (int)(DisplayDevice.Default.Bounds.Top + DisplayDevice.Default.Height * 0.05f);
 
-            // Set the window icon.
-            var assembly = Assembly.GetEntryAssembly();
-            if(assembly != null)
-                window.Icon = Icon.ExtractAssociatedIcon(assembly.Location);
-            Title = MonoGame.Utilities.AssemblyHelper.GetDefaultWindowTitle();
+            //make sure that the game is not running on linux
+            //on Linux people may want to use mkbundle to
+            //create native Linux binaries
+            if (CurrentPlatform.OS != OS.Linux)
+            {
+                // Set the window icon.
+                var assembly = Assembly.GetEntryAssembly();
+                if (assembly != null)
+                    window.Icon = Icon.ExtractAssociatedIcon(assembly.Location);
+                Title = MonoGame.Utilities.AssemblyHelper.GetDefaultWindowTitle();
+            }
 
             updateClientBounds = false;
             clientBounds = new Rectangle(window.ClientRectangle.X, window.ClientRectangle.Y,
@@ -385,7 +352,7 @@ namespace Microsoft.Xna.Framework
 
             // mouse
             // TODO review this when opentk 1.1 is released
-#if WINDOWS || LINUX || ANGLE
+#if DESKTOPGL || ANGLE
             Mouse.setWindows(this);
 #else
             Mouse.UpdateMouseInfo(window.Mouse);
@@ -409,9 +376,6 @@ namespace Microsoft.Xna.Framework
                 windowState = WindowState.Normal;
             else
                 windowState = WindowState.Fullscreen;
-#if LINUX
-            updateClientBounds = true;
-#endif
         }
 
         internal void ChangeClientBounds(Rectangle clientBounds)

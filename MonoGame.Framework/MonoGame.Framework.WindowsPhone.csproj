@@ -23,9 +23,8 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <BaseIntermediateOutputPath>obj\WindowsPhone\x86\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsPhone\x86\Debug</OutputPath>
+    <IntermediateOutputPath>obj\WindowsPhone\x86\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\WindowsPhone\x86\Debug\MonoGame.Framework.xml</DocumentationFile>
     <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE;WINRT;DIRECTX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -34,9 +33,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
-    <BaseIntermediateOutputPath>obj\WindowsPhone\x86\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsPhone\x86\Release</OutputPath>
+    <IntermediateOutputPath>obj\WindowsPhone\x86\Release</IntermediateOutputPath>
     <DocumentationFile>bin\WindowsPhone\x86\Release\MonoGame.Framework.xml</DocumentationFile>
     <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;WINRT;DIRECTX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -47,9 +45,8 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <BaseIntermediateOutputPath>obj\WindowsPhone\ARM\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsPhone\ARM\Debug</OutputPath>
+    <IntermediateOutputPath>obj\WindowsPhone\ARM\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\WindowsPhone\ARM\Debug\MonoGame.Framework.xml</DocumentationFile>
     <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE;WINRT;DIRECTX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -58,9 +55,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ARM' ">
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
-    <BaseIntermediateOutputPath>obj\WindowsPhone\ARM\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsPhone\ARM\Release</OutputPath>
+    <IntermediateOutputPath>obj\WindowsPhone\ARM\Release</IntermediateOutputPath>
     <DocumentationFile>bin\WindowsPhone\ARM\Release\MonoGame.Framework.xml</DocumentationFile>
     <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;WINRT;DIRECTX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -106,11 +102,13 @@
     <Compile Include="CurveTangent.cs" />
     <Compile Include="DisplayOrientation.cs" />
     <Compile Include="DrawableGameComponent.cs" />
+    <Compile Include="FrameworkResources.cs" />
     <Compile Include="GameComponentCollection.cs" />
     <Compile Include="GameComponentCollectionEventArgs.cs" />
     <Compile Include="GameComponent.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GamePlatform.cs" />
+    <Compile Include="GameRunBehavior.cs" />
     <Compile Include="GameServiceContainer.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="GameTimerEventArgs.cs">
@@ -139,7 +137,7 @@
     <Compile Include="Rectangle.cs" />
     <Compile Include="ReusableItemList.cs" />
     <Compile Include="Threading.cs">
-      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,PSMobile,WindowsGL,WindowsPhone</Platforms>
+      <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,WindowsGL,WindowsPhone</Platforms>
     </Compile>
     <Compile Include="TitleContainer.cs" />
     <Compile Include="Vector2.cs" />
@@ -192,13 +190,13 @@
     <Compile Include="Content\ContentReaders\DictionaryReader.cs" />
     <Compile Include="Content\ContentReaders\DoubleReader.cs" />
     <Compile Include="Content\ContentReaders\DualTextureEffectReader.cs">
-      <ExcludePlatforms>PSMobile,Web</ExcludePlatforms>
+      <ExcludePlatforms>Web</ExcludePlatforms>
     </Compile>
     <Compile Include="Content\ContentReaders\EffectMaterialReader.cs" />
     <Compile Include="Content\ContentReaders\EffectReader.cs" />
     <Compile Include="Content\ContentReaders\EnumReader.cs" />
     <Compile Include="Content\ContentReaders\EnvironmentMapEffectReader.cs">
-      <ExcludePlatforms>PSMobile,Web</ExcludePlatforms>
+      <ExcludePlatforms>Web</ExcludePlatforms>
     </Compile>
     <Compile Include="Content\ContentReaders\ExternalReferenceReader.cs" />
     <Compile Include="Content\ContentReaders\IndexBufferReader.cs" />
@@ -218,7 +216,7 @@
     <Compile Include="Content\ContentReaders\SByteReader.cs" />
     <Compile Include="Content\ContentReaders\SingleReader.cs" />
     <Compile Include="Content\ContentReaders\SkinnedEffectReader.cs">
-      <ExcludePlatforms>PSMobile,Web</ExcludePlatforms>
+      <ExcludePlatforms>Web</ExcludePlatforms>
     </Compile>
     <Compile Include="Content\ContentReaders\SongReader.cs" />
     <Compile Include="Content\ContentReaders\SoundEffectReader.cs" />
@@ -226,7 +224,7 @@
     <Compile Include="Content\ContentReaders\StringReader.cs" />
     <Compile Include="Content\ContentReaders\Texture2DReader.cs" />
     <Compile Include="Content\ContentReaders\Texture3DReader.cs">
-      <Platforms>Angle,Linux,MacOS,PSMobile,Windows8,Windows,WindowsGL,WindowsPhone,WindowsPhone81,WindowsUAP</Platforms>
+      <Platforms>Angle,Linux,MacOS,Windows8,Windows,WindowsGL,WindowsPhone,WindowsPhone81,WindowsUAP</Platforms>
     </Compile>
     <Compile Include="Content\ContentReaders\TextureCubeReader.cs">
       <Platforms>Android,Angle,iOS,Linux,MacOS,Ouya,Windows8,Windows,WindowsGL,WindowsPhone,WindowsPhone81,WindowsUAP</Platforms>
@@ -266,7 +264,7 @@
     <Compile Include="Graphics\Effect\AlphaTestEffect.cs" />
     <Compile Include="Graphics\Effect\BasicEffect.cs" />
     <Compile Include="Graphics\Effect\DualTextureEffect.cs">
-      <ExcludePlatforms>PSMobile,Web</ExcludePlatforms>
+      <ExcludePlatforms>Web</ExcludePlatforms>
     </Compile>
     <Compile Include="Graphics\Effect\EffectAnnotationCollection.cs" />
     <Compile Include="Graphics\Effect\EffectAnnotation.cs" />
@@ -282,13 +280,13 @@
     <Compile Include="Graphics\Effect\EffectTechniqueCollection.cs" />
     <Compile Include="Graphics\Effect\EffectTechnique.cs" />
     <Compile Include="Graphics\Effect\EnvironmentMapEffect.cs">
-      <ExcludePlatforms>PSMobile,Web</ExcludePlatforms>
+      <ExcludePlatforms>Web</ExcludePlatforms>
     </Compile>
     <Compile Include="Graphics\Effect\IEffectFog.cs" />
     <Compile Include="Graphics\Effect\IEffectLights.cs" />
     <Compile Include="Graphics\Effect\IEffectMatrices.cs" />
     <Compile Include="Graphics\Effect\SkinnedEffect.cs">
-      <ExcludePlatforms>PSMobile,Web</ExcludePlatforms>
+      <ExcludePlatforms>Web</ExcludePlatforms>
     </Compile>
     <Compile Include="Graphics\Effect\SpriteEffect.cs" />
     <Compile Include="Graphics\GraphicsAdapter.cs" />
@@ -370,9 +368,7 @@
     </Compile>
     <Compile Include="Graphics\Shader\ShaderStage.cs" />
     <Compile Include="Graphics\SpriteBatch.cs" />
-    <Compile Include="Graphics\SpriteBatcher.cs">
-      <ExcludePlatforms>PSMobile</ExcludePlatforms>
-    </Compile>
+    <Compile Include="Graphics\SpriteBatcher.cs" />
     <Compile Include="Graphics\SpriteBatchItem.cs" />
     <Compile Include="Graphics\SpriteEffects.cs" />
     <Compile Include="Graphics\SpriteFont.cs" />
@@ -472,10 +468,10 @@
     <Compile Include="Input\JoystickHat.cs" />
     <Compile Include="Input\JoystickState.cs" />
     <Compile Include="Input\Joystick.Default.cs">
-      <Platforms>Android,Ouya,PSMobile,Windows8,Windows,WindowsPhone,WindowsPhone81,WindowsUAP,iOS,Web</Platforms>
+      <Platforms>Android,Ouya,Windows8,Windows,WindowsPhone,WindowsPhone81,WindowsUAP,iOS,Web</Platforms>
     </Compile>
     <Compile Include="Input\Keyboard.cs">
-      <ExcludePlatforms>PSMobile,Android,Ouya</ExcludePlatforms>
+      <ExcludePlatforms>Android,Ouya</ExcludePlatforms>
     </Compile>
     <Compile Include="Input\KeyboardInput.cs">
       <Platforms>Android,iOS,Windows8,WindowsPhone,WindowsPhone81,WindowsUAP</Platforms>
@@ -494,7 +490,6 @@
     </Compile>
     <Compile Include="Input\Mouse.cs" />
     <Compile Include="Input\MouseState.cs" />
-    <Compile Include="Input\ThumbStickDefinition.cs" />
     <Compile Include="Input\Touch\GestureSample.cs" />
     <Compile Include="Input\Touch\GestureType.cs" />
     <Compile Include="Input\Touch\TouchCollection.cs" />
@@ -522,12 +517,8 @@
     <Compile Include="Media\MediaSource.cs" />
     <Compile Include="Media\MediaSourceType.cs" />
     <Compile Include="Media\MediaState.cs" />
-    <Compile Include="Media\PlaylistCollection.cs">
-      <ExcludePlatforms>PSMobile</ExcludePlatforms>
-    </Compile>
-    <Compile Include="Media\Playlist.cs">
-      <ExcludePlatforms>PSMobile</ExcludePlatforms>
-    </Compile>
+    <Compile Include="Media\PlaylistCollection.cs" />
+    <Compile Include="Media\Playlist.cs" />
     <Compile Include="Media\SongCollection.cs" />
     <Compile Include="Media\Song.cs" />
     <Compile Include="Media\Song.WP.cs">
@@ -537,7 +528,7 @@
     <Compile Include="Storage\StorageContainer.cs" />
     <Compile Include="Storage\StorageDevice.cs" />
     <Compile Include="Storage\StorageDeviceHelper.cs">
-      <Platforms>Android,Angle,iOS,Ouya,PSMobile,Windows8,Windows,WindowsGL,WindowsPhone,Web,WindowsPhone81,WindowsUAP,Linux</Platforms>
+      <Platforms>Android,Angle,iOS,Ouya,Windows8,Windows,WindowsGL,WindowsPhone,Web,WindowsPhone81,WindowsUAP,Linux</Platforms>
     </Compile>
     <Compile Include="Utilities\Hash.cs" />
     <Compile Include="Utilities\FileHelpers.cs" />

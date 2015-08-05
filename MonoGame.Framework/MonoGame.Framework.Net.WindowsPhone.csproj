@@ -23,9 +23,8 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <BaseIntermediateOutputPath>obj\WindowsPhone\x86\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsPhone\x86\Debug</OutputPath>
+    <IntermediateOutputPath>obj\WindowsPhone\x86\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\WindowsPhone\x86\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
     <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE;WINRT;DIRECTX;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -34,9 +33,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
-    <BaseIntermediateOutputPath>obj\WindowsPhone\x86\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsPhone\x86\Release</OutputPath>
+    <IntermediateOutputPath>obj\WindowsPhone\x86\Release</IntermediateOutputPath>
     <DocumentationFile>bin\WindowsPhone\x86\Release\MonoGame.Framework.Net.xml</DocumentationFile>
     <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;WINRT;DIRECTX;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -47,9 +45,8 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <BaseIntermediateOutputPath>obj\WindowsPhone\ARM\Debug\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsPhone\ARM\Debug</OutputPath>
+    <IntermediateOutputPath>obj\WindowsPhone\ARM\Debug</IntermediateOutputPath>
     <DocumentationFile>bin\WindowsPhone\ARM\Debug\MonoGame.Framework.Net.xml</DocumentationFile>
     <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE;WINRT;DIRECTX;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -58,9 +55,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ARM' ">
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
-    <BaseIntermediateOutputPath>obj\WindowsPhone\ARM\Release\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\</IntermediateOutputPath>
     <OutputPath>bin\WindowsPhone\ARM\Release</OutputPath>
+    <IntermediateOutputPath>obj\WindowsPhone\ARM\Release</IntermediateOutputPath>
     <DocumentationFile>bin\WindowsPhone\ARM\Release\MonoGame.Framework.Net.xml</DocumentationFile>
     <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;WINRT;DIRECTX;NET</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -86,7 +82,7 @@
     <Compile Include="GamerServices\MessageBoxIcon.cs" />
     <Compile Include="GamerServices\PropertyDictionary.cs" />
     <Compile Include="Windows\GamerServices\Guide.cs">
-      <Platforms>Windows8,Windows,WindowsGL,WindowsPhone,WindowsPhone81</Platforms>
+      <Platforms>Windows8,Windows,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>
   </ItemGroup>
   <ItemGroup />

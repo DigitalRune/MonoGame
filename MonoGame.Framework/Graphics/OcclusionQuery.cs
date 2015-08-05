@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 #if OPENGL && !IOS
 #if MONOMAC
 using MonoMac.OpenGL;
-#elif WINDOWS || LINUX
+#elif DESKTOPGL
 using OpenTK.Graphics.OpenGL;
 #elif ANGLE || ANDROID // Review for iOS and Android, and change to GLES
 using OpenTK.Graphics.ES30;

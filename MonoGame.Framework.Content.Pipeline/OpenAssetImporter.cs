@@ -494,7 +494,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline
                         list.Add(new BoneWeight(aiMesh.Bones[0].Name, 1));
                     }
 
-                    xnaWeights.Add(list);
+                        xnaWeights.Add(list);
                 }
 
                 if (missingBoneWeights)
@@ -698,8 +698,8 @@ namespace Microsoft.Xna.Framework.Content.Pipeline
                         else
                         {
                             // --> Let's assume that parent's transform is Identity.
-                            node.Transform = Matrix.Invert(offsetMatrix);
-                        }
+                        node.Transform = Matrix.Invert(offsetMatrix);
+                    }
                     }
                     else if (isOffsetMatrixValid && aiParent == _rootBone)
                     {
@@ -920,7 +920,8 @@ namespace Microsoft.Xna.Framework.Content.Pipeline
                     // Apply transformation pivot.
                     var transform = pivot.GetTransform(scale, rotation, translation);
 
-                    channel.Add(new AnimationKeyframe(TimeSpan.FromSeconds(time / aiAnimation.TicksPerSecond), transform));
+                    long ticks = (long)(time * (TimeSpan.TicksPerSecond / aiAnimation.TicksPerSecond));
+                    channel.Add(new AnimationKeyframe(TimeSpan.FromTicks(ticks), transform));
                 }
 
                 animation.Channels[channelGroup.Key] = channel;
