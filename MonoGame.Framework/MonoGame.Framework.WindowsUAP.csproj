@@ -61,9 +61,6 @@
     <Reference Include="SharpDX.XAudio2">
       <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20UAP\SharpDX.XAudio2.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.XInput">
-      <HintPath>..\ThirdParty\Dependencies\SharpDX\Windows%20UAP\SharpDX.XInput.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -430,8 +427,8 @@
     <Compile Include="Input\Buttons.cs" />
     <Compile Include="Input\ButtonState.cs" />
     <Compile Include="Input\GamePad.cs" />
-    <Compile Include="Input\GamePad.XInput.cs">
-      <Platforms>Windows8,Windows,WindowsUAP</Platforms>
+    <Compile Include="Input\GamePad.UWP.cs">
+      <Platforms>WindowsUAP</Platforms>
     </Compile>
     <Compile Include="Input\GamePadButtons.cs" />
     <Compile Include="Input\GamePadCapabilities.cs" />
