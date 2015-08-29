@@ -95,6 +95,8 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
                 format = SurfaceFormat.Single;
             else if (typeof(T) == typeof(byte))
                 format = SurfaceFormat.Alpha8;
+            else if (typeof(T) == typeof(Rg32))
+                format = SurfaceFormat.Rg32;
             else
             {
                 format = SurfaceFormat.Color;

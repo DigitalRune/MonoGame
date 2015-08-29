@@ -164,13 +164,13 @@ namespace Microsoft.Xna.Framework.Content.Pipeline
             // The bits per pixel and image type may have changed
             bpp = FreeImage.GetBPP(fBitmap);
             imageType = FreeImage.GetImageType(fBitmap);
-            var pitch = (int)FreeImage.GetPitch(fBitmap);
             var redMask = FreeImage.GetRedMask(fBitmap);
             var greenMask = FreeImage.GetGreenMask(fBitmap);
             var blueMask = FreeImage.GetBlueMask(fBitmap);
 
             // Get the bytes from the FreeImage bitmap
-            var bytes = new byte[width * height * (bpp / 8)];
+            int pitch = (int)(width * (bpp / 8));
+            var bytes = new byte[pitch * height];
             FreeImage.ConvertToRawBits(bytes, fBitmap, pitch, bpp, redMask, greenMask, blueMask, true);
 
             // Massage into the ordering and formats we want that wasn't possible earlier
@@ -229,6 +229,20 @@ namespace Microsoft.Xna.Framework.Content.Pipeline
 
                 case FREE_IMAGE_TYPE.FIT_RGBAF:
                     face = new PixelBitmapContent<Vector4>(width, height);
+                    break;
+
+                case FREE_IMAGE_TYPE.FIT_UINT16:
+                    // XNA does not have an R16 format. --> Duplicate R channel and use Rg32.
+                    var bytesRg32 = new byte[bytes.Length * 2];
+                    for (int i = 0; i < bytes.Length; i += 2)
+                    {
+                        bytesRg32[i * 2 + 0] = bytes[i];
+                        bytesRg32[i * 2 + 1] = bytes[i + 1];
+                        bytesRg32[i * 2 + 2] = bytes[i];
+                        bytesRg32[i * 2 + 3] = bytes[i + 1];
+                    }
+                    bytes = bytesRg32;
+                    face = new PixelBitmapContent<Rg32>(width, height);
                     break;
             }
             FreeImage.UnloadEx(ref fBitmap);
