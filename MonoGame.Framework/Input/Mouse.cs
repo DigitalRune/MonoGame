@@ -57,7 +57,7 @@ using MonoMac.AppKit;
 using SharpDX.Multimedia;
 using SharpDX.RawInput;
 #endif
-#if WINDOWS_STOREAPP && !WINDOWS_PHONE81
+#if (WINDOWS_STOREAPP && !WINDOWS_PHONE81) || WINDOWS_UAP
 using Windows.Devices.Input;
 #endif
 
@@ -87,7 +87,7 @@ namespace Microsoft.Xna.Framework.Input
         private static int _defaultPositionX;
         private static int _defaultPositionY;
         private static bool _isRelative;
-#if (WINDOWS && DIRECTX) || (WINDOWS_STOREAPP && !WINDOWS_PHONE81)
+#if (WINDOWS && DIRECTX) || (WINDOWS_STOREAPP && !WINDOWS_PHONE81) || WINDOWS_UAP
         private static int _deltaX;
         private static int _deltaY;
 #endif
@@ -114,14 +114,14 @@ namespace Microsoft.Xna.Framework.Input
             {
                 _isRelative = value;
 
-#if WINDOWS && DIRECTX || (WINDOWS_STOREAPP && !WINDOWS_PHONE81)
+#if WINDOWS && DIRECTX || (WINDOWS_STOREAPP && !WINDOWS_PHONE81) || WINDOWS_UAP
                 if (_isRelative)
                 {
 #if WINDOWS && DIRECTX
                     // Register the raw mouse device once, and never unregister the device or event.
                     Device.RegisterDevice(UsagePage.Generic, UsageId.GenericMouse, DeviceFlags.InputSink, WindowHandle);
                     Device.MouseInput += OnRawMouseInput;
-#elif WINDOWS_STOREAPP
+#elif WINDOWS_STOREAPP || WINDOWS_UAP
                     MouseDevice.GetForCurrentView().MouseMoved += OnWinStoreMouseMoved;
 #endif
                 }
@@ -129,7 +129,7 @@ namespace Microsoft.Xna.Framework.Input
                 {
 #if WINDOWS && DIRECTX
                     Device.MouseInput -= OnRawMouseInput;
-#elif WINDOWS_STOREAPP
+#elif WINDOWS_STOREAPP || WINDOWS_UAP
                     // We have to unregister the event handler because while the event is handled 
                     // the mouse behaves differently than the default absolute mouse.
                     MouseDevice.GetForCurrentView().MouseMoved -= OnWinStoreMouseMoved;
@@ -223,7 +223,7 @@ namespace Microsoft.Xna.Framework.Input
             window.MouseState.ScrollWheelValue = (int)(state.Scroll.Y * 120);
 #endif
 
-#if WINDOWS && DIRECTX || WINDOWS_STOREAPP && !WINDOWS_PHONE81
+#if WINDOWS && DIRECTX || WINDOWS_STOREAPP && !WINDOWS_PHONE81 || WINDOWS_UAP
             window.MouseState.DeltaX = _deltaX;
             window.MouseState.DeltaY = _deltaY;
 #else
@@ -272,7 +272,7 @@ namespace Microsoft.Xna.Framework.Input
         {
             _defaultPositionX = x;
             _defaultPositionY = y;
-#if WINDOWS && DIRECTX || WINDOWS_STOREAPP && !WINDOWS_PHONE81
+#if WINDOWS && DIRECTX || WINDOWS_STOREAPP && !WINDOWS_PHONE81 || WINDOWS_UAP
             _deltaX = 0;
             _deltaY = 0;
 #endif
@@ -329,7 +329,7 @@ namespace Microsoft.Xna.Framework.Input
         }
 #endif
 
-#if WINDOWS_STOREAPP && !WINDOWS_PHONE81
+#if WINDOWS_STOREAPP && !WINDOWS_PHONE81 || WINDOWS_UAP
         private static void OnWinStoreMouseMoved(MouseDevice sender, MouseEventArgs mouseEventArgs)
         {
             _deltaX += mouseEventArgs.MouseDelta.X;

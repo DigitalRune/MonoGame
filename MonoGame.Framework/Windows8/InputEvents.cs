@@ -192,7 +192,11 @@ namespace Microsoft.Xna.Framework
             // To scale from window resolution to graphics device back buffer resolution.
             var graphicsDeviceManager = Game.Instance.graphicsDeviceManager;
 
+#if WINDOWS_UAP
+            var clientBounds = UAPGameWindow.Instance.ClientBounds;
+#else
             var clientBounds = MetroGameWindow.Instance.ClientBounds;
+#endif
             var backBufferScaleX = graphicsDeviceManager.PreferredBackBufferWidth / (float)clientBounds.Width;
             var backBufferScaleY = graphicsDeviceManager.PreferredBackBufferHeight / (float)clientBounds.Height;
 
