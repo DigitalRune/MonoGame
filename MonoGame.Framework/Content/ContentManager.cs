@@ -322,7 +322,7 @@ namespace Microsoft.Xna.Framework.Content
 	
 				if (string.IsNullOrEmpty(assetName))
 				{
-					throw new ContentLoadException("Could not load " + originalAssetName + " asset as a non-content file!", ex);
+					throw new ContentLoadException("Could not load " + originalAssetName + " asset as a non-content file! See inner exception for more information.", ex);
 				}
 
                 result = ReadRawAsset<T>(assetName, originalAssetName);
