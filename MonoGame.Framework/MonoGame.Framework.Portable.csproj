@@ -43,6 +43,7 @@
     <Compile Include="Audio\SoundEffectInstance.Null.cs" />
     <Compile Include="Audio\Xact\VolumeEvent.cs" />
     <Compile Include="Graphics\GraphicsDevice.Null.cs" />
+    <Compile Include="Graphics\OcclusionQuery.Null.cs" />
     <Compile Include="Graphics\RenderTarget2D.Null.cs" />
     <Compile Include="Graphics\RenderTarget3D.Null.cs" />
     <Compile Include="Graphics\SamplerStateCollection.Null.cs" />
@@ -58,6 +59,9 @@
     <Compile Include="Graphics\TextureCube.Null.cs" />
     <Compile Include="Graphics\Vertices\IndexBuffer.Null.cs" />
     <Compile Include="Graphics\Vertices\VertexBuffer.Null.cs" />
+    <Compile Include="Graphics\Vertices\VertexBufferBinding.cs" />
+    <Compile Include="Graphics\Vertices\VertexBufferBindings.cs" />
+    <Compile Include="Graphics\Vertices\VertexInputLayout.cs" />
     <Compile Include="Input\GamePad.Default.cs" />
     <Compile Include="Input\KeyboardInput.cs" />
     <Compile Include="Input\KeyboardInput.Null.cs" />

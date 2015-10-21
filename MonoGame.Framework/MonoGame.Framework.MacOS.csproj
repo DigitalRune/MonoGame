@@ -48,6 +48,7 @@
     <EnablePackageSigning>False</EnablePackageSigning>
     <IncludeMonoRuntime>False</IncludeMonoRuntime>
     <UseSGen>False</UseSGen>
+    <UseRefCounting>false</UseRefCounting>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoMac">
@@ -65,6 +66,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\OcclusionQuery.OpenGL.cs" />
+    <Compile Include="Graphics\Vertices\VertexBufferBinding.cs" />
+    <Compile Include="Graphics\Vertices\VertexBufferBindings.cs" />
+    <Compile Include="Graphics\Vertices\VertexInputLayout.cs" />
     <Compile Include="Input\KeyboardInput.cs" />
     <Compile Include="Input\KeyboardInput.Null.cs" />
     <Compile Include="Input\MessageBox.cs" />
