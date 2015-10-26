@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Name="MonoGame.Framework.Net" Path="MonoGame.Framework" Type="Library" Platforms="Android,iOS,Linux,MacOS,Ouya,Windows,Windows8,WindowsGL,WindowsPhone,WindowsPhone81">
+<Project Name="MonoGame.Framework.Net" Path="MonoGame.Framework" Type="Library" Platforms="PCL,Android,iOS,Linux,MacOS,Ouya,Windows,Windows8,WindowsGL,WindowsPhone,WindowsPhone81">
 
   <!--
     Using Protobuild in your own project?  ProjectGuids are only in use here
@@ -9,6 +9,7 @@
     See https://protobuild.readthedocs.org/en/latest/faq.html#project-guids-faq
   -->
   <ProjectGuids>
+    <Platform Name="PCL">E21858C2-3011-4AC2-B3BA-57FB4EE7609A</Platform>
 	<Platform Name="Android">713EE5CA-C850-42AD-AC67-B6546AC8BFFB</Platform>
 	<Platform Name="iOS">D4838656-8545-4DC5-8822-D4AD313E17AC</Platform>
 	<Platform Name="Linux">1B738549-0449-4504-B978-7BFC347E3F3C</Platform>
@@ -23,9 +24,6 @@
 
   <!-- Common assembly references -->
   <References>
-    <Reference Include="System" />
-    <Reference Include="System.Runtime.Serialization" />
-
     <!-- See FrameworkReferences.definition for the platform specific references -->
     <Reference Include="FrameworkReferences.Net" />
     <Reference Include="MonoGame.Framework">
@@ -35,7 +33,8 @@
   </References>
 
   <Properties>
-    
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\DigitalRuneMonoGame.snk</AssemblyOriginatorKeyFile>
     <NoWarn>1591,0436</NoWarn>
     <MonoDevelopPoliciesFile>Build/MonoDevelopPolicies.xml</MonoDevelopPoliciesFile>
 
@@ -44,6 +43,7 @@
     <PlatformSpecificOutputFolder>True</PlatformSpecificOutputFolder>
 
     <CustomDefinitions>
+      <Platform Name="PCL">TRACE;PORTABLE</Platform>
       <Platform Name="Android">TRACE;ANDROID;GLES;OPENGL;NET</Platform>
       <Platform Name="iOS">IOS;GLES;OPENGL;OPENAL;NET</Platform>
       <Platform Name="Linux">TRACE;LINUX;OPENGL;OPENAL;NET;DESKTOPGL</Platform>
@@ -113,13 +113,13 @@
       <ExcludePlatforms>WindowsPhone</ExcludePlatforms> 
     </Compile>
     <Compile Include="GamerServices\GuideAlreadyVisibleException.cs">
-      <Platforms>Android,MacOS,Ouya,Windows,WindowsGL,Linux</Platforms>
+      <Platforms>PCL,Android,MacOS,Ouya,Windows,WindowsGL,Linux</Platforms>
     </Compile>
     <Compile Include="GamerServices\GamerServicesDispatcher.cs">
-      <Platforms>MacOS,Windows,WindowsGL,Linux</Platforms>
+      <Platforms>PCL,MacOS,Windows,WindowsGL,Linux</Platforms>
     </Compile>
     <Compile Include="GamerServices\GamerServicesComponent.cs">
-      <Platforms>Android,iOS,Linux,MacOS,Ouya,Windows,WindowsGL</Platforms>
+      <Platforms>PCL,Android,iOS,Linux,MacOS,Ouya,Windows,WindowsGL</Platforms>
     </Compile>
  
 
@@ -165,7 +165,7 @@
       <ExcludePlatforms>WindowsPhone,WindowsPhone81,Windows8</ExcludePlatforms> 
     </Compile>
     <Compile Include="Net\MonoGamerPeer.cs">
-      <ExcludePlatforms>WindowsPhone,WindowsPhone81,Windows8</ExcludePlatforms> 
+      <ExcludePlatforms>PCL,WindowsPhone,WindowsPhone81,Windows8</ExcludePlatforms> 
     </Compile>
     <Compile Include="Net\NetworkException.cs">
       <ExcludePlatforms>WindowsPhone,WindowsPhone81,Windows8</ExcludePlatforms> 
@@ -290,13 +290,13 @@
 
     <!-- Windows Desktop Platform -->
     <Compile Include="Windows\GamerServices\Guide.cs">
-      <Platforms>Windows8,Windows,WindowsPhone,WindowsPhone81</Platforms>
+      <Platforms>PCL,Windows8,Windows,WindowsPhone,WindowsPhone81</Platforms>
     </Compile>
     <Compile Include="Windows\GamerServices\MonoGameGamerServicesHelper.cs">
       <Platforms>Windows</Platforms>
     </Compile>
     <Compile Include="Windows\GamerServices\SignedInGamer.cs">
-      <Platforms>Windows</Platforms>
+      <Platforms>PCL,Windows</Platforms>
     </Compile>
 
  

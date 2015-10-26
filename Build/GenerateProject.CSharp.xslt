@@ -275,7 +275,9 @@
             <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
           </xsl:when>
           <xsl:when test="/Input/Generation/Platform = 'Windows8'">
-            <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+            <TargetFrameworkVersion></TargetFrameworkVersion>
+            <TargetPlatformVersion>8.1</TargetPlatformVersion>
+            <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
           </xsl:when>
           <xsl:when test="/Input/Generation/Platform = 'WindowsPhone'">
             <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
@@ -561,7 +563,7 @@
             <xsl:value-of select="/Input/Properties/iOSExtraArgs" />
           </MtouchExtraArgs>
         </xsl:if>
-        <xsl:if test="/Input/Properties/SignAssembly">
+        <!--<xsl:if test="/Input/Properties/SignAssembly">
           <SignAssembly>
             <xsl:value-of select="/Input/Properties/SignAssembly" />
           </SignAssembly>
@@ -570,7 +572,7 @@
           <CodesignKey>
             <xsl:value-of select="user:GetCodesignKey()" />
           </CodesignKey>
-        </xsl:if>
+        </xsl:if>-->
       </xsl:when>
       <xsl:when test="/Input/Generation/Platform = 'MacOS'">
         <EnableCodeSigning>False</EnableCodeSigning>
@@ -664,7 +666,10 @@
       <xsl:choose>
         <xsl:when test="/Input/Generation/Platform = 'WindowsUAP'">
           <xsl:text>14.0</xsl:text>
-        </xsl:when>		  
+        </xsl:when>
+        <xsl:when test="/Input/Generation/Platform = 'Windows8'">
+          <xsl:text>12.0</xsl:text>
+        </xsl:when>
         <xsl:when test="/Input/Generation/Platform = 'WindowsPhone81'">
           <xsl:text>12.0</xsl:text>
         </xsl:when>
@@ -708,6 +713,9 @@
             <Platform Condition=" '$(Platform)' == '' ">
               <xsl:value-of select="/Input/Properties/ForceArchitecture" />
             </Platform>
+          </xsl:when>
+          <xsl:when test="/Input/Generation/Platform = 'iOS'">
+            <Platform Condition=" '$(Platform)' == '' ">iPhone</Platform>
           </xsl:when>
           <xsl:otherwise>
             <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -885,6 +893,12 @@
           </xsl:choose>
         </RootNamespace>
         <AssemblyName><xsl:copy-of select="$assembly_name" /></AssemblyName>
+        <xsl:if test="/Input/Properties/SignAssembly">
+          <SignAssembly><xsl:value-of select="/Input/Properties/SignAssembly" /></SignAssembly>
+        </xsl:if>
+        <xsl:if test="/Input/Properties/AssemblyOriginatorKeyFile">
+          <AssemblyOriginatorKeyFile><xsl:value-of select="/Input/Properties/AssemblyOriginatorKeyFile" /></AssemblyOriginatorKeyFile>
+        </xsl:if>
         <xsl:if test="/Input/Generation/Platform != 'PCL'">
           <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         </xsl:if>
@@ -1129,7 +1143,7 @@
           </Reference>
         </xsl:if>
 
-        <xsl:if test="/Input/Generation/Platform = 'MacOS'">
+        <!--<xsl:if test="/Input/Generation/Platform = 'MacOS'">
           <xsl:choose>
             <xsl:when test="user:HasXamarinMac()">
               <Reference Include="XamMac" />
@@ -1138,7 +1152,7 @@
               <Reference Include="MonoMac" />
             </xsl:otherwise>
           </xsl:choose>
-        </xsl:if>
+        </xsl:if>-->
 
         <xsl:if test="/Input/Generation/Platform = 'iOS'">
           <xsl:choose>
@@ -1996,8 +2010,8 @@
           <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
         </xsl:when>
         <xsl:when test="/Input/Generation/Platform = 'Windows8'">
-          <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
-            <VisualStudioVersion>11.0</VisualStudioVersion>
+          <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+            <VisualStudioVersion>12.0</VisualStudioVersion>
           </PropertyGroup>
           <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
         </xsl:when>

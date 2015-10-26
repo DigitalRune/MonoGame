@@ -2,6 +2,8 @@
 <ExternalProject Name="FrameworkReferences">
 
   <Platform Type="iOS">
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
     <Reference Include="OpenTK-1.0" />
@@ -9,6 +11,8 @@
 
   <Platform Type="Linux">
     <Service Name="MonoGame.Framework/OpenGLGraphics">
+      <Reference Include="System" />
+      <Reference Include="System.Runtime.Serialization" />
       <Reference Include="System.Drawing" />
       <Binary
         Name="NVorbis"
@@ -21,8 +25,11 @@
 
   <Platform Type="MacOS">
     <Service Name="MonoGame.Framework/OpenGLGraphics">
+      <Reference Include="System" />
+      <Reference Include="System.Runtime.Serialization" />
       <Reference Include="System.Core" />
       <Reference Include="System.Drawing" />
+      <Binary Name="MonoMac" Path="ThirdParty\Dependencies\MonoMac\MonoMac.dll" />
       <Binary
         Name="Tao.Sdl"
         Path="ThirdParty/GamepadConfig/Tao.Sdl.dll" />
@@ -33,6 +40,8 @@
   </Platform>
 
   <Platform Type="Android">
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
     <Reference Include="OpenTK-1.0" />
@@ -40,6 +49,8 @@
   </Platform>
 
   <Platform Type="Ouya">
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
     <Reference Include="OpenTK-1.0" />
@@ -51,6 +62,8 @@
 
   <Platform Type="Windows">
     <Service Name="MonoGame.Framework/DirectXGraphics">
+      <Reference Include="System" />
+      <Reference Include="System.Runtime.Serialization" />
       <Reference Include="System.Core" />
       <Reference Include="System.Drawing" />
       <Reference Include="System.Web" />
@@ -84,6 +97,8 @@
     </Service>
 
     <Service Name="MonoGame.Framework/OpenGLGraphics">
+      <Reference Include="System" />
+      <Reference Include="System.Runtime.Serialization" />
       <Reference Include="System.Core" />
       <Reference Include="System.Drawing" />
       <Reference Include="System.Web" />
@@ -97,6 +112,8 @@
   </Platform>
 
   <Platform Type="Windows8">
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
     <Binary
       Name="SharpDX"
       Path="ThirdParty/Dependencies/SharpDX/Windows 8 Metro/SharpDX.dll" />
@@ -122,6 +139,8 @@
 
   <Platform Type="WindowsGL">
     <Service Name="MonoGame.Framework/OpenGLGraphics">
+      <Reference Include="System" />
+      <Reference Include="System.Runtime.Serialization" />
       <Reference Include="System.Core" />
       <Reference Include="System.Drawing" />
       <Reference Include="System.Web" />
@@ -138,6 +157,8 @@
   </Platform>
 
   <Platform Type="WindowsPhone">
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
     <Binary
       Name="SharpDX"
       Path="ThirdParty/Dependencies/SharpDX/Windows Phone/$(Platform)/SharpDX.dll" />
@@ -162,6 +183,8 @@
   </Platform>
   
   <Platform Type="WindowsPhone81">
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
     <Binary
       Name="SharpDX"
       Path="ThirdParty/Dependencies/SharpDX/Windows Phone 8.1/SharpDX.dll" />
@@ -186,6 +209,8 @@
   </Platform>
 	
   <Platform Type="WindowsUAP">
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
     <Binary
       Name="SharpDX"
       Path="ThirdParty/Dependencies/SharpDX/Windows UAP/SharpDX.dll" />
@@ -207,10 +232,14 @@
   </Platform>
 	
   <Platform Type="Web">
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="JSIL.Meta" />
   </Platform>
 
   <Service Name="MonoGame.Framework/ANGLEGraphics">
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />

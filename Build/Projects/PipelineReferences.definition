@@ -29,6 +29,7 @@
   </Platform>
 
   <Platform Type="MacOS">
+    <Reference Include="MonoMac" />
     <Reference Include="atk-sharp"/>
     <Reference Include="gdk-sharp"/>
     <Reference Include="glade-sharp"/>

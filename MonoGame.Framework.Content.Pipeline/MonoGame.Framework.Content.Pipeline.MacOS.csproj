@@ -49,7 +49,6 @@
     <UseSGen>False</UseSGen>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MonoMac" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />

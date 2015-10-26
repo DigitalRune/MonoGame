@@ -62,15 +62,15 @@ monodroid*.msi
 Documentation/Output/
 
 # Protobuild Generated Files
-#MonoGame.Framework.Content.Pipeline/*.csproj
-#MonoGame.Framework/*.csproj
+MonoGame.Framework.Content.Pipeline/*.csproj
+MonoGame.Framework/*.csproj
 Tools/2MGFX/*.csproj
 Tools/MGCB/*.csproj
 Tools/Pipeline/*.csproj
 ThirdParty/Lidgren.Network/*.csproj
 Test/*.csproj
 !Test/MonoGame.Test.XNA.csproj
-#/*.sln
+/*.sln
 *.speccache
 *.ncrunchproject
 *.ncrunchsolution

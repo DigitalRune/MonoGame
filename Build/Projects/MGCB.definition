@@ -8,6 +8,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+      
+    <!-- See MGCBReferences.definition for the platform specific references -->
+    <Reference Include="MGCBReferences" />
+      
     <Reference Include="MonoGame.Framework" />
     <Reference Include="MonoGame.Framework.Content.Pipeline" />
   </References>

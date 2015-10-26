@@ -27,6 +27,7 @@
       <Platform Name="MacOS">TRACE;MONOMAC;GTK2</Platform>
       <Platform Name="Linux">TRACE;LINUX;GTK3</Platform>
     </CustomDefinitions>
+    <ForceArchitecture>x64</ForceArchitecture>
   </Properties>
 
   <Files>
