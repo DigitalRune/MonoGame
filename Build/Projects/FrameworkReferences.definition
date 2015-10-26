@@ -209,8 +209,6 @@
   </Platform>
 	
   <Platform Type="WindowsUAP">
-    <Reference Include="System" />
-    <Reference Include="System.Runtime.Serialization" />
     <Binary
       Name="SharpDX"
       Path="ThirdParty/Dependencies/SharpDX/Windows UAP/SharpDX.dll" />

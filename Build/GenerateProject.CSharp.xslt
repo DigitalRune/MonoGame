@@ -327,7 +327,7 @@
         <TargetFrameworkProfile></TargetFrameworkProfile>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:if test="/Input/Generation/Platform = 'Windows8' or /Input/Generation/Platform = 'WindowsUAP'">
+    <xsl:if test="/Input/Generation/Platform = 'Windows8' or /Input/Generation/Platform = 'WindowsPhone81' or /Input/Generation/Platform = 'WindowsUAP'">
       <DefaultLanguage>en-US</DefaultLanguage>
     </xsl:if>
   </xsl:template>

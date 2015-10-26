@@ -55,7 +55,6 @@
   <Platform Type="Windows8">
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="MonoGame.Framework.Windows8" />
   </Platform>
 
   <Platform Type="WindowsGL">
@@ -79,7 +78,6 @@
   <Platform Type="WindowsPhone81">
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="MonoGame.Framework.WindowsPhone81" />
   </Platform>
    
   <Platform Type="Web">
