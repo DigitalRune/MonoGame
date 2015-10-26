@@ -16,11 +16,13 @@ namespace Microsoft.Xna.Framework
 {
     internal class InputEvents
     {
+        private readonly CoreWindow _window;
         private readonly TouchQueue _touchQueue;
         private readonly List<Keys> _keys = new List<Keys>();
 
         public InputEvents(CoreWindow window, UIElement inputElement, TouchQueue touchQueue)
         {
+            _window = window;
             _touchQueue = touchQueue;
 
             // The key events are always tied to the window as those will
@@ -207,8 +209,32 @@ namespace Microsoft.Xna.Framework
 
         public void UpdateState()
         {
+            // Check ALT keys in every tick. (ALT keys don't fire KeyUp/KeyDown events.)
+            if (IsDown(Windows.System.VirtualKey.LeftMenu))
+            {
+                if (!_keys.Contains(Keys.LeftAlt))
+                    _keys.Add(Keys.LeftAlt);
+            }
+            else
+                _keys.Remove(Keys.LeftAlt);
+
+            if (IsDown(Windows.System.VirtualKey.RightMenu))
+            {
+                if (!_keys.Contains(Keys.RightAlt))
+                    _keys.Add(Keys.RightAlt);
+            }
+            else
+                _keys.Remove(Keys.RightAlt);
+
             // Update the keyboard state.
             Keyboard.SetKeys(_keys);
+        }
+
+
+        private bool IsDown(Windows.System.VirtualKey key)
+        {
+            var keyState = _window.GetKeyState(key);
+            return (keyState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
         }
 
         private static Keys KeyTranslate(Windows.System.VirtualKey inkey, CorePhysicalKeyStatus keyStatus)
@@ -225,9 +251,7 @@ namespace Microsoft.Xna.Framework
                     // left shift is 0x2A, right shift is 0x36. IsExtendedKey is always false.
                     return (keyStatus.ScanCode==0x36) ? Keys.RightShift : Keys.LeftShift;
                 // Note that the Alt key is now refered to as Menu.
-                // ALT key doesn't get fired by KeyUp/KeyDown events.
-                // One solution could be to check CoreWindow.GetKeyState(...) on every tick.
-                case Windows.System.VirtualKey.Menu:                    
+                case Windows.System.VirtualKey.Menu:
                     return Keys.LeftAlt;
 
                 default:
