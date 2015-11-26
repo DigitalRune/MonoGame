@@ -613,7 +613,8 @@ namespace MonoGame.Framework.Content.Pipeline.Builder
             }
             else
             {
-                Logger.LogMessage("Skipping {0}", pipelineEvent.SourceFile);
+                // "Skipping" messages are commented out because they just clutter the build log.
+                //Logger.LogMessage("Skipping {0}", pipelineEvent.SourceFile);
             }
 
             Logger.PopFile();
