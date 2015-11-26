@@ -283,28 +283,28 @@ namespace Microsoft.Xna.Framework.Content.Pipeline
                     Identity = _identity,
                 };
 
-                if (aiMaterial.HasTextureDiffuse)
+                if (aiMaterial.HasTextureDiffuse && !string.IsNullOrEmpty(aiMaterial.TextureDiffuse.FilePath))
                 {
                     var texture = new ExternalReference<TextureContent>(aiMaterial.TextureDiffuse.FilePath, _identity);
                     texture.OpaqueData.Add("TextureCoordinate", string.Format("TextureCoordinate{0}", aiMaterial.TextureDiffuse.UVIndex));
                     material.Texture = texture;
                 }
 
-                if (aiMaterial.HasTextureOpacity)
+                if (aiMaterial.HasTextureOpacity && !string.IsNullOrEmpty(aiMaterial.TextureOpacity.FilePath))
                 {
                     var texture = new ExternalReference<TextureContent>(aiMaterial.TextureOpacity.FilePath, _identity);
                     texture.OpaqueData.Add("TextureCoordinate", string.Format("TextureCoordinate{0}", aiMaterial.TextureOpacity.UVIndex));
                     material.Textures.Add("Transparency", texture);
                 }
 
-                if (aiMaterial.HasTextureSpecular)
+                if (aiMaterial.HasTextureSpecular && !string.IsNullOrEmpty(aiMaterial.TextureSpecular.FilePath))
                 {
                     var texture = new ExternalReference<TextureContent>(aiMaterial.TextureSpecular.FilePath, _identity);
                     texture.OpaqueData.Add("TextureCoordinate", string.Format("TextureCoordinate{0}", aiMaterial.TextureSpecular.UVIndex));
                     material.Textures.Add("Specular", texture);
                 }
 
-                if (aiMaterial.HasTextureHeight)
+                if (aiMaterial.HasTextureHeight && !string.IsNullOrEmpty(aiMaterial.TextureHeight.FilePath))
                 {
                     var texture = new ExternalReference<TextureContent>(aiMaterial.TextureHeight.FilePath, _identity);
                     texture.OpaqueData.Add("TextureCoordinate", string.Format("TextureCoordinate{0}", aiMaterial.TextureHeight.UVIndex));
@@ -541,7 +541,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline
                 rootBones.Add(FindRootBone(_scene, boneName));
 
             if (rootBones.Count > 1)
-                throw new InvalidContentException("Multiple skeletons found. Please ensure that the model does not contain more that one skeleton.", _identity);
+                throw new InvalidContentException("Multiple skeletons found. Please ensure that the model does not contain more than one skeleton.", _identity);
 
             _rootBone = rootBones.First();
 
