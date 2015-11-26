@@ -59,6 +59,7 @@ namespace Microsoft.Xna.Framework.Audio
         internal AudioBuffer _buffer;
         internal AudioBuffer _loopedBuffer;
         internal WaveFormat _format;
+        internal float[] _channelAzimuths;
 
         #region Initialization
 
@@ -175,6 +176,10 @@ namespace Microsoft.Xna.Framework.Audio
                 LoopCount = AudioBuffer.LoopInfinite,
                 Context = new IntPtr(42),
             };
+
+            // 3D sound (see X3DAudio.Calculate) requires an azimuth array if there are 2 or more channels.
+            if (format.Channels > 1)
+                _channelAzimuths = new float[format.Channels];
         }
 
         private void PlatformSetupInstance(SoundEffectInstance inst)
