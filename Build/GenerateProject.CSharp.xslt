@@ -1358,6 +1358,11 @@
                             '.csproj'),
                           @Path)" />
                     </HintPath>
+                    <xsl:choose>
+                      <xsl:when test="@LocalCopy">
+                        <Private><xsl:value-of select="@LocalCopy" /></Private>
+                      </xsl:when>
+                    </xsl:choose>
                   </Reference>
                 </xsl:for-each>
                 <xsl:for-each select="./Service">
@@ -2135,7 +2140,7 @@
         </xsl:if>
       </xsl:if>
 
-      {ADDITIONAL_TRANSFORMS}
+      <!-- {ADDITIONAL_TRANSFORMS} -->
 
       <ItemGroup>
         <xsl:for-each select="$project/References/Reference">

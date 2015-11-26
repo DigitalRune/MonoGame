@@ -79,6 +79,10 @@
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
   </Platform>
+  
+  <Platform Type="WindowsUAP">
+    <Reference Include="MonoGame.Framework.WindowsUAP" />
+  </Platform>
    
   <Platform Type="Web">
     <Reference Include="JSIL.Meta" />

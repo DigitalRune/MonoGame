@@ -124,7 +124,6 @@ namespace MonoGame.Tools.Pipeline
             }
 
             propertiesview1.Initalize (this);
-            this.textview2.SizeAllocated += AutoScroll;
         }
             
         void BuildMenu() {
@@ -186,7 +185,12 @@ namespace MonoGame.Tools.Pipeline
             _controller = controller;
             propertiesview1.controller = _controller;
 
-            _controller.OnBuildStarted += UpdateMenus;
+            _controller.OnBuildStarted += delegate
+            {
+                buildOutput1.SetBaseFolder(_controller);
+                UpdateMenus();
+            };
+            
             _controller.OnBuildFinished += UpdateMenus;
             _controller.OnProjectLoading += UpdateMenus;
             _controller.OnProjectLoaded += UpdateMenus;
@@ -348,41 +352,25 @@ namespace MonoGame.Tools.Pipeline
             UpdateMenus ();
         }
 
-        public void AutoScroll(object sender, SizeAllocatedArgs e)
-        {
-            textview2.ScrollToIter(textview2.Buffer.EndIter, 0, false, 0, 0);
-        }
-
         public void OutputAppend (string text)
         {
             if (text == null)
                 return;
 
-            Application.Invoke (delegate { 
-                try {
-                    lock(textview2.Buffer) {
-                        textview2.Buffer.Text += text + "\r\n";
-                        UpdateMenus();
-                        System.Threading.Thread.Sleep(1);
-                    }
-                }
-                catch {
-                }
-            });
+            Application.Invoke(delegate
+                { 
+                    buildOutput1.OutputAppend(text);
+                    UpdateMenus();
+                });
         }
 
         public void OutputClear ()
         {
-            Application.Invoke (delegate { 
-                try {
-                    lock(textview2.Buffer) {
-                        textview2.Buffer.Text = "";
-                        UpdateMenus();
-                    }
-                }
-                catch {
-                }
-            });
+            Application.Invoke(delegate
+                { 
+                    buildOutput1.ClearOutput();
+                    UpdateMenus();
+                });
         }
 
         public bool ChooseContentFile (string initialDirectory, out List<string> files)
@@ -466,6 +454,27 @@ namespace MonoGame.Tools.Pipeline
             projectview1.RefreshItem(projectview1.GetBaseIter(), item.OriginalPath, item.Exists, _controller.GetFullPath(item.OriginalPath));
         }
 
+
+#if MONOMAC || LINUX
+        string FindSystemMono ()
+        {
+            // El Capitan Support. /usr/bin is now read only and /usr/local/bin is NOT included
+            // in $PATH for apps... only the shell. So we need to manaully find the full path to 
+            // the right location.
+            string[] pathsToCheck = new string[] {
+                "/usr/bin",
+                "/usr/local/bin",
+                "/Library/Frameworks/Mono.framework/Versions/Current/bin",
+            };
+            foreach (var path in pathsToCheck) {
+                if (System.IO.File.Exists (System.IO.Path.Combine (path, "mono")))
+                    return System.IO.Path.Combine (path, "mono");
+            }
+            OutputAppend("Cound not find mono. Please install the latest version from http://www.mono-project.com");
+            return "mono";
+        }
+#endif
+
         public Process CreateProcess(string exe, string commands)
         {
             var _buildProcess = new Process();
@@ -474,7 +483,7 @@ namespace MonoGame.Tools.Pipeline
             _buildProcess.StartInfo.Arguments = commands;
 #endif
 #if MONOMAC || LINUX
-            _buildProcess.StartInfo.FileName = "mono";
+            _buildProcess.StartInfo.FileName = FindSystemMono ();
             if (_controller.LaunchDebugger) {
                 var port = Environment.GetEnvironmentVariable("MONO_DEBUGGER_PORT");
                 port = !string.IsNullOrEmpty (port) ? port : "55555";
@@ -695,6 +704,11 @@ namespace MonoGame.Tools.Pipeline
             _controller.LaunchDebugger = this.DebugModeAction.Active;
         }
 
+        protected void OnFilterOutputActionActivated (object sender, System.EventArgs e)
+        {
+            buildOutput1.CurrentPage = (FilterOutputAction.Active) ? 0 : 1;
+        }
+
         protected void OnCancelBuildActionActivated (object sender, EventArgs e)
         {
             _controller.CancelBuild();
@@ -712,6 +726,7 @@ namespace MonoGame.Tools.Pipeline
             var somethingSelected = paths.Length > 0;
 
             // Update the state of all menu items.
+
 
             Application.Invoke(delegate
                 { 
@@ -752,11 +767,10 @@ namespace MonoGame.Tools.Pipeline
                     #endif
 
                     DebugModeAction.Sensitive = notBuilding;
-
                     UpdateUndoRedo(_controller.CanUndo, _controller.CanRedo);
-                    UpdateRecentProjectList();
-
                 });
+
+            UpdateRecentProjectList();
         }
 
         public void UpdateRecentProjectList()
@@ -782,22 +796,27 @@ namespace MonoGame.Tools.Pipeline
 
                 m.Insert (recentItem, 0);
             }
-                
-            if (nop > 0) {
-                m.Add (new SeparatorMenuItem ());
-                var item = new MenuItem ("Clear");
-                item.Activated += delegate {
-                    History.Default.Clear ();
-                    UpdateRecentProjectList ();
-                };
-                m.Add (item);
 
-                recentMenu.Submenu = m;
-                m.ShowAll ();
-            }
+            Application.Invoke(delegate
+                { 
+                    if (nop > 0)
+                    {
+                        m.Add(new SeparatorMenuItem());
+                        var item = new MenuItem("Clear");
+                        item.Activated += delegate
+                        {
+                            History.Default.Clear();
+                            UpdateRecentProjectList();
+                        };
+                        m.Add(item);
 
-            recentMenu.Sensitive = nop > 0;
-            menubar1.ShowAll ();
+                        recentMenu.Submenu = m;
+                        m.ShowAll();
+                    }
+
+                    recentMenu.Sensitive = nop > 0;
+                    menubar1.ShowAll();
+                });
         }
 
         void UpdateUndoRedo(bool canUndo, bool canRedo)

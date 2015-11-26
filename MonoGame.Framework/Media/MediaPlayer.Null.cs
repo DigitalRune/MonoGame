@@ -70,7 +70,7 @@ namespace Microsoft.Xna.Framework.Media
         {
         }
 
-        private static void PlatformPlaySong(Song song)
+        private static void PlatformPlaySong(Song song, TimeSpan? startPosition)
         {
         }
 

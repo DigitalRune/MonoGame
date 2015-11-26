@@ -106,6 +106,7 @@
     <Compile Include="Framework\CurveTest.cs" />
     <Compile Include="Framework\EnumConformingTest.cs" />
     <Compile Include="Framework\GamePadStateTest.cs" />
+    <Compile Include="Framework\GamePadThumbSticksTest.cs" />
     <Compile Include="Framework\MatrixTest.cs" />
     <Compile Include="Framework\PackedVectorTest.cs" />
     <Compile Include="Framework\PlaneTest.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Framework\Visual\SpriteFontTest.cs" />
     <Compile Include="Framework\Components\UpdateGuard.cs" />
     <Compile Include="Framework\Visual\ViewportTest.cs" />
+    <Compile Include="Framework\Visual\OcclusionQueryTest.cs" />
     <Compile Include="Framework\Visual\VisualTestFixtureBase.cs" />
     <Compile Include="Framework\Visual\VisualTestGame.cs" />
     <Compile Include="Runner\Windows\Program.cs" />

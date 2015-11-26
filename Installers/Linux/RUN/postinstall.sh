@@ -13,16 +13,9 @@ then
 	exit 1
 fi
 
-#installation
+#pipeline installation
 DIR=$(pwd)
 IDIR="/opt/monogame-pipeline"
-
-read -p "The pipeline will be installed in $IDIR, ok(Y, n): " choice
-case "$choice" in 
-	n|N ) 
-	echo "Type in the directory that will be used for installation:" 
-	read IDIR
-esac
 
 if [ -d "$IDIR" ]
 then
@@ -39,23 +32,19 @@ echo "rm -rf $IDIR" >> $IDIR/uninstall.sh
 ./Dependencies/dependencies.sh
 
 #setup nvtt libraries
-if [ ! -f /lib/libnvcore.so ]
-then
+if [ ! -f /lib/libnvcore.so ]; then
 	ln $IDIR/libnvcore.so /lib/libnvcore.so
 fi
 
-if [ ! -f /lib/libnvimage.so ]
-then
+if [ ! -f /lib/libnvimage.so ]; then
 	ln $IDIR/libnvimage.so /lib/libnvimage.so
 fi
 
-if [ ! -f /lib/libnvmath.so ]
-then
+if [ ! -f /lib/libnvmath.so ]; then
 	ln $IDIR/libnvmath.so /lib/libnvmath.so
 fi
 
-if [ ! -f /lib/libnvtt.so ]
-then
+if [ ! -f /lib/libnvtt.so ]; then
 	ln $IDIR/libnvtt.so /lib/libnvtt.so
 fi
 
@@ -85,8 +74,23 @@ read -p "Install monodevelop addin(Y, n): " choice2
 case "$choice2" in 
 	n|N ) ;;
 	*)
-	sudo -H -u $SUDO_USER bash -c 'mdtool setup install $DIR/Main/MonoDevelop.MonoGame.mpack'
+	sudo -H -u $SUDO_USER bash -c "mdtool setup install $DIR/Main/MonoDevelop.MonoGame.mpack"
 esac
+
+#MonoGame.xbuild data
+if [ -d /usr/lib/mono/xbuild/MonoGame ]; then
+	rm -rf /usr/lib/mono/xbuild/MonoGame
+fi
+
+mkdir /usr/lib/mono/xbuild/MonoGame
+mkdir /usr/lib/mono/xbuild/MonoGame/v3.0
+
+mkdir /usr/lib/mono/xbuild/MonoGame/v3.0/Assemblies/
+cp "$DIR/Assemblies/." /usr/lib/mono/xbuild/MonoGame/v3.0/Assemblies/ -R
+
+sudo ln -s /opt/monogame-pipeline /usr/lib/mono/xbuild/MonoGame/v3.0/Tools
+
+sudo cp $DIR/Main/MonoGame.Content.Builder.targets /usr/lib/mono/xbuild/MonoGame/v3.0/
 
 #fix permissions
 usr="$SUDO_USER"
@@ -114,19 +118,31 @@ cp $DIR/Main/mgcb /bin/mgcb
 chmod +x /bin/mgcb
 
 #application/mimetype icon
+if [ ! -d /usr/share/icons/gnome/scalable/mimetypes ]
+then
+	mkdir /usr/share/icons/gnome/scalable/mimetypes
+fi
+
 cp $DIR/Main/monogame.svg /usr/share/icons/gnome/scalable/mimetypes/monogame.svg
-sudo gtk-update-icon-cache /usr/share/icons/gnome/ -f
+
+if [ -f /usr/share/icons/default/index.theme ]
+then
+	sudo gtk-update-icon-cache /usr/share/icons/default/ -f
+else
+	sudo gtk-update-icon-cache /usr/share/icons/gnome/ -f
+fi
 
 #application launcher
 if [ -f /usr/share/applications/Monogame\ Pipeline.desktop ]
 then
 	rm /usr/share/applications/Monogame\ Pipeline.desktop
 fi
-echo "[Desktop Entry]\nVersion=1.0\nEncoding=UTF-8\nName=MonoGame Pipeline\nGenericName=MonoGame Pipeline\nComment=Used to create platform specific .xnb files\nExec=monogame-pipeline %F\nTryExec=monogame-pipeline\nIcon=monogame\nStartupNotify=true\nTerminal=false\nType=Application\nMimeType=text/mgcb;\nCategories=Development;" >> /usr/share/applications/Monogame\ Pipeline.desktop
+echo -e "[Desktop Entry]\nVersion=1.0\nEncoding=UTF-8\nName=MonoGame Pipeline\nGenericName=MonoGame Pipeline\nComment=Used to create platform specific .xnb files\nExec=monogame-pipeline %F\nTryExec=monogame-pipeline\nIcon=monogame\nStartupNotify=true\nTerminal=false\nType=Application\nMimeType=text/mgcb;\nCategories=Development;" | sudo tee --append /usr/share/applications/Monogame\ Pipeline.desktop > /dev/null
 
 #mimetype
 echo "Adding mimetype..."
 xdg-mime install $DIR/Main/mgcb.xml --novendor
+xdg-mime default "Monogame Pipeline.desktop" text/mgcb
 
 #uninstall script
 chmod +x $IDIR/uninstall.sh

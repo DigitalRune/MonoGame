@@ -232,7 +232,7 @@
   <Platform Type="Web">
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="JSIL.Meta" />
+    <Reference Include="Microsoft.CSharp" />
   </Platform>
 
   <Service Name="MonoGame.Framework/ANGLEGraphics">

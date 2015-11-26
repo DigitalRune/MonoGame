@@ -16,7 +16,6 @@ namespace Microsoft.Xna.Framework.Graphics
 
         private void PlatformEnd()
         {
-
         }
 
         private bool PlatformGetResult(out int pixelCount)

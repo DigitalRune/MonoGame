@@ -92,6 +92,7 @@
 	<Compile Include="Framework\CurveTest.cs" />
 	<Compile Include="Framework\EnumConformingTest.cs" />
     <Compile Include="Framework\GamePadStateTest.cs" />
+    <Compile Include="Framework\GamePadThumbSticksTest.cs" />
     <Compile Include="Framework\GameTest.cs" />	
     <Compile Include="Framework\GameTest+Methods.cs" />
     <Compile Include="Framework\GameTest+Properties.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Framework\Visual\SpriteBatchTest.cs" />
     <Compile Include="Framework\Visual\SpriteFontTest.cs" />
     <Compile Include="Framework\Visual\ViewportTest.cs" />
+    <Compile Include="Framework\Visual\OcclusionQueryTest.cs" />
     <Compile Include="Framework\Visual\VisualTestFixtureBase.cs" />
     <Compile Include="Framework\Visual\VisualTestGame.cs" />
 

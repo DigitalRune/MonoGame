@@ -571,9 +571,6 @@
     <Compile Include="Graphics\ModelMeshPart.cs" />
     <Compile Include="Graphics\NoSuitableGraphicsDeviceException.cs" />
     <Compile Include="Graphics\OcclusionQuery.cs" />
-    <Compile Include="Graphics\OcclusionQuery.Null.cs">
-      <Platforms>PCL</Platforms>
-    </Compile>
     <Compile Include="Graphics\OcclusionQuery.DirectX.cs">
       <Services>DirectXGraphics</Services>
     </Compile>
@@ -582,7 +579,7 @@
       <ExcludePlatforms>iOS,Android,Ouya</ExcludePlatforms>
     </Compile>
     <Compile Include="Graphics\OcclusionQuery.Null.cs">
-      <Platforms>iOS,Android,Ouya,Web</Platforms>
+      <Platforms>PCL,iOS,Android,Ouya,Web</Platforms>
     </Compile>
     <Compile Include="Graphics\PackedVector\Alpha8.cs" />
     <Compile Include="Graphics\PackedVector\Bgr565.cs" />
@@ -922,10 +919,13 @@
     <Compile Include="Input\JoystickHat.cs" />
     <Compile Include="Input\JoystickState.cs" />
     <Compile Include="Input\Joystick.Default.cs">
-      <Platforms>PCL,Android,Ouya,Windows8,Windows,WindowsPhone,WindowsPhone81,WindowsUAP,iOS,Web</Platforms>
+      <Platforms>PCL,Android,Ouya,Windows8,Windows,WindowsPhone,WindowsPhone81,WindowsUAP,iOS</Platforms>
     </Compile>
     <Compile Include="Input\Joystick.OpenTK.cs">
       <Platforms>Angle,Linux,MacOS,WindowsGL</Platforms>
+    </Compile>
+    <Compile Include="Input\Joystick.Web.cs">
+      <Platforms>Web</Platforms>
     </Compile>
     <Compile Include="Input\Keyboard.cs">
 		<ExcludePlatforms>Android,Ouya</ExcludePlatforms>
@@ -1227,6 +1227,9 @@
     <Compile Include="Input\KeyboardUtil.OpenTK.cs">
       <Platforms>Angle,Linux,WindowsGL</Platforms>
     </Compile>
+	 <EmbeddedResource Include="../Installers/monogame.ico">
+      <Platforms>Angle,Linux,WindowsGL</Platforms>
+    </EmbeddedResource>
 
 
     <!-- iOS Platform -->
@@ -1364,20 +1367,15 @@
     <Compile Include="Web\WebGameWindow.cs">
       <Platforms>Web</Platforms>
     </Compile>
-    <Compile Include="Libraries\JSAPI.cs">
+    <Compile Include="Web\WebHelper.cs">
       <Platforms>Web</Platforms>
     </Compile>
-    <Compile Include="Libraries\JSAPIAccess.cs">
+    <Compile Include="Input\KeyboardUtil.Web.cs">
       <Platforms>Web</Platforms>
     </Compile>
-    <Content Include="Libraries\MonoGame.Web.js">
+    <Compile Include="Input\GamepadUtil.Web.cs">
       <Platforms>Web</Platforms>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MonoGame.Framework.manifest.js">
-      <Platforms>Web</Platforms>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </Compile>
 
     <!-- Microsoft.Xna.Framework.Design -->
     <Compile Include="Design\VectorConversion.cs">

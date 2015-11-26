@@ -406,8 +406,10 @@ namespace Microsoft.Xna.Framework
                 break;
             case GameRunBehavior.Synchronous:
                 Platform.RunLoop();
+#if !DESKTOPGL
                 EndRun();
 				DoExiting();
+#endif
                 break;
             default:
                 throw new ArgumentException(string.Format(
@@ -415,6 +417,17 @@ namespace Microsoft.Xna.Framework
             }
 #endif
         }
+
+#if DESKTOPGL
+        // This code is used so that the Window could stay alive
+        // while all the resources are getting destroyed
+        internal void ExitEverything()
+        {
+            EndRun();
+            DoExiting();
+            this.Dispose();
+        }
+#endif
 
 #if !PORTABLE
         private TimeSpan _accumulatedElapsedTime;
