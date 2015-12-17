@@ -393,16 +393,13 @@ namespace Microsoft.Xna.Framework.Graphics
         /// </summary>
         /// <value>
         /// <see langword="true" /> to enable the debug layer; otherwise, <see langword="false" />.
+        /// The default value is <see langword="false"/>.
         /// </value>
         public static bool UseDebugDevice
         {
             get { return _useDebugDevice; } 
             set { _useDebugDevice = value; }
         }
-#if DEBUG
-        private static bool _useDebugDevice = true;
-#else
-        private static bool _useDebugDevice = false;
-#endif
+        private static bool _useDebugDevice;
     }
 }
