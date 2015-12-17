@@ -247,6 +247,9 @@ namespace Microsoft.Xna.Framework.Content.Pipeline
             }
             FreeImage.UnloadEx(ref fBitmap);
 
+            if (face == null)
+                throw new ContentLoadException("TextureImporter failed to load '" + filename + "'. Color format is not supported.");
+
             face.SetPixelData(bytes);
             output.Faces[0].Add(face);
             return output;
