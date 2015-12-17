@@ -339,10 +339,6 @@ namespace Microsoft.Xna.Framework
             window.X = (int)(DisplayDevice.Default.Bounds.Left + DisplayDevice.Default.Width * 0.05f);
             window.Y = (int)(DisplayDevice.Default.Bounds.Top + DisplayDevice.Default.Height * 0.05f);
 
-            //make sure that the game is not running on linux
-            //on Linux people may want to use mkbundle to
-            //create native Linux binaries
-            if (CurrentPlatform.OS != OS.Linux)
             var assembly = Assembly.GetEntryAssembly();
             var t = Type.GetType ("Mono.Runtime");
 
