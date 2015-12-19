@@ -8,6 +8,8 @@ namespace Microsoft.Xna.Framework.Audio
 {
     partial class SoundEffect
     {
+        internal const int MAX_PLAYING_INSTANCES = int.MaxValue;
+
         private void PlatformLoadAudioStream(Stream s)
         {
         }

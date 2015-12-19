@@ -196,6 +196,9 @@
     <Compile Include="GameComponent.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GamePlatform.cs" />
+    <Compile Include="GamePlatform.Null.cs">
+      <Platforms>PCL</Platforms>
+    </Compile>
     <Compile Include="GamePlatform.Desktop.cs">
       <Platforms>Angle,Linux,MacOS,Windows,Windows8,WindowsGL,WindowsUAP</Platforms>
     </Compile>
