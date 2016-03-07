@@ -155,6 +155,17 @@ namespace Microsoft.Xna.Framework.Graphics
                 catch (SharpDXException)
                 {
                     // Workaround failed.
+
+                    // Revert change.
+                    for (int i = 0; i < inputElements.Length; i++)
+                    {
+                        if (inputElements[i].SemanticIndex == 0 && inputElements[i].SemanticName.Equals("SV_Position", StringComparison.OrdinalIgnoreCase))
+                        {
+                            inputElements[i].SemanticName = "POSITION";
+                            break;
+                        }
+                    }
+
                     throw new InvalidOperationException(GetInvalidArgMessage(inputElements), ex);
                 }
             }
