@@ -436,6 +436,22 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             if (transform == Matrix.Identity)
                 return;
 
+            // This method applies the specified transform to the contents of all nodes in this
+            // subtree. The result needs to be the same as when the transform is applied to the
+            // local transform of a node.
+            // => The local transforms of the nodes (and animations) need to be updated!
+            // 
+            // c ... The contents of a node. (Represents a vertex position or a child node.)
+            // T ... The transform matrix to apply. (Parameter 'transform')
+            // M ... The old local transform of a node.
+            // M' ... The new local transform of a node.
+            // (Notation: row vectors, matrices multiplied left-to-right)
+            // 
+            // "T applied to contents" = "T applied to local transform"
+            //              c * T * M' = c * M * T
+            //                  T * M' = M * T
+            //                      M' = T^(-1) * M * T
+
             Matrix inverseTransform = Matrix.Invert(transform);
 
             var work = new Stack<NodeContent>();
@@ -447,15 +463,15 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
                 foreach (var child in node.Children)
                     work.Push(child);
 
-                // Transform the mesh content.
+                // Apply transform to mesh content.
                 var mesh = node as MeshContent;
                 if (mesh != null)
                     mesh.TransformContents(ref transform);
 
-                // Transform local coordinate system using "similarity transform".
+                // Update local transform.
                 node.Transform = inverseTransform * node.Transform * transform;
 
-                // Transform animations.
+                // Update animation transforms.
                 foreach (var animationContent in node.Animations.Values)
                     foreach (var animationChannel in animationContent.Channels.Values)
                         for (int i = 0; i < animationChannel.Count; i++)
