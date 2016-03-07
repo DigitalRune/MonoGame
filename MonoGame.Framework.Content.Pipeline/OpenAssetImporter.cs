@@ -746,7 +746,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline
             {
                 Name = GetAnimationName(aiAnimation.Name),
                 Identity = _identity,
-                Duration = TimeSpan.FromSeconds(aiAnimation.DurationInTicks / aiAnimation.TicksPerSecond)
+                Duration = ToTimeSpan(aiAnimation, aiAnimation.DurationInTicks)
             };
 
             // In Assimp animation channels may be split into separate channels.
@@ -920,8 +920,7 @@ namespace Microsoft.Xna.Framework.Content.Pipeline
                     // Apply transformation pivot.
                     var transform = pivot.GetTransform(scale, rotation, translation);
 
-                    long ticks = (long)(time * (TimeSpan.TicksPerSecond / aiAnimation.TicksPerSecond));
-                    channel.Add(new AnimationKeyframe(TimeSpan.FromTicks(ticks), transform));
+                    channel.Add(new AnimationKeyframe(ToTimeSpan(aiAnimation, time), transform));
                 }
 
                 animation.Channels[channelGroup.Key] = channel;
@@ -1058,6 +1057,12 @@ namespace Microsoft.Xna.Framework.Content.Pipeline
         public static Color ToXnaColor(Color4D color)
         {
             return new Color(color.R, color.G, color.B, color.A);
+        }
+
+        private static TimeSpan ToTimeSpan(Animation aiAnimation, double time)
+        {
+            long durationInTicks = (long)(time * (TimeSpan.TicksPerSecond / aiAnimation.TicksPerSecond));
+            return TimeSpan.FromTicks(durationInTicks);
         }
         #endregion
     }
