@@ -139,6 +139,7 @@ built from source.
 Please note, strong names were disabled in the open source version of the DigitalRune Engine, and 
 these changes are only relevant if you want re-enable strong names! 
 
+Other changes:
 
-
-
+* ATI.TextureConverter was temporarily removed because license was unclear. But now it was clarified
+that the license is Ms-PL and we can add it back in.
