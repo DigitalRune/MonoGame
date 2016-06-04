@@ -1,13 +1,9 @@
 # DigitalRune Notes
 
-This MonoGame version is used by the [DigitalRune Engine](http://www.digitalrune.com/). 
+This MonoGame fork is used by the [DigitalRune Engine](https://github.com/DigitalRune/DigitalRune). 
 
 This fork contains changes compared to the [official MonoGame repository](https://github.com/mono/MonoGame).
-It is planned to keep this fork close to the original MonoGame repository. Changes and bugfixes are submitted back to the MonoGame team to be included in the original MonoGame version. 
-
-Important differences: 
-
-* The MonoGame assemblies are signed with a strong name. The strong name key file is included in the repository: DigitalRuneMonoGame.snk.
+A summary of all changes can be found here: [CHANGES.md](CHANGES.md)
 
 
 ----------
