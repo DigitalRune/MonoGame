@@ -31,8 +31,8 @@
 
   <Properties>
 
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\DigitalRuneMonoGame.snk</AssemblyOriginatorKeyFile>
+    <!--<SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\DigitalRuneMonoGame.snk</AssemblyOriginatorKeyFile>-->
     <NoWarn>1591,0436</NoWarn>
     <MonoDevelopPoliciesFile>Build/MonoDevelopPolicies.xml</MonoDevelopPoliciesFile>
 

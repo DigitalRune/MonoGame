@@ -27,8 +27,8 @@
   </References>
 
   <Properties>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\DigitalRuneMonoGame.snk</AssemblyOriginatorKeyFile>
+    <!--<SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\DigitalRuneMonoGame.snk</AssemblyOriginatorKeyFile>-->
     <WarningLevel>0</WarningLevel>
     <MonoDevelopPoliciesFile>Build/MonoDevelopPolicies.xml</MonoDevelopPoliciesFile>
     <CustomDefinitions>
