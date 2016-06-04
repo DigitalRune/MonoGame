@@ -60,9 +60,6 @@
     <Reference Include="PVRTexLibNET">
       <HintPath>..\ThirdParty\Dependencies\PVRTexLibNET\PVRTexLibNET.dll</HintPath>
     </Reference>
-    <Reference Include="ATI.TextureConverter">
-      <HintPath>..\ThirdParty\Dependencies\ATI.TextureConverter\ATI.TextureConverter.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

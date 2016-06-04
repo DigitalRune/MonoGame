@@ -17,9 +17,9 @@
     <Binary
       Name="PVRTexLibNET"
       Path="ThirdParty\Dependencies\PVRTexLibNET\PVRTexLibNET.dll" />
-    <Binary
+    <!--<Binary
       Name="ATI.TextureConverter"
-      Path="ThirdParty\Dependencies\ATI.TextureConverter\ATI.TextureConverter.dll" />
+      Path="ThirdParty\Dependencies\ATI.TextureConverter\ATI.TextureConverter.dll" />-->
   </Platform>
 
 
@@ -40,9 +40,9 @@
     <Binary
       Name="PVRTexLibNET"
       Path="ThirdParty\Dependencies\PVRTexLibNET\PVRTexLibNET.dll" />
-    <Binary
+    <!--<Binary
       Name="ATI.TextureConverter"
-      Path="ThirdParty\Dependencies\ATI.TextureConverter\ATI.TextureConverter.dll" />
+      Path="ThirdParty\Dependencies\ATI.TextureConverter\ATI.TextureConverter.dll" />-->
   </Platform>
 
 
@@ -71,9 +71,9 @@
     <Binary
       Name="PVRTexLibNET"
       Path="ThirdParty\Dependencies\PVRTexLibNET\PVRTexLibNET.dll" />
-    <Binary
+    <!--<Binary
       Name="ATI.TextureConverter"
-      Path="ThirdParty\Dependencies\ATI.TextureConverter\ATI.TextureConverter.dll" />
+      Path="ThirdParty\Dependencies\ATI.TextureConverter\ATI.TextureConverter.dll" />-->
   </Platform>
 	
 </ExternalProject>

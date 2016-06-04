@@ -4,7 +4,7 @@
 
 using System;
 using Microsoft.Xna.Framework.Graphics;
-using ATI.TextureConverter;
+//using ATI.TextureConverter;                      // Removed temporarily until license is clarified.
 
 namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
 {
@@ -71,24 +71,26 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             BitmapContent.Copy(sourceBitmap, sourceRegion, colorBitmap, new Rectangle(0, 0, colorBitmap.Width, colorBitmap.Height));
             sourceBitmap = colorBitmap;
 
-			ATICompressor.CompressionFormat targetFormat;
-			switch (format)
-            {
-				case SurfaceFormat.RgbaAtcExplicitAlpha:
-					targetFormat = ATICompressor.CompressionFormat.AtcRgbaExplicitAlpha;
-					break;
-				case SurfaceFormat.RgbaAtcInterpolatedAlpha:
-					targetFormat = ATICompressor.CompressionFormat.AtcRgbaInterpolatedAlpha;
-					break;
-				default:
-					return false;
-			}
+            throw new NotImplementedException("ATI.TextureConverter.dll was temporarily removed until license is clarified.");
 
-			var sourceData = sourceBitmap.GetPixelData();
-			var compressedData = ATICompressor.Compress(sourceData, Width, Height, targetFormat);
-			SetPixelData(compressedData);
+   //         ATICompressor.CompressionFormat targetFormat;
+			//switch (format)
+   //         {
+			//	case SurfaceFormat.RgbaAtcExplicitAlpha:
+			//		targetFormat = ATICompressor.CompressionFormat.AtcRgbaExplicitAlpha;
+			//		break;
+			//	case SurfaceFormat.RgbaAtcInterpolatedAlpha:
+			//		targetFormat = ATICompressor.CompressionFormat.AtcRgbaInterpolatedAlpha;
+			//		break;
+			//	default:
+			//		return false;
+			//}
 
-			return true;
+			//var sourceData = sourceBitmap.GetPixelData();
+			//var compressedData = ATICompressor.Compress(sourceData, Width, Height, targetFormat);
+			//SetPixelData(compressedData);
+
+			//return true;
         }
 
         protected override bool TryCopyTo(BitmapContent destinationBitmap, Rectangle sourceRegion, Rectangle destinationRegion)
